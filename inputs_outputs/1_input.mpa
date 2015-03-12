@@ -1,0 +1,11 @@
+'uma ''citacao'' correcta'
+'uma 'citacao' falhada'
+
+'
+''
+'''
+''''
+'''''
+
+'abc'
+'texto entre ''aspas'''

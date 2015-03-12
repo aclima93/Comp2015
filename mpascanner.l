@@ -1,5 +1,8 @@
 %{
 
+int line = 1;
+int col = 1;
+
 %}
 
 word				[a-zA-Z]+
@@ -28,7 +31,7 @@ PARAMSTR			[pP][aA][rR][aA][mM][sS][tT][rR]
 PROGRAM				[pP][rR][oO][gG][rR][aA][mM]
 RBRAC				)
 REPEAT				[rR][eE][pP][eE][aA][tT]
-SEMIC				;
+SEMIC				; 	{;}
 THEN				[tT][hH][eE][nN]
 UNTIL				[uU][nN][tT][iI][lL]
 VAL					[vV][aA][lL]
@@ -41,7 +44,7 @@ OP3					[+-]
 OP4					[*|/|([mM][oO][dD])|([dD][iI][vV])]
 
 
-RESERVED			[|]
+RESERVED			[{ABSOLUTE}|{ARRAY}|{ASM}|{CASE}|{CONST}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EXIT}|{FILE}|{FOR}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INTERFACE}|{LABEL}|{NEW}|{NIL}|{OBJECT}|{OF}|{OPERATOR}|{PACKED}|{PROCEDURE}|{RECORD}|{REINTRODUCE}|{SELF}|{SET}|{SHL}|{SHR}|{STRING}|{TO}|{TYPE}|{UNIT}|{USES}|{WITH}|{XOR}]
 ABSOLUTE			[aA][bB][sS][oO][lL][uU][tT][eE]
 ARRAY				[aA][rR][rR][aA][yY]
 ASM					[aA][sS][mM]
@@ -84,10 +87,49 @@ XOR					[xX][oO][rR]
 
 
 %%
-{email}					;		{printf("%s, ", yytext);}
-.						; 		{;}
-\n						; 		{;}
+
+INTLIT				; 	{printf("INTLIT(%s)", yytext); col=col+yyleng;}
+REALLIT				; 	{printf("REALLIT(%s)", yytext); col=col+yyleng;}
+STRINGLIT			; 	{printf("STRING(%s)", yytext); col=col+yyleng;}
+
+ASSIGN				; 	{printf("ASSIGN"); col=col+yyleng;}
+BEGIN				; 	{printf("BEGIN"); col=col+yyleng;}
+COLON				; 	{printf("COLON"); col=col+yyleng;}
+COMMA				; 	{printf("COMMA"); col=col+yyleng;}
+DO					; 	{printf("DO"); col=col+yyleng;}
+DOT					; 	{printf("DOT"); col=col+yyleng;}
+ELSE				; 	{printf("ELSE"); col=col+yyleng;}
+END					; 	{printf("END"); col=col+yyleng;}
+FORWARD				; 	{printf("FORWARD"); col=col+yyleng;}
+FUNCTION			; 	{printf("FUNCTION"); col=col+yyleng;}
+IF					; 	{printf("IF"); col=col+yyleng;}
+LBRAC				; 	{printf("LBRAC"); col=col+yyleng;}
+NOT					; 	{printf("NOT"); col=col+yyleng;}
+OUTPUT				; 	{printf("OUTPUT"); col=col+yyleng;}
+PARAMSTR			; 	{printf("PARAMSTR"); col=col+yyleng;}
+PROGRAM				; 	{printf("PROGRAM"); col=col+yyleng;}
+RBRAC				; 	{printf("RBRAC"); col=col+yyleng;}
+REPEAT				; 	{printf("REPEAT"); col=col+yyleng;}
+SEMIC				; 	{printf("SEMIC"); col=col+yyleng;}
+THEN				; 	{printf("THEN"); col=col+yyleng;}
+UNTIL				; 	{printf("UNTIL"); col=col+yyleng;}
+VAL					; 	{printf("VAL"); col=col+yyleng;}
+VAR					; 	{printf("VAR"); col=col+yyleng;}
+WHILE				; 	{printf("WHILE"); col=col+yyleng;}
+WRITELN				; 	{printf("WRITELN"); col=col+yyleng;}
+
+OP1					; 	{printf("OP1(%S)", yytext); col=col+yyleng;}
+OP2					; 	{printf("OP2(%s)", yytext); col=col+yyleng;}
+OP3					; 	{printf("OP3(%s)", yytext); col=col+yyleng;}
+OP4					; 	{printf("OP4(%s)", yytext); col=col+yyleng;}
+
+ID					; 	{printf("ID(%s)", yytext); col=col+yyleng;}
+
+\n					; 	{; line++; col=1;}
+.					; 	{"Line %d, col %d: illegal character ('%c')\n", line, col, yytext); ; col=col+yyleng;}
+
 %%
+
 int main(){
 	yylex();
 	return 0;
