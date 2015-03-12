@@ -1,0 +1,19 @@
+(* bccc*)program echo(output);
+var x(* bccc*): integer;
+begin
+	{}
+	val(paramstr((* bccc*)1), x);
+	writeln(x){(**)}
+end.{
+
+
+
+
+
+(* bccc*)program echo(output);
+var x(* bccc*): integer;
+begin
+	{}
+	val(paramstr((* bccc*)1), x);
+	writeln(x){(**)}
+end.{

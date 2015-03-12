@@ -8,6 +8,10 @@ int col = 1;
 
 %}
 
+%X BRACECOMMENT CURLYCOMMENT
+
+
+
 word				[a-zA-Z]+
 number				[0-9]+
 
@@ -102,9 +106,27 @@ STRINGLIT			'.'
 %%
 
 
+"(*"					;	{BEGIN BRACECOMMENT;}
+"{"						;	{BEGIN CURLYCOMMENT;}
+
+<BRACECOMMENT>"*)"		;	{BEGIN 0; col=col+yyleng;}
+<CURLYCOMMENT>"}"		;	{BEGIN 0; col=col+yyleng;}
+
+<BRACECOMMENT><<EOF>>	;	{col+=yyleng; printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0;}
+<CURLYCOMMENT><<EOF>>	;	{col+=yyleng; printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0;}
+
+<BRACECOMMENT>.			;	{col=col+yyleng;}
+<BRACECOMMENT>"\n"		;	{line++; col=1;}
+
+<CURLYCOMMENT>.			;	{col=col+yyleng;}
+<CURLYCOMMENT>"\n"		;	{line++; col=1;}
+
+
 {INTLIT}				; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
 {REALLIT}				; 	{printf("REALLIT(%s)\n", yytext); col=col+yyleng;}
 {STRINGLIT}				; 	{printf("STRING(%s)\n", yytext); col=col+yyleng;}
+
+{RESERVED}				;	{printf("RESERVED(%s)\n", yytext); col=col+yyleng;}
 
 {ASSIGN}				; 	{printf("ASSIGN\n"); col=col+yyleng;}
 {BEGIN}					; 	{printf("BEGIN\n"); col=col+yyleng;}
@@ -137,12 +159,12 @@ STRINGLIT			'.'
 {OP3}					; 	{printf("OP3(%s)\n", yytext); col=col+yyleng;}
 {OP4}					; 	{printf("OP4(%s)\n", yytext); col=col+yyleng;}
 
-{ID}					; 	{printf("ID(%s)\n", yytext); col=col+yyleng;}
+{ID}					; 	{printf("ID(%s)\n", yytext);}
 
 {WHITESPACE}			;	{col=col+yyleng;}
 {NEWLINE}				; 	{line++; col=1;}
 
-.						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); ; col=col+yyleng;}
+.						; 	{col=col+yyleng; printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]);}
 
 
 %%
