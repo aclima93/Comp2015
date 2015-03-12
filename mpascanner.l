@@ -8,7 +8,7 @@ number				[0-9]+
 ID					{word}([{word}{number}])*
 INTLIT				{number}
 REALLIT				{INTLIT}"."?(e[-+]{INTLIT})
-STRING				'.'
+STRINGLIT			'.'
 
 ASSIGN				:=
 BEGIN				[bB][eE][gG][iI][nN]
@@ -39,6 +39,49 @@ OP1					[([aA][nN][dD])|([oO][rR])]
 OP2					[<|>|=|"<>"|"<="|">="]
 OP3					[+-]
 OP4					[*|/|([mM][oO][dD])|([dD][iI][vV])]
+
+
+RESERVED			[|]
+ABSOLUTE			[aA][bB][sS][oO][lL][uU][tT][eE]
+ARRAY				[aA][rR][rR][aA][yY]
+ASM					[aA][sS][mM]
+CASE				[cC][aA][sS][eE]
+CONST				[cC][oO][nN][sS][tT]
+CONSTRUCTOR			[cC][oO][nN][sS][tT][rR][uU][cC][tT][oO][rR]
+DESTRUCTOR			[dD][eE][sS][tT][rR][uU][cC][tT][oO][rR]
+DISPOSE				[dD][iI][sS][pP][oO][sS][eE]
+DOWNTO				[dD][oO][wW][nN][tT][oO]
+EXIT				[eE][xX][iI][tT]
+FILE				[fF][iI][lL][eE]
+FOR   				[fF][oO][rR]
+GOTO				[gG][oO][tT][oO]
+IMPLEMENTATION		[iI][mM][pP][lL][eE][mM][eE][nN[tT][aA][tT][iI][oO][nN]
+IN 					[iI][nN]
+INHERITED			[iI][nN][hH][eE][rR][iI][tT][eE][dD]
+INLINE				[iI][nN][lL][iI][nN][eE]
+INTERFACE			[iI][nN][tT][eE][rR][fF][aA][cC][eE]
+LABEL				[lL][aA][bB][eE][lL]
+NEW					[nN][eE][wW]
+NIL					[nN][iI][lL]
+OBJECT				[oO][bB][jJ][eE][cC][tT]
+OF					[oO][fF]
+OPERATOR			[oO][pP][eE][rR][aA][tT][oO][rR]
+PACKED				[pP][aA][cC][kK][eE][dD]
+PROCEDURE			[pP][rR][oO][cC][eE][dD][uU][rR][eE]
+RECORD				[rR][eE][cC][oO][rR][dD]
+REINTRODUCE			[rR][eE][iI][nN][tT][rR][oO][dD][uU][cC][eE]
+SELF 				[sS][eE][lL][fF]
+SET					[sS][eE][tT]
+SHL					[sS][hH][lL]
+SHR					[sS][hH][rR]
+STRING				[sS][tT][rR][iI][nN][gG]
+TO					[tT][oO]
+TYPE				[tT][yY][pP][eE]
+UNIT 				[uU][nN][iI][tT]
+USES				[uU][sS][eE][sS]
+WITH				[wW][iI][tT][hH]
+XOR					[xX][oO][rR]
+
 
 %%
 {email}					;		{printf("%s, ", yytext);}
