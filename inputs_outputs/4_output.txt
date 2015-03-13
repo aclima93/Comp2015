@@ -42,4 +42,4 @@ ID(x)
 RBRAC
 END
 DOT
-Line 19, col 6: unterminated comment
+Line 19, col 5: unterminated comment

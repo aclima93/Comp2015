@@ -5,10 +5,11 @@
 
 int line = 1;
 int col = 1;
+char readString[100];
 
 %}
 
-%X BRACECOMMENT CURLYCOMMENT
+%X BRACECOMMENT CURLYCOMMENT STRINGLIT
 
 
 
@@ -97,10 +98,9 @@ WITH				[wW][iI][tT][hH]
 XOR					[xX][oO][rR]
 
 
-ID					{word}([{word}{number}])*
+ID					{word}({word}|{number})*
 INTLIT				{number}
 REALLIT				{INTLIT}"."?(e[+-]{INTLIT})
-STRINGLIT			'.'
 
 
 %%
@@ -109,11 +109,11 @@ STRINGLIT			'.'
 "(*"					;	{BEGIN BRACECOMMENT;}
 "{"						;	{BEGIN CURLYCOMMENT;}
 
-<BRACECOMMENT>"*)"		;	{BEGIN 0; col=col+yyleng;}
-<CURLYCOMMENT>"}"		;	{BEGIN 0; col=col+yyleng;}
+<BRACECOMMENT>"*)"		;	{col=col+yyleng; BEGIN 0; }
+<CURLYCOMMENT>"}"		;	{col=col+yyleng; BEGIN 0; }
 
-<BRACECOMMENT><<EOF>>	;	{col+=yyleng; printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0;}
-<CURLYCOMMENT><<EOF>>	;	{col+=yyleng; printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0;}
+<BRACECOMMENT><<EOF>>	;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; col+=yyleng; }
+<CURLYCOMMENT><<EOF>>	;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; col+=yyleng; }
 
 <BRACECOMMENT>.			;	{col=col+yyleng;}
 <BRACECOMMENT>"\n"		;	{line++; col=1;}
@@ -122,9 +122,16 @@ STRINGLIT			'.'
 <CURLYCOMMENT>"\n"		;	{line++; col=1;}
 
 
+"'"						;	{strcpy(readString, "'"); BEGIN STRINGLIT;}
+<STRINGLIT>"''"		;	{strcat(readString, yytext);}
+<STRINGLIT>"'"		;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col=col+strlen(readString); }
+<STRINGLIT>.			;	{strcat(readString, yytext);}
+<STRINGLIT>"\n"		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
+<STRINGLIT><<EOF>>	;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); }
+
+
 {INTLIT}				; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
 {REALLIT}				; 	{printf("REALLIT(%s)\n", yytext); col=col+yyleng;}
-{STRINGLIT}				; 	{printf("STRING(%s)\n", yytext); col=col+yyleng;}
 
 {RESERVED}				;	{printf("RESERVED(%s)\n", yytext); col=col+yyleng;}
 

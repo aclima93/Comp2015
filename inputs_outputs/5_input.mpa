@@ -1,0 +1,23 @@
+(*Operators and punctuation marks*)
+mod < div := . (or);
+(*Identifiers, word-symbols and directives*)
+if((var x:=output) <= program.val)
+then
+(
+	x:=array[];
+	while(i>0)
+	(
+		x = x.put(arctan(i));
+		i = i-mod(i,aux);
+	)
+)
+(*Text*)
+var asdf := 'asd '' asdkjnaskdnas(*output*)'''
+var asdf2 := 'asd '' asdkjnaskdnas(*and*)''''
+(*Numeric and string literals*)
+var a123:=123
+var a1234:=123.4
+var a1234e5:=123.4e-5
+var zxc:='O vestido é azul e preto'
+(*Vejam bem os	comments)
+
