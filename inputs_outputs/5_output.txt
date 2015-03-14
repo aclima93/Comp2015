@@ -24,7 +24,7 @@ THEN
 LBRAC
 ID(x)
 ASSIGN
-RESERVED(array)
+array
 Line 7, col 10: illegal character ('[')
 Line 7, col 11: illegal character (']')
 SEMIC
@@ -39,9 +39,9 @@ ID(x)
 OP2(=)
 ID(x)
 DOT
-ID(put)
+put
 LBRAC
-ID(arctan)
+arctan
 LBRAC
 ID(i)
 RBRAC
@@ -75,17 +75,34 @@ INTLIT(123)
 VAR
 ID(a1234)
 ASSIGN
-INTLIT(123)
-DOT
-INTLIT(4)
+REALLIT(123.4)
 VAR
 ID(a1234e5)
 ASSIGN
-INTLIT(123)
-DOT
-REALLIT(4e-5)
+REALLIT(123.4e-5)
 VAR
 ID(zxc)
 ASSIGN
 STRING('O vestido é azul e preto')
-Line 24, col 1: unterminated comment
+ID(teste1)
+STRING('teste2')
+Line 24, col 1: unterminated string
+STRING('teste4')
+ID(teste4)
+Line 25, col 9: unterminated string
+STRING('teste5')
+ID(teste5)
+STRING('teste5')
+STRING('teste6 teste6''teste6''')
+Line 28, col 1: unterminated string
+STRING('teste8 teste8''teste8''''')
+INTLIT(1)
+INTLIT(12)
+REALLIT(2.0)
+REALLIT(3e4)
+REALLIT(3.0e4)
+REALLIT(3e+4)
+REALLIT(3e-4)
+REALLIT(3.0e+4)
+REALLIT(3.0e-4)
+Line 39, col 1: unterminated comment

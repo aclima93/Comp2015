@@ -84,4 +84,26 @@ VAR
 ID(zxc)
 ASSIGN
 STRING('O vestido é azul e preto')
-Line 22, col 1: unterminated comment
+ID(teste1)
+STRING('teste2')
+Line 24, col 1: illegal character (''')
+ID(teste3)
+STRING('teste4')
+ID(teste4)
+Line 25, col 15: illegal character (''')
+STRING('teste5')
+ID(teste5)
+STRING('teste5')
+STRING('teste6 teste6''teste6''')
+Line 28, col 1: unterminated string
+STRING('teste8 teste8''teste8''''')
+INTLIT(1)
+INTLIT(12)
+REALLIT(2.0)
+REALLIT(3e4)
+REALLIT(3.0e4)
+REALLIT(3e+4)
+REALLIT(3e-4)
+REALLIT(3.0e+4)
+REALLIT(3.0e-4)
+Line 39, col 1: unterminated comment

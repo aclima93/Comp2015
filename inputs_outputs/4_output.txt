@@ -24,8 +24,21 @@ WRITELN
 LBRAC
 ID(x)
 RBRAC
+Line 6, col 17: illegal character ('}')
 END
 DOT
+PROGRAM
+ID(echo)
+LBRAC
+OUTPUT
+RBRAC
+SEMIC
+VAR
+ID(x)
+COLON
+ID(integer)
+SEMIC
+BEGIN
 VAL
 LBRAC
 PARAMSTR
@@ -40,6 +53,7 @@ WRITELN
 LBRAC
 ID(x)
 RBRAC
+Line 18, col 17: illegal character ('}')
 END
 DOT
 Line 19, col 5: unterminated comment

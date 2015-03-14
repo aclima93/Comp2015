@@ -5,11 +5,14 @@
 
 int line = 1;
 int col = 1;
+
+int commentCols;
+int commentLines;
 char readString[100];
 
 %}
 
-%X BRACECOMMENT CURLYCOMMENT STRINGLIT
+%X COMMENT STRINGLIT
 
 
 
@@ -56,78 +59,109 @@ OP3					[+-]
 OP4					"*"|"/"|{MOD}|{DIV}
 
 
-RESERVED			{ABSOLUTE}|{ARRAY}|{ASM}|{CASE}|{CONST}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EXIT}|{FILE}|{FOR}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INTERFACE}|{LABEL}|{NEW}|{NIL}|{OBJECT}|{OF}|{OPERATOR}|{PACKED}|{PROCEDURE}|{RECORD}|{REINTRODUCE}|{SELF}|{SET}|{SHL}|{SHR}|{STRING}|{TO}|{TYPE}|{UNIT}|{USES}|{WITH}|{XOR}
+RESERVED			{ABS}|{ABSOLUTE}|{ARCTAN}|{ARRAY}|{ASM}|{CASE}|{CHAR}|{CHR}|{CONST}|{COS}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EOF}|{EOLN}|{EXIT}|{EXP}|{FILE}|{FOR}|{GET}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INPUT}|{INTERFACE}|{LABEL}|{LN}|{MAXINT}|{NEW}|{NIL}|{OBJECT}|{ODD}|{OF}|{OPERATOR}|{ORD}|{PACK}|{PACKED}|{PAGE}|{PRED}|{PROCEDURE}|{PUT}|{READ}|{READLN}|{RECORD}|{REINTRODUCE}|{RESET}|{REWRITE}|{ROUND}|{SELF}|{SET}|{SHL}|{SHR}|{SIN}|{SQR}|{SQRT}|{SUCC}|{STRING}|{TEXT}|{TO}|{TRUNC}|{TYPE}|{UNIT}|{UNPACK}|{USES}|{WITH}|{WRITE}|{XOR}
+
+ABS 				[aA][bB][sS]
 ABSOLUTE			[aA][bB][sS][oO][lL][uU][tT][eE]
+ARCTAN				[aA][rR][cC][tT][aA][nN]
 ARRAY				[aA][rR][rR][aA][yY]
 ASM					[aA][sS][mM]
 CASE				[cC][aA][sS][eE]
+CHAR 				[cC][hH][aA][rR]
+CHR 				[cC][hH][rR]
 CONST				[cC][oO][nN][sS][tT]
 CONSTRUCTOR			[cC][oO][nN][sS][tT][rR][uU][cC][tT][oO][rR]
+COS 				[cC][oO][sS]
 DESTRUCTOR			[dD][eE][sS][tT][rR][uU][cC][tT][oO][rR]
 DISPOSE				[dD][iI][sS][pP][oO][sS][eE]
 DOWNTO				[dD][oO][wW][nN][tT][oO]
+EOF					[eE][oO][fF]
+EOLN				[eE][oO][lL][nN]
 EXIT				[eE][xX][iI][tT]
+EXP					[eE][xX][pP]
 FILE				[fF][iI][lL][eE]
 FOR   				[fF][oO][rR]
+GET					[gG][eE][tT]
 GOTO				[gG][oO][tT][oO]
-IMPLEMENTATION		[iI][mM][pP][lL][eE][mM][eE][nN[tT][aA][tT][iI][oO][nN]
+IMPLEMENTATION		[iI][mM][pP][lL][eE][mM][eE][nN][tT][aA][tT][iI][oO][nN]
 IN 					[iI][nN]
 INHERITED			[iI][nN][hH][eE][rR][iI][tT][eE][dD]
 INLINE				[iI][nN][lL][iI][nN][eE]
+INPUT				[iI][nN][pP][uU][tT]
 INTERFACE			[iI][nN][tT][eE][rR][fF][aA][cC][eE]
 LABEL				[lL][aA][bB][eE][lL]
+LN 					[lL][nN]
+MAXINT				[mM][aA][xX][iI][nN][tT]
 NEW					[nN][eE][wW]
 NIL					[nN][iI][lL]
 OBJECT				[oO][bB][jJ][eE][cC][tT]
+ODD					[oO][dD][dD]
 OF					[oO][fF]
 OPERATOR			[oO][pP][eE][rR][aA][tT][oO][rR]
+ORD					[oO][rR][dD]
+PACK 				[pP][aA][cC][kK]
 PACKED				[pP][aA][cC][kK][eE][dD]
+PAGE				[pP][aA][gG][eE]
+PRED 				[pP][rR][eE][dD]
 PROCEDURE			[pP][rR][oO][cC][eE][dD][uU][rR][eE]
+PUT					[pP][uU][tT]
+READ 				[rR][eE][aA][dD]
+READLN				[rR][eE][aA][dD][lL][nN]
 RECORD				[rR][eE][cC][oO][rR][dD]
 REINTRODUCE			[rR][eE][iI][nN][tT][rR][oO][dD][uU][cC][eE]
+RESET				[rR][eE][sS][eE][tT]
+REWRITE				[rR][eE][wW][rR][iI][tT][eE]
+ROUND				[rR][oO][uU][nN][dD]
 SELF 				[sS][eE][lL][fF]
 SET					[sS][eE][tT]
 SHL					[sS][hH][lL]
 SHR					[sS][hH][rR]
+SIN 				[sS][iI][nN]
+SQR					[sS][qQ][rR]
+SQRT				[sS][qQ][rR][tT]
 STRING				[sS][tT][rR][iI][nN][gG]
+SUCC				[sS][uU][cC][cC]
+TEXT				[tT][eE][xX][tT]
 TO					[tT][oO]
+TRUNC				[tT][rR][uU][nN][cC]
 TYPE				[tT][yY][pP][eE]
 UNIT 				[uU][nN][iI][tT]
+UNPACK				[uU][nN][pP][aA][cC][kK]
 USES				[uU][sS][eE][sS]
 WITH				[wW][iI][tT][hH]
+WRITE 				[wW][rR][iI][tT][eE]
 XOR					[xX][oO][rR]
 
 
 ID					{word}({word}|{number})*
+scalefactor			[eE][+-]?{number}
+dotnumber			{DOT}{number}
+REALLIT				{number}{dotnumber}?{scalefactor}?
 INTLIT				{number}
-REALLIT				{INTLIT}"."?(e[+-]{INTLIT})
-
 
 %%
 
 
-"(*"					;	{BEGIN BRACECOMMENT;}
-"{"						;	{BEGIN CURLYCOMMENT;}
+"(*"|"{"				;	{BEGIN COMMENT; commentLines=0; commentCols=yyleng; }
 
-<BRACECOMMENT>"*)"		;	{col=col+yyleng; BEGIN 0; }
-<CURLYCOMMENT>"}"		;	{col=col+yyleng; BEGIN 0; }
+<COMMENT>"*)"|"}"		;	{commentCols+=yyleng; line+=commentLines; col+=commentCols; BEGIN 0; }
 
-<BRACECOMMENT><<EOF>>	;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; col+=yyleng; }
-<CURLYCOMMENT><<EOF>>	;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; col+=yyleng; }
+<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line+=commentLines; col+=commentCols; }
 
-<BRACECOMMENT>.			;	{col=col+yyleng;}
-<BRACECOMMENT>"\n"		;	{line++; col=1;}
+<COMMENT>.				;	{commentCols+=yyleng;}
+<COMMENT>"\n"			;	{commentLines++; commentCols=1;}
 
-<CURLYCOMMENT>.			;	{col=col+yyleng;}
-<CURLYCOMMENT>"\n"		;	{line++; col=1;}
 
 
 "'"						;	{strcpy(readString, "'"); BEGIN STRINGLIT;}
-<STRINGLIT>"''"		;	{strcat(readString, yytext);}
-<STRINGLIT>"'"		;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col=col+strlen(readString); }
+
+<STRINGLIT>"''"			;	{strcat(readString, yytext);}
+<STRINGLIT>"'"			;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col+=strlen(readString); }
+
 <STRINGLIT>.			;	{strcat(readString, yytext);}
-<STRINGLIT>"\n"		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
-<STRINGLIT><<EOF>>	;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); }
+<STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
+<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); }
+
 
 
 {INTLIT}				; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
