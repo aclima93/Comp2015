@@ -17,4 +17,4 @@ Line 18, col 1: unterminated string
 OP1(and)
 ID(continues)
 ID(here)
-Line 19, col 6: unterminated string
+Line 19, col 19: unterminated string

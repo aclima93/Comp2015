@@ -8,4 +8,6 @@ for i in {0..6}
 		./mpascanner < inputs_outputs/"$i"_input.mpa > inputs_outputs/"$i"_output.txt
 done
 
+rm mpascanner.zip
+
 zip mpascanner mpascanner.l

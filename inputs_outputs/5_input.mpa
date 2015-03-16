@@ -36,6 +36,15 @@ teste1
 3e-4
 3.0e+4
 3.0e-4
+
+(* comentário 1 *)
+
+{ comentário 2 }
+
+(* comentário misto }
+
+{ comentário misto 2 *)
+
 (*Vejam bem os	comments)
 kjhdkfjshdkfjhsdk
 dkjfhsdkjhfkdjhs

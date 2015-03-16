@@ -24,7 +24,7 @@ THEN
 LBRAC
 ID(x)
 ASSIGN
-array
+RESERVED(array)
 Line 7, col 10: illegal character ('[')
 Line 7, col 11: illegal character (']')
 SEMIC
@@ -39,9 +39,9 @@ ID(x)
 OP2(=)
 ID(x)
 DOT
-put
+RESERVED(put)
 LBRAC
-arctan
+RESERVED(arctan)
 LBRAC
 ID(i)
 RBRAC
@@ -67,7 +67,7 @@ STRING('asd '' asdkjnaskdnas(*output*)''')
 VAR
 ID(asdf2)
 ASSIGN
-Line 16, col 9: unterminated string
+Line 16, col 14: unterminated string
 VAR
 ID(a123)
 ASSIGN
@@ -89,7 +89,7 @@ STRING('teste2')
 Line 24, col 1: unterminated string
 STRING('teste4')
 ID(teste4)
-Line 25, col 9: unterminated string
+Line 25, col 15: unterminated string
 STRING('teste5')
 ID(teste5)
 STRING('teste5')
@@ -105,4 +105,4 @@ REALLIT(3e+4)
 REALLIT(3e-4)
 REALLIT(3.0e+4)
 REALLIT(3.0e-4)
-Line 39, col 1: unterminated comment
+Line 48, col 1: unterminated comment

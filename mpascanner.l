@@ -59,7 +59,7 @@ OP3					[+-]
 OP4					"*"|"/"|{MOD}|{DIV}
 
 
-RESERVED			{ABS}|{ABSOLUTE}|{ARCTAN}|{ARRAY}|{ASM}|{CASE}|{CHAR}|{CHR}|{CONST}|{COS}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EOF}|{EOLN}|{EXIT}|{EXP}|{FILE}|{FOR}|{GET}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INPUT}|{INTERFACE}|{LABEL}|{LN}|{MAXINT}|{NEW}|{NIL}|{OBJECT}|{ODD}|{OF}|{OPERATOR}|{ORD}|{PACK}|{PACKED}|{PAGE}|{PRED}|{PROCEDURE}|{PUT}|{READ}|{READLN}|{RECORD}|{REINTRODUCE}|{RESET}|{REWRITE}|{ROUND}|{SELF}|{SET}|{SHL}|{SHR}|{SIN}|{SQR}|{SQRT}|{SUCC}|{STRING}|{TEXT}|{TO}|{TRUNC}|{TYPE}|{UNIT}|{UNPACK}|{USES}|{WITH}|{WRITE}|{XOR}
+RESERVED			{ABS}|{ABSOLUTE}|{ARCTAN}|{ARRAY}|{ASM}|{CASE}|{CHAR}|{CHR}|{CONST}|{COS}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EOF}|{EOLN}|{EXIT}|{EXP}|{FILE}|{FOR}|{GET}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INPUT}|{LABEL}|{LN}|{MAXINT}|{NEW}|{NIL}|{OBJECT}|{ODD}|{OF}|{OPERATOR}|{ORD}|{PACK}|{PACKED}|{PAGE}|{PRED}|{PROCEDURE}|{PUT}|{READ}|{READLN}|{RECORD}|{REINTRODUCE}|{RESET}|{REWRITE}|{ROUND}|{SELF}|{SET}|{SHL}|{SHR}|{SIN}|{SQR}|{SQRT}|{SUCC}|{TEXT}|{TO}|{TRUNC}|{TYPE}|{UNIT}|{UNPACK}|{USES}|{WITH}|{WRITE}|{XOR}
 
 ABS 				[aA][bB][sS]
 ABSOLUTE			[aA][bB][sS][oO][lL][uU][tT][eE]
@@ -88,7 +88,6 @@ IN 					[iI][nN]
 INHERITED			[iI][nN][hH][eE][rR][iI][tT][eE][dD]
 INLINE				[iI][nN][lL][iI][nN][eE]
 INPUT				[iI][nN][pP][uU][tT]
-INTERFACE			[iI][nN][tT][eE][rR][fF][aA][cC][eE]
 LABEL				[lL][aA][bB][eE][lL]
 LN 					[lL][nN]
 MAXINT				[mM][aA][xX][iI][nN][tT]
@@ -119,7 +118,6 @@ SHR					[sS][hH][rR]
 SIN 				[sS][iI][nN]
 SQR					[sS][qQ][rR]
 SQRT				[sS][qQ][rR][tT]
-STRING				[sS][tT][rR][iI][nN][gG]
 SUCC				[sS][uU][cC][cC]
 TEXT				[tT][eE][xX][tT]
 TO					[tT][oO]
@@ -153,7 +151,8 @@ INTLIT				{number}
 
 
 
-"'"						;	{strcpy(readString, "'"); BEGIN STRINGLIT;}
+
+"'"						;	{BEGIN STRINGLIT; strcpy(readString, "'"); }
 
 <STRINGLIT>"''"			;	{strcat(readString, yytext);}
 <STRINGLIT>"'"			;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col+=strlen(readString); }
@@ -164,10 +163,13 @@ INTLIT				{number}
 
 
 
+
 {INTLIT}				; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
 {REALLIT}				; 	{printf("REALLIT(%s)\n", yytext); col=col+yyleng;}
 
+
 {RESERVED}				;	{printf("RESERVED(%s)\n", yytext); col=col+yyleng;}
+
 
 {ASSIGN}				; 	{printf("ASSIGN\n"); col=col+yyleng;}
 {BEGIN}					; 	{printf("BEGIN\n"); col=col+yyleng;}
@@ -195,17 +197,20 @@ INTLIT				{number}
 {WHILE}					; 	{printf("WHILE\n"); col=col+yyleng;}
 {WRITELN}				; 	{printf("WRITELN\n"); col=col+yyleng;}
 
+
 {OP1}					; 	{printf("OP1(%s)\n", yytext); col=col+yyleng;}
 {OP2}					; 	{printf("OP2(%s)\n", yytext); col=col+yyleng;}
 {OP3}					; 	{printf("OP3(%s)\n", yytext); col=col+yyleng;}
 {OP4}					; 	{printf("OP4(%s)\n", yytext); col=col+yyleng;}
 
-{ID}					; 	{printf("ID(%s)\n", yytext);}
 
-{WHITESPACE}			;	{col=col+yyleng;}
-{NEWLINE}				; 	{line++; col=1;}
+{ID}					; 	{printf("ID(%s)\n", yytext); col=col+yyleng;}
 
-.						; 	{col=col+yyleng; printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]);}
+
+{WHITESPACE}			;	{col=col+yyleng; printf(""); }
+{NEWLINE}				; 	{line++; col=1; printf(""); }
+
+.						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
 
 
 %%
