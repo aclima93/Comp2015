@@ -59,7 +59,7 @@ OP3					[+-]
 OP4					"*"|"/"|{MOD}|{DIV}
 
 
-RESERVED			{ABS}|{ABSOLUTE}|{ARCTAN}|{ARRAY}|{ASM}|{CASE}|{CHAR}|{CHR}|{CONST}|{COS}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EOF}|{EOLN}|{EXIT}|{EXP}|{FILE}|{FOR}|{GET}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INPUT}|{LABEL}|{LN}|{MAXINT}|{NEW}|{NIL}|{OBJECT}|{ODD}|{OF}|{OPERATOR}|{ORD}|{PACK}|{PACKED}|{PAGE}|{PRED}|{PROCEDURE}|{PUT}|{READ}|{READLN}|{RECORD}|{REINTRODUCE}|{RESET}|{REWRITE}|{ROUND}|{SELF}|{SET}|{SHL}|{SHR}|{SIN}|{SQR}|{SQRT}|{SUCC}|{TEXT}|{TO}|{TRUNC}|{TYPE}|{UNIT}|{UNPACK}|{USES}|{WITH}|{WRITE}|{XOR}
+RESERVED			{ABS}|{ABSOLUTE}|{ARCTAN}|{ARRAY}|{ASM}|{CASE}|{CHAR}|{CHR}|{CONST}|{COS}|{CONSTRUCTOR}|{DESTRUCTOR}|{DISPOSE}|{DOWNTO}|{EOF}|{EOLN}|{EXIT}|{EXP}|{FILE}|{FOR}|{GET}|{GOTO}|{IMPLEMENTATION}|{IN}|{INHERITED}|{INLINE}|{INPUT}|{LABEL}|{LN}|{MAXINT}|{NEW}|{NIL}|{OBJECT}|{ODD}|{OF}|{OPERATOR}|{ORD}|{PACK}|{PACKED}|{PAGE}|{PRED}|{PROCEDURE}|{PUT}|{READ}|{READLN}|{RECORD}|{REINTRODUCE}|{RESET}|{REWRITE}|{ROUND}|{SELF}|{SET}|{SHL}|{SHR}|{SIN}|{SQR}|{SQRT}|{SUCC}|{TEXT}|{TO}|{TRUNC}|{TYPE}|{UNIT}|{UNPACK}|{WITH}|{WRITE}|{XOR}
 
 ABS 				[aA][bB][sS]
 ABSOLUTE			[aA][bB][sS][oO][lL][uU][tT][eE]
@@ -125,7 +125,6 @@ TRUNC				[tT][rR][uU][nN][cC]
 TYPE				[tT][yY][pP][eE]
 UNIT 				[uU][nN][iI][tT]
 UNPACK				[uU][nN][pP][aA][cC][kK]
-USES				[uU][sS][eE][sS]
 WITH				[wW][iI][tT][hH]
 WRITE 				[wW][rR][iI][tT][eE]
 XOR					[xX][oO][rR]
@@ -177,7 +176,7 @@ INTLIT				{number}
 {BEGIN}					; 	{printf("BEGIN\n"); col=col+yyleng;}
 {COLON}					; 	{printf("COLON\n"); col=col+yyleng;}
 {COMMA}					; 	{printf("COMMA\n"); col=col+yyleng;}
-{DO}					; 	{printf("DO\n\n"); col=col+yyleng;}
+{DO}					; 	{printf("DO\n"); col=col+yyleng;}
 {DOT}					; 	{printf("DOT\n"); col=col+yyleng;}
 {ELSE}					; 	{printf("ELSE\n"); col=col+yyleng;}
 {END}					; 	{printf("END\n"); col=col+yyleng;}
