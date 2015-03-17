@@ -3,15 +3,25 @@ A Inês é mesmo gira. :)
 À parte isso, e sem mais demoras, segue-se a seguinte descrição deste projecto.
 
   _____________________________________
- /								   	   \
-|	 Projecto de Compiladores - 2015 	|
-|	 António Lima & Inês Petronilho		|
+ /                                     \
+|          Compiladores - 2015          |
+|    António Lima & Inês Petronilho     |
  \_____________________________________/
+
+
+ _____________________________________________
+|                                             |
+| Construção de um compilador para miliPascal |
+|_____________________________________________|
 
 
 **[Análise Lexical]**
 
-Para correr o analisador lexical sobre os casos de teste associados:
+O analisador recebe como input um ficheiro com extensão ".mpa" e retorna todos os tokens que constem do mesmo e que pertençam à sintaxe de miliPascal.
+
+Mudar para a directoria "Meta1"
+
+Para correr o analisador lexical com todos os casos de teste associados:
 	$ bash run_mpascanner.sh
 
 Para correr para um caso de teste específico:
@@ -21,5 +31,7 @@ Para correr para um caso de teste específico:
 
 **[Análise Sintática]**
 
-Spoon...
+Mudar para a directoria "Meta2"
+
+To be continued...
 

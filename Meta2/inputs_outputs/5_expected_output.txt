@@ -1,0 +1,109 @@
+OP4(mod)
+OP2(<)
+OP4(div)
+ASSIGN
+DOT
+LBRAC
+OP1(or)
+RBRAC
+SEMIC
+IF
+LBRAC
+LBRAC
+VAR
+ID(x)
+ASSIGN
+OUTPUT
+RBRAC
+OP2(<=)
+PROGRAM
+DOT
+VAL
+RBRAC
+THEN
+LBRAC
+ID(x)
+ASSIGN
+RESERVED(array)
+Line 7, col 10: illegal character ('[')
+Line 7, col 11: illegal character (']')
+SEMIC
+WHILE
+LBRAC
+ID(i)
+OP2(>)
+INTLIT(0)
+RBRAC
+LBRAC
+ID(x)
+OP2(=)
+ID(x)
+DOT
+RESERVED(put)
+LBRAC
+RESERVED(arctan)
+LBRAC
+ID(i)
+RBRAC
+RBRAC
+SEMIC
+ID(i)
+OP2(=)
+ID(i)
+OP3(-)
+OP4(mod)
+LBRAC
+ID(i)
+COMMA
+ID(aux)
+RBRAC
+SEMIC
+RBRAC
+RBRAC
+VAR
+ID(asdf)
+ASSIGN
+STRING('asd '' asdkjnaskdnas(*output*)''')
+VAR
+ID(asdf2)
+ASSIGN
+Line 16, col 14: unterminated string
+VAR
+ID(a123)
+ASSIGN
+INTLIT(123)
+VAR
+ID(a1234)
+ASSIGN
+REALLIT(123.4)
+VAR
+ID(a1234e5)
+ASSIGN
+REALLIT(123.4e-5)
+VAR
+ID(zxc)
+ASSIGN
+STRING('O vestido é azul e preto')
+ID(teste1)
+STRING('teste2')
+Line 24, col 1: illegal character (''')
+ID(teste3)
+STRING('teste4')
+ID(teste4)
+Line 25, col 15: illegal character (''')
+STRING('teste5')
+ID(teste5)
+STRING('teste5')
+STRING('teste6 teste6''teste6''')
+Line 28, col 1: unterminated string
+STRING('teste8 teste8''teste8''''')
+INTLIT(1)
+INTLIT(12)
+REALLIT(2.0)
+REALLIT(3e4)
+REALLIT(3.0e4)
+REALLIT(3e+4)
+REALLIT(3e-4)
+REALLIT(3.0e+4)
+REALLIT(3.0e-4)
+Line 39, col 1: unterminated comment

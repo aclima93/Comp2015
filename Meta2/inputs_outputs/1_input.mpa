@@ -1,0 +1,19 @@
+'uma ''citacao'' correcta'
+'uma 'citacao' falhada'
+
+'
+''
+'''
+''''
+'''''
+
+'abc'
+'texto entre ''aspas'''
+
+'This is a pascal string'
+'' 
+'a'  
+'A tabulator character: ''#9'' is easy to embed'
+
+'the string starts here  
+and continues here'
