@@ -19,8 +19,8 @@ char readString[100];
 word				[a-zA-Z]+
 number				[0-9]+
 
-NEWLINE				\n
-WHITESPACE			[ \t\r]+
+NEWLINE				"\n"
+WHITESPACE			" "|"\t"|"\r"
 
 ASSIGN				":="
 BEGIN				[bB][eE][gG][iI][nN]
@@ -132,19 +132,21 @@ XOR					[xX][oO][rR]
 
 
 ID					{word}({word}|{number})*
+
 scalefactor			[eE][+-]?{number}
 dotnumber			{DOT}{number}
 REALLIT				{number}{dotnumber}?{scalefactor}?
+
 INTLIT				{number}
 
 %%
 
 
-"(*"|"{"				;	{BEGIN COMMENT; commentLines=0; commentCols=yyleng; }
+"(*"|"{"				;	{BEGIN COMMENT; commentLines=line; commentCols=col+yyleng; }
 
-<COMMENT>"*)"|"}"		;	{commentCols+=yyleng; line+=commentLines; col+=commentCols; BEGIN 0; }
+<COMMENT>"*)"|"}"		;	{BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
 
-<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line+=commentLines; col+=commentCols; }
+<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
 
 <COMMENT>.				;	{commentCols+=yyleng;}
 <COMMENT>"\n"			;	{commentLines++; commentCols=1;}
@@ -152,7 +154,7 @@ INTLIT				{number}
 
 
 
-"'"						;	{BEGIN STRINGLIT; strcpy(readString, "'"); }
+"'"						;	{BEGIN STRINGLIT; strcpy(readString, yytext); }
 
 <STRINGLIT>"''"			;	{strcat(readString, yytext);}
 <STRINGLIT>"'"			;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col+=strlen(readString); }
@@ -207,8 +209,8 @@ INTLIT				{number}
 {ID}					; 	{printf("ID(%s)\n", yytext); col=col+yyleng;}
 
 
-{WHITESPACE}			;	{col=col+yyleng; printf(""); }
-{NEWLINE}				; 	{line++; col=1; printf(""); }
+{WHITESPACE}			;	{col+=yyleng; }
+{NEWLINE}				; 	{line++; col=1; }
 
 .						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
 

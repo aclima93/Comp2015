@@ -24,7 +24,7 @@ WRITELN
 LBRAC
 ID(x)
 RBRAC
-Line 6, col 17: illegal character ('}')
+Line 6, col 16: illegal character ('}')
 END
 DOT
 PROGRAM
