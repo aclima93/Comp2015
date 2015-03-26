@@ -145,7 +145,7 @@ INTLIT				{number}
 
 <COMMENT>"*)"|"}"		;	{BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
 
-<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
+<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; return 0;}
 
 <COMMENT>.				;	{commentCols+=yyleng;}
 <COMMENT>"\n"			;	{commentLines++; commentCols=1;}
@@ -160,52 +160,53 @@ INTLIT				{number}
 
 <STRINGLIT>.			;	{strcat(readString, yytext);}
 <STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
-<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); }
+<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); return 0;}
 
 
 
 
-{INTLIT}				; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
-{REALLIT}				; 	{printf("REALLIT(%s)\n", yytext); col=col+yyleng;}
+{INTLIT}				; 	{col=col+yyleng; return INTLIT;}
+{REALLIT}				; 	{col=col+yyleng; return REALLIT;}
 
 
-{RESERVED}				;	{printf("RESERVED(%s)\n", yytext); col=col+yyleng;}
+{RESERVED}				;	{col=col+yyleng; return RESERVED;}
 
 
-{ASSIGN}				; 	{printf("ASSIGN\n"); col=col+yyleng;}
-{BEGIN}					; 	{printf("BEGIN\n"); col=col+yyleng;}
-{COLON}					; 	{printf("COLON\n"); col=col+yyleng;}
-{COMMA}					; 	{printf("COMMA\n"); col=col+yyleng;}
-{DO}					; 	{printf("DO\n"); col=col+yyleng;}
-{DOT}					; 	{printf("DOT\n"); col=col+yyleng;}
-{ELSE}					; 	{printf("ELSE\n"); col=col+yyleng;}
-{END}					; 	{printf("END\n"); col=col+yyleng;}
-{FORWARD}				; 	{printf("FORWARD\n"); col=col+yyleng;}
-{FUNCTION}				; 	{printf("FUNCTION\n"); col=col+yyleng;}
-{IF}					; 	{printf("IF\n"); col=col+yyleng;}
-{LBRAC}					; 	{printf("LBRAC\n"); col=col+yyleng;}
-{NOT}					; 	{printf("NOT\n"); col=col+yyleng;}
-{OUTPUT}				; 	{printf("OUTPUT\n"); col=col+yyleng;}
-{PARAMSTR}				; 	{printf("PARAMSTR\n"); col=col+yyleng;}
-{PROGRAM}				; 	{printf("PROGRAM\n"); col=col+yyleng;}
-{RBRAC}					; 	{printf("RBRAC\n"); col=col+yyleng;}
-{REPEAT}				; 	{printf("REPEAT\n"); col=col+yyleng;}
-{SEMIC}					; 	{printf("SEMIC\n"); col=col+yyleng;}
-{THEN}					; 	{printf("THEN\n"); col=col+yyleng;}
-{UNTIL}					; 	{printf("UNTIL\n"); col=col+yyleng;}
-{VAL}					; 	{printf("VAL\n"); col=col+yyleng;}
-{VAR}					; 	{printf("VAR\n"); col=col+yyleng;}
-{WHILE}					; 	{printf("WHILE\n"); col=col+yyleng;}
-{WRITELN}				; 	{printf("WRITELN\n"); col=col+yyleng;}
+{ASSIGN}				; 	{col=col+yyleng; return ASSIGN;}
+{BEGIN}					; 	{col=col+yyleng; return BEGIN;}
+{COLON}					; 	{col=col+yyleng; return ':';}
+{COMMA}					; 	{col=col+yyleng; return COMMA;}
+{DO}					; 	{col=col+yyleng; return DO;}
+{DOT}					; 	{col=col+yyleng; return '.';}
+{ELSE}					; 	{col=col+yyleng; return ELSE;}
+{END}					; 	{col=col+yyleng; return END;}
+{FORWARD}				; 	{col=col+yyleng; return FORWARD;}
+{FUNCTION}				; 	{col=col+yyleng; return FUNCTION;}
+{IF}					; 	{col=col+yyleng; return IF;}
+{LBRAC}					; 	{col=col+yyleng; return '(';}
+{NOT}					; 	{col=col+yyleng; return NOT;}
+{OUTPUT}				; 	{col=col+yyleng; return OUPUT;}
+{PARAMSTR}				; 	{col=col+yyleng; return PARAMSTR;}
+{PROGRAM}				; 	{col=col+yyleng; return PROGRAM;}
+{RBRAC}					; 	{col=col+yyleng; return ')';}
+{REPEAT}				; 	{col=col+yyleng; return REPEAT;}
+{SEMIC}					; 	{col=col+yyleng; return ';'}
+{THEN}					; 	{col=col+yyleng; return THEN;}
+{UNTIL}					; 	{col=col+yyleng; return UNTIL;}
+{VAL}					; 	{col=col+yyleng; return VAL;}
+{VAR}					; 	{col=col+yyleng; return VAR;}
+{WHILE}					; 	{col=col+yyleng; return WHILE;}
+{WRITELN}				; 	{col=col+yyleng; return WRITELN;}
 
 
-{OP1}					; 	{printf("OP1(%s)\n", yytext); col=col+yyleng;}
-{OP2}					; 	{printf("OP2(%s)\n", yytext); col=col+yyleng;}
-{OP3}					; 	{printf("OP3(%s)\n", yytext); col=col+yyleng;}
-{OP4}					; 	{printf("OP4(%s)\n", yytext); col=col+yyleng;}
+{AND}					; 	{col=col+yyleng; return AND;}
+{OR}					;	{col=col+yyleng; return OR;}
+{OP2}					; 	{col=col+yyleng; return OP2;}
+{OP3}					; 	{col=col+yyleng; return OP3;}
+{OP4}					; 	{col=col+yyleng; return OP4;}
 
 
-{ID}					; 	{printf("ID(%s)\n", yytext); col=col+yyleng;}
+{ID}					; 	{col=col+yyleng; return ID;}
 
 
 {WHITESPACE}			;	{col+=yyleng; }
@@ -213,6 +214,7 @@ INTLIT				{number}
 
 .						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
 
+<<EOF>>					;	{return 0;}
 
 %%
 
@@ -224,3 +226,8 @@ int main(){
 int yywrap(){
 	return 1;
 }
+
+void yyerror(char *s) {
+     printf ("Line %d, col %d: %s: %s\n", line, col, s, yytext);
+}
+

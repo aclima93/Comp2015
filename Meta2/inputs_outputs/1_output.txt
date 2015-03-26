@@ -1,20 +1,59 @@
-STRING('uma ''citacao'' correcta')
-STRING('uma ')
-ID(citacao)
-STRING(' falhada')
-Line 4, col 1: unterminated string
-STRING('')
-Line 6, col 1: unterminated string
-STRING('''')
-Line 8, col 1: unterminated string
-STRING('abc')
-STRING('texto entre ''aspas''')
-STRING('This is a pascal string')
-STRING('')
-STRING('a')
-STRING('A tabulator character: ''#9'' is easy to embed')
-Line 18, col 1: unterminated string
-OP1(and)
-ID(continues)
-ID(here)
-Line 19, col 19: unterminated string
+PROGRAM
+ID(echo)
+LBRAC
+OUTPUT
+RBRAC
+SEMIC
+VAR
+ID(x)
+COLON
+ID(integer)
+SEMIC
+BEGIN
+VAL
+LBRAC
+PARAMSTR
+LBRAC
+INTLIT(1)
+RBRAC
+COMMA
+ID(x)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+ID(x)
+RBRAC
+Line 6, col 17: illegal character ('}')
+END
+DOT
+PROGRAM
+ID(echo)
+LBRAC
+OUTPUT
+RBRAC
+SEMIC
+VAR
+ID(x)
+COLON
+ID(integer)
+SEMIC
+BEGIN
+VAL
+LBRAC
+PARAMSTR
+LBRAC
+INTLIT(1)
+RBRAC
+COMMA
+ID(x)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+ID(x)
+RBRAC
+Line 18, col 17: illegal character ('}')
+END
+DOT
+Line 19, col 5: unterminated comment

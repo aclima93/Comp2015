@@ -1,19 +1,19 @@
-'uma ''citacao'' correcta'
-'uma 'citacao' falhada'
+(* bccc*)program echo(output);
+var x(* bccc*): integer;
+begin
+	{}
+	val(paramstr((* bccc*)1), x);
+	writeln(x){(**)}
+end.{
 
-'
-''
-'''
-''''
-'''''
 
-'abc'
-'texto entre ''aspas'''
 
-'This is a pascal string'
-'' 
-'a'  
-'A tabulator character: ''#9'' is easy to embed'
 
-'the string starts here  
-and continues here'
+
+(* bccc*)program echo(output);
+var x(* bccc*): integer;
+begin
+	{}
+	val(paramstr((* bccc*)1), x);
+	writeln(x){(**)}
+end.{

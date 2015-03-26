@@ -1,0 +1,422 @@
+PROGRAM
+ID(Lesson1)
+Line 7, col 16: illegal character ('_')
+ID(Program1)
+SEMIC
+BEGIN
+RESERVED(Write)
+LBRAC
+STRING('Hello World. Prepare to learn PASCAL!!')
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+END
+DOT
+PROGRAM
+ID(Lesson1)
+Line 18, col 16: illegal character ('_')
+ID(Program2)
+SEMIC
+BEGIN
+RESERVED(Write)
+LBRAC
+STRING('Hello World. Prepare to learn PASCAL!!')
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+END
+DOT
+PROGRAM
+ID(Lesson1)
+Line 26, col 16: illegal character ('_')
+ID(Program3)
+SEMIC
+VAR
+ID(Num1)
+COMMA
+ID(Num2)
+COMMA
+ID(Sum)
+COLON
+ID(Integer)
+SEMIC
+BEGIN
+RESERVED(Write)
+LBRAC
+STRING('Input number 1:')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(Num1)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Input number 2:')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(Num2)
+RBRAC
+SEMIC
+ID(Sum)
+ASSIGN
+ID(Num1)
+OP3(+)
+ID(Num2)
+SEMIC
+WRITELN
+LBRAC
+ID(Sum)
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+END
+DOT
+PROGRAM
+ID(Lesson2)
+Line 45, col 16: illegal character ('_')
+ID(Program1)
+SEMIC
+VAR
+ID(name)
+COMMA
+ID(surname)
+COLON
+ID(String)
+SEMIC
+BEGIN
+RESERVED(Write)
+LBRAC
+STRING('Enter your name:')
+RBRAC
+SEMIC
+RESERVED(readln)
+LBRAC
+ID(name)
+RBRAC
+SEMIC
+RESERVED(Write)
+LBRAC
+STRING('Enter your surname:')
+RBRAC
+SEMIC
+RESERVED(readln)
+LBRAC
+ID(surname)
+RBRAC
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+LBRAC
+STRING('Your full name is: ')
+COMMA
+ID(name)
+COMMA
+STRING(' ')
+COMMA
+ID(surname)
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+END
+DOT
+PROGRAM
+ID(Lesson2)
+Line 64, col 16: illegal character ('_')
+ID(Program2)
+SEMIC
+VAR
+ID(surname)
+COLON
+ID(String)
+SEMIC
+RESERVED(Const)
+ID(name)
+OP2(=)
+STRING('Victor')
+SEMIC
+BEGIN
+RESERVED(Write)
+LBRAC
+STRING('Enter your surname:')
+RBRAC
+SEMIC
+RESERVED(readln)
+LBRAC
+ID(surname)
+RBRAC
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+LBRAC
+STRING('Your full name is: ')
+COMMA
+ID(name)
+COMMA
+STRING(' ')
+COMMA
+ID(surname)
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+END
+DOT
+PROGRAM
+ID(lesson2)
+Line 86, col 16: illegal character ('_')
+ID(Program3)
+SEMIC
+VAR
+ID(PD)
+COMMA
+ID(Dname)
+COMMA
+ID(Cmodel)
+COLON
+ID(String)
+SEMIC
+ID(TotalKM)
+COMMA
+ID(CostPD)
+COMMA
+ID(TCostPD)
+COMMA
+ID(Distance)
+COLON
+ID(Real)
+SEMIC
+BEGIN
+ID(TCostPD)
+ASSIGN
+INTLIT(0)
+SEMIC
+WRITELN
+LBRAC
+STRING('This program prompts you to ')
+OP3(+)
+OP3(+)
+STRING('input the cost per litre of')
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('the petrol/diesel you spend ')
+OP3(+)
+OP3(+)
+STRING('in and the average distance you travel')
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('with your car every week. Then ')
+OP3(+)
+OP3(+)
+STRING('the computer calculates the total cost')
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('you spend in fuel every week.')
+RBRAC
+SEMIC
+RESERVED(Readln)
+SEMIC
+RESERVED(Write)
+LBRAC
+STRING('Diesel or Petrol?: ')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(PD)
+RBRAC
+SEMIC
+RESERVED(Write)
+LBRAC
+STRING('Name Of Driver: ')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(Dname)
+RBRAC
+SEMIC
+RESERVED(Write)
+LBRAC
+STRING('Car Model: ')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(Cmodel)
+RBRAC
+SEMIC
+RESERVED(Write)
+LBRAC
+STRING('Cost of Diesel/Petrol: (£) ')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(CostPD)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Average distance you travel ')
+OP3(+)
+OP3(+)
+STRING('with your car every week: (kilometres) ')
+RBRAC
+SEMIC
+RESERVED(Readln)
+LBRAC
+ID(Distance)
+RBRAC
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+LBRAC
+STRING('Name of Driver:')
+COMMA
+ID(Dname)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Car Model:')
+COMMA
+ID(Cmodel)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Diesel/Petrol:')
+COMMA
+ID(PD)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Average distance covered ')
+OP3(+)
+OP3(+)
+STRING('every week: ')
+COMMA
+ID(Distance)
+COLON
+INTLIT(1)
+COLON
+INTLIT(2)
+COMMA
+STRING('Km')
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Cost of ')
+COMMA
+ID(PD)
+COMMA
+STRING(' per liter: £')
+COMMA
+ID(CostPD)
+COLON
+INTLIT(1)
+COLON
+INTLIT(2)
+COMMA
+STRING('/litre')
+RBRAC
+SEMIC
+WRITELN
+SEMIC
+WRITELN
+SEMIC
+ID(TCostPD)
+ASSIGN
+ID(Distance)
+OP4(*)
+ID(CostPD)
+SEMIC
+WRITELN
+LBRAC
+STRING('Total cost of ')
+COMMA
+ID(PD)
+COMMA
+STRING(' per week:')
+OP3(+)
+OP3(+)
+STRING('£')
+COMMA
+ID(TCostPD)
+COLON
+INTLIT(1)
+COLON
+INTLIT(2)
+RBRAC
+SEMIC
+ID(TCostPD)
+ASSIGN
+INTLIT(0)
+SEMIC
+WRITELN
+LBRAC
+STRING('Total cost of ')
+COMMA
+ID(PD)
+COMMA
+STRING(' per week:')
+OP3(+)
+OP3(+)
+STRING('£')
+COMMA
+LBRAC
+ID(Distance)
+OP4(*)
+ID(CostPD)
+RBRAC
+COLON
+INTLIT(1)
+COLON
+INTLIT(2)
+RBRAC
+SEMIC
+WRITELN
+LBRAC
+STRING('Total cost of ')
+COMMA
+ID(PD)
+COMMA
+STRING(' per week:')
+OP3(+)
+OP3(+)
+STRING('£')
+COMMA
+ID(Distance)
+OP4(*)
+ID(CostPD)
+RBRAC
+SEMIC
+RESERVED(readln)
+SEMIC
+END
+DOT

@@ -1,6 +1,7 @@
 clear
 
 lex mpascanner.l
+yacc -d mpascanner.y
 cc -o mpascanner lex.yy.c -ll
 
 for i in {0..7}

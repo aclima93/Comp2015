@@ -360,8 +360,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 46
-#define YY_END_OF_BUFFER 47
+#define YY_NUM_RULES 47
+#define YY_END_OF_BUFFER 48
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -371,38 +371,38 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[294] =
     {   0,
-        0,    0,    0,    0,    0,    0,   47,   45,   43,   44,
-        5,   24,   29,   41,   40,   16,   18,   10,   15,   31,
-       39,   39,   39,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,    1,    3,    4,    3,    2,    8,
-        9,    7,    1,    0,   10,    0,   13,   39,   42,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       17,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       23,   42,   12,   42,   12,   42,   42,   42,   42,   42,
-       42,   42,   42,   38,   42,   42,   42,   42,   42,   42,
+        0,    0,    0,    0,    0,    0,   48,   46,   44,   45,
+        5,   24,   29,   42,   41,   16,   18,   10,   15,   31,
+       40,   40,   40,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,    1,    3,    4,    3,    2,    8,
+        9,    7,    1,    0,   10,    0,   13,   40,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       17,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       23,   43,   12,   43,   12,   43,   43,   43,   43,   43,
+       43,   43,   43,   39,   43,   43,   43,   43,   43,   43,
 
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,   42,    2,    6,   11,    0,   11,
-       42,   12,   38,   42,   42,   42,   42,   42,   42,   42,
-       42,   41,   42,   42,   20,   42,   42,   42,   12,   42,
-       42,   42,   42,   42,   42,   42,   42,   25,   42,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,   12,   42,   42,   42,   42,   42,
-       42,   42,   42,   34,   35,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,   42,   42,   19,   42,   42,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   12,   42,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,    2,    6,   11,    0,   11,
+       43,   12,   38,   43,   43,   43,   43,   43,   43,   43,
+       43,   42,   43,   43,   20,   43,   43,   43,   12,   43,
+       43,   43,   43,   43,   43,   43,   43,   25,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   12,   43,   43,   43,   43,   43,
+       43,   43,   43,   34,   35,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   19,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   12,   43,
 
-       42,   42,   12,   42,   42,   42,   42,   42,   42,   32,
-       42,   42,   42,   42,   42,   42,   42,   14,   12,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   33,   36,   12,   42,   42,   42,   42,   42,   42,
-       42,   42,   42,   26,   42,   42,   42,   42,   30,   42,
-       42,   42,   42,   42,   21,   42,   42,   42,   42,   42,
-       42,   28,   42,   37,   42,   42,   22,   42,   42,   27,
-       42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-       42,   42,    0
+       43,   43,   12,   43,   43,   43,   43,   43,   43,   32,
+       43,   43,   43,   43,   43,   43,   43,   14,   12,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   33,   36,   12,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   26,   43,   43,   43,   43,   30,   43,
+       43,   43,   43,   43,   21,   43,   43,   43,   43,   43,
+       43,   28,   43,   37,   43,   43,   22,   43,   43,   27,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,    0
 
     } ;
 
@@ -986,7 +986,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
 #line 148 "mpascanner.l"
-;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
+;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; return 0;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1027,197 +1027,204 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
 #line 163 "mpascanner.l"
-;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); }
+;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); return 0;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 168 "mpascanner.l"
-; 	{printf("INTLIT(%s)\n", yytext); col=col+yyleng;}
+; 	{col=col+yyleng; return INTLIT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 169 "mpascanner.l"
-; 	{printf("REALLIT(%s)\n", yytext); col=col+yyleng;}
+; 	{col=col+yyleng; return REALLIT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 172 "mpascanner.l"
-;	{printf("RESERVED(%s)\n", yytext); col=col+yyleng;}
+;	{col=col+yyleng; return RESERVED;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 175 "mpascanner.l"
-; 	{printf("ASSIGN\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return ASSIGN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 176 "mpascanner.l"
-; 	{printf("BEGIN\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return BEGIN;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 177 "mpascanner.l"
-; 	{printf("COLON\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return ':';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 178 "mpascanner.l"
-; 	{printf("COMMA\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return COMMA;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 179 "mpascanner.l"
-; 	{printf("DO\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return DO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 180 "mpascanner.l"
-; 	{printf("DOT\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return '.';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 181 "mpascanner.l"
-; 	{printf("ELSE\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return ELSE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 182 "mpascanner.l"
-; 	{printf("END\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 183 "mpascanner.l"
-; 	{printf("FORWARD\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return FORWARD;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 184 "mpascanner.l"
-; 	{printf("FUNCTION\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return FUNCTION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 185 "mpascanner.l"
-; 	{printf("IF\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return IF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 186 "mpascanner.l"
-; 	{printf("LBRAC\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return '(';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 187 "mpascanner.l"
-; 	{printf("NOT\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return NOT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 188 "mpascanner.l"
-; 	{printf("OUTPUT\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return OUPUT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 189 "mpascanner.l"
-; 	{printf("PARAMSTR\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return PARAMSTR;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 190 "mpascanner.l"
-; 	{printf("PROGRAM\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return PROGRAM;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 191 "mpascanner.l"
-; 	{printf("RBRAC\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return ')';}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 192 "mpascanner.l"
-; 	{printf("REPEAT\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return REPEAT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 193 "mpascanner.l"
-; 	{printf("SEMIC\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return ';'}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 194 "mpascanner.l"
-; 	{printf("THEN\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return THEN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 195 "mpascanner.l"
-; 	{printf("UNTIL\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return UNTIL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 196 "mpascanner.l"
-; 	{printf("VAL\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return VAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 197 "mpascanner.l"
-; 	{printf("VAR\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return VAR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 198 "mpascanner.l"
-; 	{printf("WHILE\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return WHILE;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 199 "mpascanner.l"
-; 	{printf("WRITELN\n"); col=col+yyleng;}
+; 	{col=col+yyleng; return WRITELN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 202 "mpascanner.l"
-; 	{printf("OP1(%s)\n", yytext); col=col+yyleng;}
+; 	{col=col+yyleng; return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 203 "mpascanner.l"
-; 	{printf("OP2(%s)\n", yytext); col=col+yyleng;}
+;	{col=col+yyleng; return OR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 204 "mpascanner.l"
-; 	{printf("OP3(%s)\n", yytext); col=col+yyleng;}
+; 	{col=col+yyleng; return OP2;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 205 "mpascanner.l"
-; 	{printf("OP4(%s)\n", yytext); col=col+yyleng;}
+; 	{col=col+yyleng; return OP3;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 208 "mpascanner.l"
-; 	{printf("ID(%s)\n", yytext); col=col+yyleng;}
+#line 206 "mpascanner.l"
+; 	{col=col+yyleng; return OP4;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 211 "mpascanner.l"
-;	{col+=yyleng; }
+#line 209 "mpascanner.l"
+; 	{col=col+yyleng; return ID;}
 	YY_BREAK
 case 44:
-/* rule 44 can match eol */
 YY_RULE_SETUP
 #line 212 "mpascanner.l"
-; 	{line++; col=1; }
+;	{col+=yyleng; }
 	YY_BREAK
 case 45:
+/* rule 45 can match eol */
 YY_RULE_SETUP
-#line 214 "mpascanner.l"
-; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
+#line 213 "mpascanner.l"
+; 	{line++; col=1; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
+#line 215 "mpascanner.l"
+; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
 #line 217 "mpascanner.l"
+;	{return 0;}
+	YY_BREAK
+case 47:
+YY_RULE_SETUP
+#line 219 "mpascanner.l"
 ECHO;
 	YY_BREAK
-#line 1219 "lex.yy.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 1228 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2212,7 +2219,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 217 "mpascanner.l"
+#line 219 "mpascanner.l"
 
 
 
@@ -2224,4 +2231,9 @@ int main(){
 int yywrap(){
 	return 1;
 }
+
+void yyerror(char *s) {
+     printf ("Line %d, col %d: %s: %s\n", line, col, s, yytext);
+}
+
 
