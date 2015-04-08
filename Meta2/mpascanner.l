@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "y.tab.h"
+
 int line = 1;
 int col = 1;
 
@@ -23,7 +25,7 @@ NEWLINE				"\n"
 WHITESPACE			" "|"\t"|"\r"
 
 ASSIGN				":="
-BEGIN				[bB][eE][gG][iI][nN]
+BEGIN_token			[bB][eE][gG][iI][nN]
 COLON				":"
 COMMA				","
 DO					[dD][oO]
@@ -156,7 +158,7 @@ INTLIT				{number}
 "'"						;	{BEGIN STRINGLIT; strcpy(readString, yytext); }
 
 <STRINGLIT>"''"			;	{strcat(readString, yytext);}
-<STRINGLIT>"'"			;	{strcat(readString, yytext); printf("STRING(%s)\n", readString); BEGIN 0; col+=strlen(readString); }
+<STRINGLIT>"'"			;	{strcat(readString, yytext); BEGIN 0; col+=strlen(readString); strcpy(yylval.string, readString); return STRING;}
 
 <STRINGLIT>.			;	{strcat(readString, yytext);}
 <STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
@@ -165,17 +167,17 @@ INTLIT				{number}
 
 
 
-{INTLIT}				; 	{col=col+yyleng; return INTLIT;}
-{REALLIT}				; 	{col=col+yyleng; return REALLIT;}
+{INTLIT}				; 	{col=col+yyleng; yyval.integer = atoi(yytext); return INTLIT;}
+{REALLIT}				; 	{col=col+yyleng; yyval.real = strtod(yytext, NULL); return REALLIT;}
 
 
 {RESERVED}				;	{col=col+yyleng; return RESERVED;}
 
 
 {ASSIGN}				; 	{col=col+yyleng; return ASSIGN;}
-{BEGIN}					; 	{col=col+yyleng; return BEGIN;}
+{BEGIN_token}			; 	{col=col+yyleng; return BEGIN_token;}
 {COLON}					; 	{col=col+yyleng; return ':';}
-{COMMA}					; 	{col=col+yyleng; return COMMA;}
+{COMMA}					; 	{col=col+yyleng; return ',';}
 {DO}					; 	{col=col+yyleng; return DO;}
 {DOT}					; 	{col=col+yyleng; return '.';}
 {ELSE}					; 	{col=col+yyleng; return ELSE;}
@@ -185,7 +187,7 @@ INTLIT				{number}
 {IF}					; 	{col=col+yyleng; return IF;}
 {LBRAC}					; 	{col=col+yyleng; return '(';}
 {NOT}					; 	{col=col+yyleng; return NOT;}
-{OUTPUT}				; 	{col=col+yyleng; return OUPUT;}
+{OUTPUT}				; 	{col=col+yyleng; return OUTPUT;}
 {PARAMSTR}				; 	{col=col+yyleng; return PARAMSTR;}
 {PROGRAM}				; 	{col=col+yyleng; return PROGRAM;}
 {RBRAC}					; 	{col=col+yyleng; return ')';}
@@ -206,7 +208,7 @@ INTLIT				{number}
 {OP4}					; 	{col=col+yyleng; return OP4;}
 
 
-{ID}					; 	{col=col+yyleng; return ID;}
+{ID}					; 	{col=col+yyleng; strcpy(yyval.string, yytext); return ID;}
 
 
 {WHITESPACE}			;	{col+=yyleng; }
@@ -217,11 +219,6 @@ INTLIT				{number}
 <<EOF>>					;	{return 0;}
 
 %%
-
-int main(){
-	yylex();
-	return 0;
-}
 
 int yywrap(){
 	return 1;
