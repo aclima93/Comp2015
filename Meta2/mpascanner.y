@@ -95,7 +95,7 @@ FuncIdent: FUNCTION ID 																{$$ = makenode("FuncIdent", $2, null, nul
 
 FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode("FormalParamsList", $2, $3, null);} ;
 
-SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode("FormalParamsList", $2, null, null);} 
+SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode("FormalParamsList", $2, $3, null);} 
 	| 																				{$$ = null;} 
 	;
 
@@ -103,10 +103,8 @@ FormalParamList_Optional: FormalParamList 											{$$ = makenode("FormalParam
 	| 																				{$$ = null;}
 	;
 
-FormalParams: VAR_Optional IDList ':' ID 											{$$ = makenode("FormalParams", $2, $4, null);} ;
-
-VAR_Optional: VAR 
-	| 
+FormalParams: VAR IDList ':' ID 													{$$ = makenode("FormalParams", $2, $4, null);} 
+	| IDList ':' ID 																{$$ = makenode("FormalParams", $1, $3, null);} 
 	;
 
 FuncBlock: VarPart StatPart															{$$ = makenode("FuncBlock", $1, $2, null);} ;
