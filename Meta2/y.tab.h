@@ -114,7 +114,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 15 "mpascanner.y"
+#line 10 "mpaparser.y"
 {
 	int integer;
 	char* string;

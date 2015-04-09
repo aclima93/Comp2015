@@ -689,8 +689,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "mpascanner.l"
-#line 2 "mpascanner.l"
+#line 1 "mpaparser.l"
+#line 2 "mpaparser.l"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -893,7 +893,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 147 "mpascanner.l"
+#line 147 "mpaparser.l"
 
 
 
@@ -982,252 +982,252 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 150 "mpascanner.l"
+#line 150 "mpaparser.l"
 ;	{BEGIN COMMENT; commentLines=line; commentCols=col+yyleng; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 152 "mpascanner.l"
+#line 152 "mpaparser.l"
 ;	{BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 154 "mpascanner.l"
+#line 154 "mpaparser.l"
 ;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=yyleng; line=commentLines; col=commentCols; return 0;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 156 "mpascanner.l"
+#line 156 "mpaparser.l"
 ;	{commentCols+=yyleng;}
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 157 "mpascanner.l"
+#line 157 "mpaparser.l"
 ;	{commentLines++; commentCols=1;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 162 "mpascanner.l"
+#line 162 "mpaparser.l"
 ;	{BEGIN STRINGLIT; strcpy(readString, yytext); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 164 "mpascanner.l"
+#line 164 "mpaparser.l"
 ;	{strcat(readString, yytext);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 165 "mpascanner.l"
+#line 165 "mpaparser.l"
 ;	{strcat(readString, yytext); BEGIN 0; col+=strlen(readString); strcpy(yylval.string, readString); return STRING;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 167 "mpascanner.l"
+#line 167 "mpaparser.l"
 ;	{strcat(readString, yytext);}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 168 "mpascanner.l"
+#line 168 "mpaparser.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
-#line 169 "mpascanner.l"
+#line 169 "mpaparser.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); return 0;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 174 "mpascanner.l"
+#line 174 "mpaparser.l"
 ; 	{col=col+yyleng; yylval.integer = atoi(yytext); return INTLIT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 175 "mpascanner.l"
+#line 175 "mpaparser.l"
 ; 	{col=col+yyleng; yylval.real = strtod(yytext, NULL); return REALLIT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 178 "mpascanner.l"
+#line 178 "mpaparser.l"
 ;	{col=col+yyleng;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 181 "mpascanner.l"
+#line 181 "mpaparser.l"
 ; 	{col=col+yyleng; return ASSIGN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 182 "mpascanner.l"
+#line 182 "mpaparser.l"
 ; 	{col=col+yyleng; return BEGIN_token;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 183 "mpascanner.l"
+#line 183 "mpaparser.l"
 ; 	{col=col+yyleng; return ':';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 184 "mpascanner.l"
+#line 184 "mpaparser.l"
 ; 	{col=col+yyleng; return ',';}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 185 "mpascanner.l"
+#line 185 "mpaparser.l"
 ; 	{col=col+yyleng; return DO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 186 "mpascanner.l"
+#line 186 "mpaparser.l"
 ; 	{col=col+yyleng; return '.';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 187 "mpascanner.l"
+#line 187 "mpaparser.l"
 ; 	{col=col+yyleng; return ELSE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 188 "mpascanner.l"
+#line 188 "mpaparser.l"
 ; 	{col=col+yyleng; return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 189 "mpascanner.l"
+#line 189 "mpaparser.l"
 ; 	{col=col+yyleng; return FORWARD;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 190 "mpascanner.l"
+#line 190 "mpaparser.l"
 ; 	{col=col+yyleng; return FUNCTION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 191 "mpascanner.l"
+#line 191 "mpaparser.l"
 ; 	{col=col+yyleng; return IF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 192 "mpascanner.l"
+#line 192 "mpaparser.l"
 ; 	{col=col+yyleng; return '(';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 193 "mpascanner.l"
+#line 193 "mpaparser.l"
 ; 	{col=col+yyleng; return NOT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 194 "mpascanner.l"
+#line 194 "mpaparser.l"
 ; 	{col=col+yyleng; return OUTPUT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 195 "mpascanner.l"
+#line 195 "mpaparser.l"
 ; 	{col=col+yyleng; return PARAMSTR;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 196 "mpascanner.l"
+#line 196 "mpaparser.l"
 ; 	{col=col+yyleng; return PROGRAM;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 197 "mpascanner.l"
+#line 197 "mpaparser.l"
 ; 	{col=col+yyleng; return ')';}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 198 "mpascanner.l"
+#line 198 "mpaparser.l"
 ; 	{col=col+yyleng; return REPEAT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 199 "mpascanner.l"
+#line 199 "mpaparser.l"
 ; 	{col=col+yyleng; return ';';}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 200 "mpascanner.l"
+#line 200 "mpaparser.l"
 ; 	{col=col+yyleng; return THEN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 201 "mpascanner.l"
+#line 201 "mpaparser.l"
 ; 	{col=col+yyleng; return UNTIL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 202 "mpascanner.l"
+#line 202 "mpaparser.l"
 ; 	{col=col+yyleng; return VAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 203 "mpascanner.l"
+#line 203 "mpaparser.l"
 ; 	{col=col+yyleng; return VAR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 204 "mpascanner.l"
+#line 204 "mpaparser.l"
 ; 	{col=col+yyleng; return WHILE;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 205 "mpascanner.l"
+#line 205 "mpaparser.l"
 ; 	{col=col+yyleng; return WRITELN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 208 "mpascanner.l"
+#line 208 "mpaparser.l"
 ; 	{col=col+yyleng; return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 209 "mpascanner.l"
+#line 209 "mpaparser.l"
 ;	{col=col+yyleng; return OR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 210 "mpascanner.l"
+#line 210 "mpaparser.l"
 ; 	{col=col+yyleng; return OP2;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 211 "mpascanner.l"
+#line 211 "mpaparser.l"
 ; 	{col=col+yyleng; return OP3;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 212 "mpascanner.l"
+#line 212 "mpaparser.l"
 ; 	{col=col+yyleng; return OP4;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 215 "mpascanner.l"
+#line 215 "mpaparser.l"
 ; 	{col=col+yyleng; strcpy(yylval.string, yytext); return ID;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 218 "mpascanner.l"
+#line 218 "mpaparser.l"
 ;	{col+=yyleng; }
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 219 "mpascanner.l"
+#line 219 "mpaparser.l"
 ; 	{line++; col=1; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 221 "mpascanner.l"
+#line 221 "mpaparser.l"
 ; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+yyleng; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 223 "mpascanner.l"
+#line 223 "mpaparser.l"
 ;	{return 0;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 225 "mpascanner.l"
+#line 225 "mpaparser.l"
 ECHO;
 	YY_BREAK
 #line 1234 "lex.yy.c"
@@ -2225,7 +2225,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 225 "mpascanner.l"
+#line 225 "mpaparser.l"
 
 
 
