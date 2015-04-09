@@ -12,6 +12,14 @@ int commentCols;
 int commentLines;
 char readString[100];
 
+typedef union {
+	int integer;
+	char* string;
+	double real;
+} custom_union;
+
+extern custom_union yylval;
+
 %}
 
 %X COMMENT STRINGLIT
@@ -167,11 +175,11 @@ INTLIT				{number}
 
 
 
-{INTLIT}				; 	{col=col+yyleng; yyval.integer = atoi(yytext); return INTLIT;}
-{REALLIT}				; 	{col=col+yyleng; yyval.real = strtod(yytext, NULL); return REALLIT;}
+{INTLIT}				; 	{col=col+yyleng; yylval.integer = atoi(yytext); return INTLIT;}
+{REALLIT}				; 	{col=col+yyleng; yylval.real = strtod(yytext, NULL); return REALLIT;}
 
 
-{RESERVED}				;	{col=col+yyleng; return RESERVED;}
+{RESERVED}				;	{col=col+yyleng;}
 
 
 {ASSIGN}				; 	{col=col+yyleng; return ASSIGN;}
@@ -192,7 +200,7 @@ INTLIT				{number}
 {PROGRAM}				; 	{col=col+yyleng; return PROGRAM;}
 {RBRAC}					; 	{col=col+yyleng; return ')';}
 {REPEAT}				; 	{col=col+yyleng; return REPEAT;}
-{SEMIC}					; 	{col=col+yyleng; return ';'}
+{SEMIC}					; 	{col=col+yyleng; return ';';}
 {THEN}					; 	{col=col+yyleng; return THEN;}
 {UNTIL}					; 	{col=col+yyleng; return UNTIL;}
 {VAL}					; 	{col=col+yyleng; return VAL;}
@@ -208,7 +216,7 @@ INTLIT				{number}
 {OP4}					; 	{col=col+yyleng; return OP4;}
 
 
-{ID}					; 	{col=col+yyleng; strcpy(yyval.string, yytext); return ID;}
+{ID}					; 	{col=col+yyleng; strcpy(yylval.string, yytext); return ID;}
 
 
 {WHITESPACE}			;	{col+=yyleng; }

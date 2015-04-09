@@ -30,7 +30,6 @@
 %token VAR
 %token WHILE
 %token WRITELN
-%token RESERVED
 
 %token <string> ID
 %token <string> STRING
