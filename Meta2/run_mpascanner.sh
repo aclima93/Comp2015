@@ -2,7 +2,7 @@ clear
 
 lex mpascanner.l
 yacc -d mpascanner.y
-cc -o mpascanner lex.yy.c -ll
+cc -o mpascanner y.tab.c lex.yy.c -ll -ly
 
 for i in {0..4}
 	do

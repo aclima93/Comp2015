@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "custom_structures.h"
+
 #include "y.tab.h"
 
 int line = 1;
@@ -12,13 +14,7 @@ int commentCols;
 int commentLines;
 char readString[100];
 
-typedef union {
-	int integer;
-	char* string;
-	double real;
-} custom_union;
-
-extern custom_union yylval;
+void yyerror(char *s);
 
 %}
 

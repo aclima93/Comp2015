@@ -1,8 +1,14 @@
 %{
 
 #include<stdio.h>
+#include <stdlib.h>
 
-#include"custom_structures.h"
+#include "custom_structures.h"
+
+node* makenode(nodeType t, node* f1, node* f2, node* f3);
+node* makeleafInt(int i);
+node* makeleafString(char* s);
+node* makeleafDouble(double d);
 
 %}
 
@@ -13,6 +19,11 @@
 	node* node_pointer;
 }
 
+
+%token FuncDeclarationList
+%token VarDeclarationList
+%token OP
+%token CommaIDList
 
 %token ASSIGN
 %token BEGIN_token
@@ -61,119 +72,119 @@
 
 %% 
 
-Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = makenode(ProgType, $1, $3, null);} ;
+Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = makenode(ProgType, $1, $3, NULL);} ;
 
-ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, $2, null, null);} ;
+ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleafString($2), NULL, NULL);} ;
 
 ProgBlock: VarPart FuncPart StatPart 												{$$ = makenode(ProgBlockType, $1, $2, $3);} ;
 
-VarPart: VAR VarDeclaration ';' VarDeclarationSemic_Repeat 							{$$ = makenode(VarPartType, $2, $4, null);}
-	| 																				{$$ = null;}
+VarPart: VAR VarDeclaration ';' VarDeclarationSemic_Repeat 							{$$ = makenode(VarPartType, $2, $4, NULL);}
+	| 																				{$$ = NULL;}
 	;
 
-VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat			{$$ = makenode(VarDeclarationListType, $1, $3, null);}
-	|																				{$$ = null;} 
+VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat			{$$ = makenode(VarDeclarationListType, $1, $3, NULL);}
+	|																				{$$ = NULL;} 
 	;
 
-VarDeclaration: IDList ':' ID														{$$ = makenode(VarDeclarationType, $1, $3, null);} ;
+VarDeclaration: IDList ':' ID														{$$ = makenode(VarDeclarationType, $1, makeleafString($3), NULL);} ;
 
-IDList: ID CommaID_Repeat															{$$ = makenode(IDListType, $1, $2, null);} ;
+IDList: ID CommaID_Repeat															{$$ = makenode(IDListType, makeleafString($1), $2, NULL);} ;
 
-CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, $2, null, null);} ;
-	| 																				{$$ = null;} 
+CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, makeleafString($2), NULL, NULL);} ;
+	| 																				{$$ = NULL;} 
 	;
 
-FuncPart: FuncDeclaration_Repeat													{$$ = makenode(FuncPartType, $1, null, null);} ;
+FuncPart: FuncDeclaration_Repeat													{$$ = makenode(FuncPartType, $1, NULL, NULL);} ;
 
-FuncDeclaration_Repeat: FuncDeclaration ';' FuncDeclaration_Repeat					{$$ = makenode(FuncDeclarationListType, $1, $3, null);} 
-	| 																				{$$ = null;} 
+FuncDeclaration_Repeat: FuncDeclaration ';' FuncDeclaration_Repeat					{$$ = makenode(FuncDeclarationListType, $1, $3, NULL);} 
+	| 																				{$$ = NULL;} 
 	;
 
-FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarationType, $1, null, null);} 
-	|	FuncIdent ';' FuncBlock														{$$ = makenode(FuncDeclarationType, $1, $3, null);} 
-	|	FuncHeading ';' FuncBlock													{$$ = makenode(FuncDeclarationType, $1, $3, null);} 
+FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarationType, $1, NULL, NULL);} 
+	|	FuncIdent ';' FuncBlock														{$$ = makenode(FuncDeclarationType, $1, $3, NULL);} 
+	|	FuncHeading ';' FuncBlock													{$$ = makenode(FuncDeclarationType, $1, $3, NULL);} 
 	;
 
-FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, $2, $3, $5);} 
-	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, $2, $4, null);} 
+FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleafString($2), $3, makeleafString($5));} 
+	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleafString($2), makeleafString($4), NULL);} 
 	;
 
-FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, $2, null, null);} ;
+FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleafString($2), NULL, NULL);} ;
 
-FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FormalParamsListType, $2, $3, null);} ;
+FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FormalParamsListType, $2, $3, NULL);} ;
 
-SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FormalParamsListType, $2, $3, null);} 
-	| 																				{$$ = null;} 
+SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FormalParamsListType, $2, $3, NULL);} 
+	| 																				{$$ = NULL;} 
 	;
 
-FormalParams: VAR IDList ':' ID 													{$$ = makenode(FormalParamsType, $2, $4, null);} 
-	| IDList ':' ID 																{$$ = makenode(FormalParamsType, $1, $3, null);} 
+FormalParams: VAR IDList ':' ID 													{$$ = makenode(FormalParamsType, $2, makeleafString($4), NULL);} 
+	| IDList ':' ID 																{$$ = makenode(FormalParamsType, $1, makeleafString($3), NULL);} 
 	;
 
-FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, null);} ;
+FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
 
-StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, null, null);} ;
+StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL);} ;
 
-CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, null, null);} ;
+CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
-StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, null);} ;
+StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
 
-SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatListType, $2, $3, null);} 
-	| 																				{$$ = null;} 
+SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatListType, $2, $3, NULL);} 
+	| 																				{$$ = NULL;} 
 	;
 
-Stat: CompStat 																		{$$ = makenode(StatType, $1, null, null);} 
+Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
 	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(StatType, $2, $4, $6);} 
-	|	IF Expr THEN Stat 															{$$ = makenode(StatType, $2, $4, null);} 
-	|	WHILE Expr DO Stat 															{$$ = makenode(StatType, $2, $4, null);} 
-	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(StatType, $2, $4, null);} 
-	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(StatType, $5, $8, null);} 
-	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, null, null);} 
-	|	WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, null, null);} 
+	|	IF Expr THEN Stat 															{$$ = makenode(StatType, $2, $4, NULL);} 
+	|	WHILE Expr DO Stat 															{$$ = makenode(StatType, $2, $4, NULL);} 
+	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(StatType, $2, $4, NULL);} 
+	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(StatType, $5, makeleafString($8), NULL);} 
+	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
+	|	WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
 	;
 
-IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(StatType, $1, $3, null);} 
-	| 																				{$$ = null;} 
+IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(StatType, makeleafString($1), $3, NULL);} 
+	| 																				{$$ = NULL;} 
 	;
 
-WritelnPList_Optional: WritelnPList 												{$$ = makenode(WritelnPListType, $1, null, null);} 
-	| 																				{$$ = null;}
+WritelnPList_Optional: WritelnPList 												{$$ = makenode(WritelnPListType, $1, NULL, NULL);} 
+	| 																				{$$ = NULL;}
 	;
 
-WritelnPList: '(' Expr CommaExprString_Repeat ')' 									{$$ = makenode(WritelnPListType, $2, $3, null);} 
-	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, $2, $3, null);} 
+WritelnPList: '(' Expr CommaExprString_Repeat ')' 									{$$ = makenode(WritelnPListType, $2, $3, NULL);} 
+	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, makeleafString($2), $3, NULL);} 
 	;
 
-CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(WritelnPListType, $2, $3, null);}
-	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, $2, $3, null);}
-	| 																				{$$ = null;}
+CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(WritelnPListType, $2, $3, NULL);}
+	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, makeleafString($2), $3, NULL);}
+	| 																				{$$ = NULL;}
 	;
 
 
 Expr: Expr OP1_Or_OP2_Or_OP3_Or_OP4 Expr 											{$$ = makenode(ExprType, $1, $2, $3);}
-	| OP3_Or_Not Expr 																{$$ = makenode(OPType, $1, $2, null);}
-	| '(' Expr ')' 																	{$$ = makenode(ExprType, $2, null, null);}
-	| INTLIT 																		{$$ = $1;}
-	| REALLIT 																		{$$ = $1;}
-	| ID ParamList 																	{$$ = makenode(ExprType, $1, $2, null);}
-	| ID 					 														{$$ = $1;}
+	| OP3_Or_Not Expr 																{$$ = makenode(OPType, $1, $2, NULL);}
+	| '(' Expr ')' 																	{$$ = makenode(ExprType, $2, NULL, NULL);}
+	| INTLIT 																		{$$ = makeleafInt($1);}
+	| REALLIT 																		{$$ = makeleafDouble($1);}
+	| ID ParamList 																	{$$ = makenode(ExprType, makeleafString($1), $2, NULL);}
+	| ID 					 														{$$ = makeleafString($1);}
 	;
 
-OP1_Or_OP2_Or_OP3_Or_OP4: AND 														{$$ = $1;}
-	| OR 																			{$$ = $1;}
-	| OP2 																			{$$ = $1;}
-	| OP3 																			{$$ = $1;}
-	| OP4 																			{$$ = $1;}
+OP1_Or_OP2_Or_OP3_Or_OP4: AND 														{$$ = makeleafString($1);}
+	| OR 																			{$$ = makeleafString($1);}
+	| OP2 																			{$$ = makeleafString($1);}
+	| OP3 																			{$$ = makeleafString($1);}
+	| OP4 																			{$$ = makeleafString($1);}
 	; 
 
-OP3_Or_Not: OP3 																	{$$ = $1;}
-	| NOT 																			{$$ = $1;}
+OP3_Or_Not: OP3 																	{$$ = makeleafString($1);}
+	| NOT 																			{$$ = makeleafString($1);}
 	;
 
-ParamList: '(' Expr CommaExpr_Repeat ')' 											{$$ = makenode(ParamListType, $2, $3, null);} ;
+ParamList: '(' Expr CommaExpr_Repeat ')' 											{$$ = makenode(ParamListType, $2, $3, NULL);} ;
 
-CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprType, $2, $3, null);}
-	| 																				{$$ = null;}
+CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprType, $2, $3, NULL);}
+	| 																				{$$ = NULL;}
 	;
 
 %%
