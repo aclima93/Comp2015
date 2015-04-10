@@ -46,20 +46,22 @@
 %token <integer> INTLIT
 
 
-
 %token <string> OP2
-
 %token <string> OR
 %token <string> OP3
-%left '!'
-%left '|'
-
-%left '&'
 %token <string> AND
 %token <string> OP4
-
 %token <string> NOT
-%left '~'
+
+%right THEN
+%right ELSE
+
+%left OP2
+%left OR
+%left OP3
+%left AND
+%left OP4
+%left NOT
 
 
 %type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclarationList VarDeclaration IDList CommaIDList FuncPart FuncDeclarationList FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr OP ParamList 
