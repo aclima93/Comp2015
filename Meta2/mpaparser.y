@@ -15,11 +15,6 @@
 }
 
 
-%token FuncDeclarationList
-%token VarDeclarationList
-%token OP
-%token CommaIDList
-
 %token ASSIGN
 %token BEGIN_token
 %token DO
@@ -31,7 +26,6 @@
 %token OUTPUT
 %token PARAMSTR
 %token PROGRAM
-%token RBRAC
 %token REPEAT
 %token THEN
 %token UNTIL
@@ -63,7 +57,7 @@
 %left NOT
 
 
-%type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclarationList VarDeclaration IDList CommaIDList FuncPart FuncDeclarationList FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr OP ParamList 
+%type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclaration IDList FuncPart FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr ParamList 
 %type <node_pointer> VarDeclarationSemic_Repeat CommaID_Repeat FuncDeclaration_Repeat SemicFormalParams_Repeat SemicStat_Repeat IDAssignExpr_Optional WritelnPList_Optional CommaExprString_Repeat CommaExpr_Repeat
 
 %% 

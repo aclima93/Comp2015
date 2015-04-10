@@ -39,75 +39,65 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     FuncDeclarationList = 258,
-     VarDeclarationList = 259,
-     OP = 260,
-     CommaIDList = 261,
-     ASSIGN = 262,
-     BEGIN_token = 263,
-     DO = 264,
-     ELSE = 265,
-     END = 266,
-     FORWARD = 267,
-     FUNCTION = 268,
-     IF = 269,
-     OUTPUT = 270,
-     PARAMSTR = 271,
-     PROGRAM = 272,
-     RBRAC = 273,
-     REPEAT = 274,
-     THEN = 275,
-     UNTIL = 276,
-     VAL = 277,
-     VAR = 278,
-     WHILE = 279,
-     WRITELN = 280,
-     ID = 281,
-     STRING = 282,
-     REALLIT = 283,
-     INTLIT = 284,
-     OP2 = 285,
-     OR = 286,
-     OP3 = 287,
-     AND = 288,
-     OP4 = 289,
-     NOT = 290
+     ASSIGN = 258,
+     BEGIN_token = 259,
+     DO = 260,
+     ELSE = 261,
+     END = 262,
+     FORWARD = 263,
+     FUNCTION = 264,
+     IF = 265,
+     OUTPUT = 266,
+     PARAMSTR = 267,
+     PROGRAM = 268,
+     REPEAT = 269,
+     THEN = 270,
+     UNTIL = 271,
+     VAL = 272,
+     VAR = 273,
+     WHILE = 274,
+     WRITELN = 275,
+     ID = 276,
+     STRING = 277,
+     REALLIT = 278,
+     INTLIT = 279,
+     OP2 = 280,
+     OR = 281,
+     OP3 = 282,
+     AND = 283,
+     OP4 = 284,
+     NOT = 285
    };
 #endif
 /* Tokens.  */
-#define FuncDeclarationList 258
-#define VarDeclarationList 259
-#define OP 260
-#define CommaIDList 261
-#define ASSIGN 262
-#define BEGIN_token 263
-#define DO 264
-#define ELSE 265
-#define END 266
-#define FORWARD 267
-#define FUNCTION 268
-#define IF 269
-#define OUTPUT 270
-#define PARAMSTR 271
-#define PROGRAM 272
-#define RBRAC 273
-#define REPEAT 274
-#define THEN 275
-#define UNTIL 276
-#define VAL 277
-#define VAR 278
-#define WHILE 279
-#define WRITELN 280
-#define ID 281
-#define STRING 282
-#define REALLIT 283
-#define INTLIT 284
-#define OP2 285
-#define OR 286
-#define OP3 287
-#define AND 288
-#define OP4 289
-#define NOT 290
+#define ASSIGN 258
+#define BEGIN_token 259
+#define DO 260
+#define ELSE 261
+#define END 262
+#define FORWARD 263
+#define FUNCTION 264
+#define IF 265
+#define OUTPUT 266
+#define PARAMSTR 267
+#define PROGRAM 268
+#define REPEAT 269
+#define THEN 270
+#define UNTIL 271
+#define VAL 272
+#define VAR 273
+#define WHILE 274
+#define WRITELN 275
+#define ID 276
+#define STRING 277
+#define REALLIT 278
+#define INTLIT 279
+#define OP2 280
+#define OR 281
+#define OP3 282
+#define AND 283
+#define OP4 284
+#define NOT 285
 
 
 
@@ -122,7 +112,7 @@ typedef union YYSTYPE
 	node* node_pointer;
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "y.tab.h"
+#line 116 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

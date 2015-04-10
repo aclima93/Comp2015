@@ -1,12 +1,3 @@
-Terminals which are not used
-
-   FuncDeclarationList
-   VarDeclarationList
-   OP
-   CommaIDList
-   RBRAC
-
-
 Grammar
 
     0 $accept: Prog $end
@@ -114,103 +105,98 @@ $end (0) 0
 ':' (58) 8 18 19 24 25
 ';' (59) 1 4 6 13 15 16 17 22 30
 error (256)
-FuncDeclarationList (258)
-VarDeclarationList (259)
-OP (260)
-CommaIDList (261)
-ASSIGN (262) 40
-BEGIN_token (263) 28
-DO (264) 35
-ELSE (265) 33
-END (266) 28
-FORWARD (267) 15
-FUNCTION (268) 18 19 20
-IF (269) 33 34
-OUTPUT (270) 2
-PARAMSTR (271) 37
-PROGRAM (272) 2
-RBRAC (273)
-REPEAT (274) 36
-THEN (275) 33 34
-UNTIL (276) 36
-VAL (277) 37
-VAR (278) 4 24
-WHILE (279) 35
-WRITELN (280) 39
-ID (281) 2 8 9 10 18 19 20 24 25 37 40 59 60
-STRING (282) 45 47
-REALLIT (283) 58
-INTLIT (284) 57
-OP2 (285) 51
-OR (286) 50
-OP3 (287) 52 54
-AND (288) 49
-OP4 (289) 53
-NOT (290) 55
+ASSIGN (258) 40
+BEGIN_token (259) 28
+DO (260) 35
+ELSE (261) 33
+END (262) 28
+FORWARD (263) 15
+FUNCTION (264) 18 19 20
+IF (265) 33 34
+OUTPUT (266) 2
+PARAMSTR (267) 37
+PROGRAM (268) 2
+REPEAT (269) 36
+THEN (270) 33 34
+UNTIL (271) 36
+VAL (272) 37
+VAR (273) 4 24
+WHILE (274) 35
+WRITELN (275) 39
+ID (276) 2 8 9 10 18 19 20 24 25 37 40 59 60
+STRING (277) 45 47
+REALLIT (278) 58
+INTLIT (279) 57
+OP2 (280) 51
+OR (281) 50
+OP3 (282) 52 54
+AND (283) 49
+OP4 (284) 53
+NOT (285) 55
 
 
 Nonterminals, with rules where they appear
 
-$accept (42)
+$accept (37)
     on left: 0
-Prog (43)
+Prog (38)
     on left: 1, on right: 0
-ProgHeading (44)
+ProgHeading (39)
     on left: 2, on right: 1
-ProgBlock (45)
+ProgBlock (40)
     on left: 3, on right: 1
-VarPart (46)
+VarPart (41)
     on left: 4 5, on right: 3 26
-VarDeclarationSemic_Repeat (47)
+VarDeclarationSemic_Repeat (42)
     on left: 6 7, on right: 4 6
-VarDeclaration (48)
+VarDeclaration (43)
     on left: 8, on right: 4 6
-IDList (49)
+IDList (44)
     on left: 9, on right: 8 24 25
-CommaID_Repeat (50)
+CommaID_Repeat (45)
     on left: 10 11, on right: 9 10
-FuncPart (51)
+FuncPart (46)
     on left: 12, on right: 3
-FuncDeclaration_Repeat (52)
+FuncDeclaration_Repeat (47)
     on left: 13 14, on right: 12 13
-FuncDeclaration (53)
+FuncDeclaration (48)
     on left: 15 16 17, on right: 13
-FuncHeading (54)
+FuncHeading (49)
     on left: 18 19, on right: 15 17
-FuncIdent (55)
+FuncIdent (50)
     on left: 20, on right: 16
-FormalParamList (56)
+FormalParamList (51)
     on left: 21, on right: 18
-SemicFormalParams_Repeat (57)
+SemicFormalParams_Repeat (52)
     on left: 22 23, on right: 21 22
-FormalParams (58)
+FormalParams (53)
     on left: 24 25, on right: 21 22
-FuncBlock (59)
+FuncBlock (54)
     on left: 26, on right: 16 17
-StatPart (60)
+StatPart (55)
     on left: 27, on right: 3 26
-CompStat (61)
+CompStat (56)
     on left: 28, on right: 27 32
-StatList (62)
+StatList (57)
     on left: 29, on right: 28 36
-SemicStat_Repeat (63)
+SemicStat_Repeat (58)
     on left: 30 31, on right: 29 30
-Stat (64)
+Stat (59)
     on left: 32 33 34 35 36 37 38 39, on right: 29 30 33 34 35
-IDAssignExpr_Optional (65)
+IDAssignExpr_Optional (60)
     on left: 40 41, on right: 38
-WritelnPList_Optional (66)
+WritelnPList_Optional (61)
     on left: 42 43, on right: 39
-WritelnPList (67)
+WritelnPList (62)
     on left: 44 45, on right: 42
-CommaExprString_Repeat (68)
+CommaExprString_Repeat (63)
     on left: 46 47 48, on right: 44 45 46 47
-Expr (69)
+Expr (64)
     on left: 49 50 51 52 53 54 55 56 57 58 59 60, on right: 33 34 35
     36 37 40 44 46 49 50 51 52 53 54 55 56 61 62
-ParamList (70)
+ParamList (65)
     on left: 61, on right: 59
-CommaExpr_Repeat (71)
+CommaExpr_Repeat (66)
     on left: 62 63, on right: 61 62
 
 
