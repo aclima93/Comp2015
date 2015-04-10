@@ -9,6 +9,10 @@ node* makeleafInt(int i){
 	return NULL;
 }
 
+node* makeleafOP(char* s){
+	return NULL;
+}
+
 node* makeleafString(char* s){
 	return NULL;
 }

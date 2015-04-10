@@ -18,6 +18,8 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3);
 
 node* makeleafInt(int i);
 
+node* makeleafOP(char* s);
+
 node* makeleafString(char* s);
 
 node* makeleafDouble(double d);

@@ -45,7 +45,6 @@
 %token <real> REALLIT
 %token <integer> INTLIT
 
-
 %token <string> OP2
 %token <string> OR
 %token <string> OP3
@@ -65,7 +64,7 @@
 
 
 %type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclarationList VarDeclaration IDList CommaIDList FuncPart FuncDeclarationList FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr OP ParamList 
-%type <node_pointer> VarDeclarationSemic_Repeat CommaID_Repeat FuncDeclaration_Repeat SemicFormalParams_Repeat SemicStat_Repeat IDAssignExpr_Optional WritelnPList_Optional CommaExprString_Repeat OP1_Or_OP2_Or_OP3_Or_OP4 OP3_Or_Not CommaExpr_Repeat
+%type <node_pointer> VarDeclarationSemic_Repeat CommaID_Repeat FuncDeclaration_Repeat SemicFormalParams_Repeat SemicStat_Repeat IDAssignExpr_Optional WritelnPList_Optional CommaExprString_Repeat CommaExpr_Repeat
 
 %% 
 
@@ -158,24 +157,18 @@ CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(Wr
 	;
 
 
-Expr: Expr OP1_Or_OP2_Or_OP3_Or_OP4 Expr 											{$$ = makenode(ExprType, $1, $2, $3);}
-	| OP3_Or_Not Expr 																{$$ = makenode(OPType, $1, $2, NULL);}
+Expr: Expr AND Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| Expr OR Expr 																	{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| Expr OP2 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| Expr OP3 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| Expr OP4 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| OP3 Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
+	| NOT Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
 	| '(' Expr ')' 																	{$$ = makenode(ExprType, $2, NULL, NULL);}
 	| INTLIT 																		{$$ = makeleafInt($1);}
 	| REALLIT 																		{$$ = makeleafDouble($1);}
 	| ID ParamList 																	{$$ = makenode(ExprType, makeleafString($1), $2, NULL);}
 	| ID 					 														{$$ = makeleafString($1);}
-	;
-
-OP1_Or_OP2_Or_OP3_Or_OP4: AND 														{$$ = makeleafString($1);}
-	| OR 																			{$$ = makeleafString($1);}
-	| OP2 																			{$$ = makeleafString($1);}
-	| OP3 																			{$$ = makeleafString($1);}
-	| OP4 																			{$$ = makeleafString($1);}
-	; 
-
-OP3_Or_Not: OP3 																	{$$ = makeleafString($1);}
-	| NOT 																			{$$ = makeleafString($1);}
 	;
 
 ParamList: '(' Expr CommaExpr_Repeat ')' 											{$$ = makenode(ParamListType, $2, $3, NULL);} ;
