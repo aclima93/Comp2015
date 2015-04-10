@@ -12,6 +12,7 @@ typedef struct {
     void* field1;
     void* field2;
     void* field3;
+    node* next;
 } node;
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3);

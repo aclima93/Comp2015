@@ -24,8 +24,7 @@ Write('Hello World. Prepare to learn PASCAL!!');Readln;End.
 (* Program 3 *)
 
 Program Lesson1_Program3;
-Var       
-    Num1, Num2, Sum : Integer;
+Var Num1, Num2, Sum : Integer;  Num3, Num4, Sum5 : Integer;
 
 Begin {no semicolon}
  Write('Input number 1:'); 
