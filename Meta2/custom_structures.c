@@ -1,10 +1,99 @@
 
 #include "custom_structures.h"
 
+
+void incrementDotCounter() {
+	dotCounter+=2;
+}
+
+void decrementDotCounter() {
+	dotCounter-=2;
+}
+
+void printDots() {
+	int i=0;
+	while(i<dotCounter) {
+		printf(".");
+		i++;
+	}
+}
+
+void printNode(node* cur_node) {
+
+	nodeType t = cur_node->type_of_node;
+
+	switch(t) {
+
+		case ProgType:
+			
+			dotCounter = 0;
+			printf("Program\n");
+			printNode(cur_node->field1);
+			printNode(cur_node->field2);
+			
+			break;
+
+		case ProgHeadingType:
+			
+			incrementDotCounter();
+			printDots();
+			printf("ID(%s)\n", (cur_node->field1)->field1);
+			decrementDotCounter();
+			
+			break;
+
+
+		case ProgBlockType:
+
+			printDots();
+			printf("VarPart");
+			if (cur_node->field1 != NULL) {
+				printNode(cur_node->field1);
+			}
+
+			printDots();
+			printf("FuncPart");
+			if (cur_node->field2 != NULL) {
+				printNode(cur_node->field2);
+			}
+
+			printDots();
+			printf("StatList");
+			if (cur_node->field3 != NULL) {
+				printNode(cur_node->field3);
+			}
+
+			break;
+
+		case VarDeclarationType:
+		case FuncPartType:
+		case FuncDeclarationType:
+		case FuncHeadingType:
+		case FuncIdentType:
+		case FormalParamsType:
+		case FuncBlockType:
+		case StatPartType:
+		case CompStatType:
+		case StatType:
+		case ExprType:
+		case VarPartType:
+		case VarDeclarationListType:
+		case IDListType:
+		case CommaIDListType:
+		case FuncDeclarationListType:
+		case FormalParamsListType:
+		case StatListType:
+		case WritelnPListType:
+		case ParamListType:
+		case ExprListType:
+	}
+}
+
+
 node* makenode(nodeType t, node* f1, node* f2, node* f3){
 
 	node* new_node = malloc(sizeof(node*));
-	leaf->type_of_node = t;
+	new_node->type_of_node = t;
 
 	switch (t) {
 
@@ -12,102 +101,39 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 		case ProgHeadingType:
 		case ProgBlockType:
 		case VarDeclarationType:
+		case FuncPartType:
+		case FuncDeclarationType:
+		case FuncHeadingType:
+		case FuncIdentType:
+		case FormalParamsType:
+		case FuncBlockType:
+		case StatPartType:
+		case CompStatType:
+		case StatType:
+		case ExprType:
 
-			leaf->field1 = f1;
-			leaf->field2 = f2;
-			leaf->field3 = f3;
+			new_node->field1 = f1;
+			new_node->field2 = f2;
+			new_node->field3 = f3;
 			break;
 
 		case VarPartType:
 		case VarDeclarationListType:
 		case IDListType:
+		case CommaIDListType:
+		case FuncDeclarationListType:
+		case FormalParamsListType:
+		case StatListType:
+		case WritelnPListType:
+		case ParamListType:
+		case ExprListType:
 
 			f1->next = f2;
 
-			leaf->field1 = f1;
-			leaf->field2 = NULL;
-			leaf->field3 = NULL;
+			new_node->field1 = f1;
+			new_node->field2 = NULL;
+			new_node->field3 = NULL;
 			break;
-
-		case CommaIDListType:
-
-		break;
-
-		case FuncPartType:
-
-		break;
-
-		case FuncDeclarationListType:
-
-		break;
-
-		case FuncDeclarationType:
-
-		break;
-
-		case FuncHeadingType:
-
-		break;
-
-		case FuncIdentType:
-
-		break;
-
-		case FormalParamsListType:
-
-		break;
-
-		case FormalParamsType:
-
-		break;
-
-		case FuncBlockType:
-
-		break;
-
-		case StatPartType:
-
-		break;
-
-		case CompStatType:
-
-		break;
-
-		case StatListType:
-
-		break;
-
-		case StatType:
-
-		break;
-
-		case WritelnPListType:
-
-		break;
-
-		case ExprType:
-
-		break;
-
-		case OPType:
-
-		break;
-
-		case IntType:
-
-		break;
-
-		case StringType:
-
-		break;
-
-		case DoubleType:
-
-		break;
-
-		case ParamListType:
-
-		break;
 
 		default:
 			return NULL;
@@ -118,7 +144,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	return new_node;
 }
 
-node* makeleafInt(int i){
+node* makeleafInt(int* i){
 	
 	node* leaf = malloc(sizeof(node*));
 	
@@ -143,6 +169,7 @@ node* makeleafOP(char* o){
 }
 
 node* makeleafString(char* s){
+
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = StringType;
@@ -153,7 +180,8 @@ node* makeleafString(char* s){
 	return leaf;
 }
 
-node* makeleafDouble(double d){
+node* makeleafDouble(double* d){
+	
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = DoubleType;

@@ -31,7 +31,19 @@ Para correr para um caso de teste específico:
 
 **[Análise Sintática]**
 
+
+"Something something Dark Side..."
+
+
 Mudar para a directoria "Meta2"
+
+Para correr o analisador semântico com todos os casos de teste associados:
+    $ bash run_mpaparser.sh
+
+Para correr para um caso de teste específico:
+    $ ./mpaparser < ficheiro_input.mpa > ficheiro_output.txt
+
+
 
 To be continued...
 

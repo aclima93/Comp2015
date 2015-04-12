@@ -62,7 +62,7 @@
 
 %% 
 
-Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = makenode(ProgType, $1, $3, NULL);} ;
+Prog:  ProgHeading ';' ProgBlock '.' 												{root = makenode(ProgType, $1, $3, NULL);} ;
 
 ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleafString($2), NULL, NULL);} ;
 
@@ -80,7 +80,7 @@ VarDeclaration: IDList ':' ID														{$$ = makenode(VarDeclarationType, $1
 
 IDList: ID CommaID_Repeat															{$$ = makenode(IDListType, makeleafString($1), $2, NULL);} ;
 
-CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, makeleafString($2), NULL, NULL);} ;
+CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, makeleafString($2), $3, NULL);} ;
 	| 																				{$$ = NULL;} 
 	;
 
@@ -159,19 +159,20 @@ Expr: Expr AND Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2),
 	| OP3 Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
 	| NOT Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
 	| '(' Expr ')' 																	{$$ = makenode(ExprType, $2, NULL, NULL);}
-	| INTLIT 																		{$$ = makeleafInt($1);}
-	| REALLIT 																		{$$ = makeleafDouble($1);}
+	| INTLIT 																		{$$ = makeleafInt(&($1));}
+	| REALLIT 																		{$$ = makeleafDouble(&($1));}
 	| ID ParamList 																	{$$ = makenode(ExprType, makeleafString($1), $2, NULL);}
 	| ID 					 														{$$ = makeleafString($1);}
 	;
 
 ParamList: '(' Expr CommaExpr_Repeat ')' 											{$$ = makenode(ParamListType, $2, $3, NULL);} ;
 
-CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprType, $2, $3, NULL);}
+CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprListType, $2, $3, NULL);}
 	| 																				{$$ = NULL;}
 	;
 
 %%
 int main(){
 	yyparse();
+	return 0;
 }
