@@ -18,9 +18,23 @@ void printDots() {
 	}
 }
 
+void printList(node* cur_node) {
+	node* next_node = ((node*)(cur_node->field1))->next;
+
+	while(next_node != NULL) {
+		printDots();
+		printNode(next_node->field1);
+		next_node = ((node*)(next_node->field1))->next;
+	}
+}
+
 void printNode(node* cur_node) {
 
 	nodeType t = cur_node->type_of_node;
+
+	if(DEBUG){
+		printf("[DEBUG] type: %d", t);
+	}
 
 	switch(t) {
 
@@ -37,7 +51,7 @@ void printNode(node* cur_node) {
 			
 			incrementDotCounter();
 			printDots();
-			printf("ID(%s)\n", (cur_node->field1)->field1);
+			printNode(cur_node->field1);
 			decrementDotCounter();
 			
 			break;
@@ -46,19 +60,19 @@ void printNode(node* cur_node) {
 		case ProgBlockType:
 
 			printDots();
-			printf("VarPart");
+			printf("VarPart\n");
 			if (cur_node->field1 != NULL) {
 				printNode(cur_node->field1);
 			}
 
 			printDots();
-			printf("FuncPart");
+			printf("FuncPart\n");
 			if (cur_node->field2 != NULL) {
 				printNode(cur_node->field2);
 			}
 
 			printDots();
-			printf("StatList");
+			printf("StatList\n");
 			if (cur_node->field3 != NULL) {
 				printNode(cur_node->field3);
 			}
@@ -66,26 +80,201 @@ void printNode(node* cur_node) {
 			break;
 
 		case VarDeclarationType:
+
+			incrementDotCounter();
+			printDots();
+			printf("VarDecl\n");
+			
+			incrementDotCounter();
+			printDots();
+			printNode(cur_node->field1);
+
+			node* next_node = ((node*)(cur_node->field1))->next;
+
+			printList(cur_node);
+
+			printDots();
+			printNode(cur_node->field2);
+
+			decrementDotCounter();
+
+			decrementDotCounter();
+
+			break;
+
 		case FuncPartType:
+			incrementDotCounter();
+			printDots();
+			printf("FuncPart\n");
+			printNode(cur_node->field1);
+			decrementDotCounter();
+			break;
+
 		case FuncDeclarationType:
+
+			incrementDotCounter();
+			
+			printNode(cur_node->field1);
+
+			if (cur_node->field2!=NULL) {
+				printNode(cur_node->field2);
+			}
+
+			decrementDotCounter();
+
+			break;
+
+
 		case FuncHeadingType:
+
+			incrementDotCounter();
+			
+
+			printNode(cur_node->field1);
+			if (cur_node->field3 !=NULL) {
+				printList(cur_node->field2);
+				printNode(cur_node->field3);
+			}
+			else {
+				printNode(cur_node->field2);
+			}
+
+			decrementDotCounter();
+
+			break;
+
 		case FuncIdentType:
+			incrementDotCounter();
+
+			printNode(cur_node->field1);
+			
+			decrementDotCounter();
+
+			break;
+
 		case FormalParamsType:
+			incrementDotCounter();
+			
+			printList(cur_node->field1);
+			printNode(cur_node->field2);
+			decrementDotCounter();
+
+			break;
+
 		case FuncBlockType:
+			incrementDotCounter();
+			
+			printNode(cur_node->field1);
+			printNode(cur_node->field2);
+			decrementDotCounter();
+
+			break;
+
+
 		case StatPartType:
+			incrementDotCounter();
+			
+			printList(cur_node->field1);
+
+			decrementDotCounter();
+
+			break;
+
 		case CompStatType:
+			incrementDotCounter();
+			
+			printList(cur_node->field1);
+			decrementDotCounter();
+
+			break;
+
 		case StatType:
+			incrementDotCounter();
+			if ((cur_node->field1)->type_of_node == WritelnPListType) {
+				printList(cur_node->field1);
+				break;
+			}
+
+			if ((cur_node->field1)->type_of_node == StatListType) {
+				printList(cur_node->field1);
+				printNode(cur_node->field2);
+				break;
+			}
+
+			printNode(cur_node->field1);
+			if (cur_node->field2 != NULL)
+				printNode(cur_node->field2);
+
+			if (cur_node->field3 !=NULL) {
+				printNode(cur_node->field3);
+			}
+			decrementDotCounter();
+
+			break;
 		case ExprType:
+			incrementDotCounter();
+
+			printNode(cur_node->field1);
+			if (cur_node->field2 != NULL)
+				printNode(cur_node->field2);
+
+			if (cur_node->field3 !=NULL) {
+				printNode(cur_node->field3);
+			}
+			decrementDotCounter();
+
+			break;
+
+
 		case VarPartType:
+			incrementDotCounter();
+
+			printList(cur_node->field1);
+			decrementDotCounter();
+
+			break;
+
+		
+		case FuncDeclarationListType:
 		case VarDeclarationListType:
 		case IDListType:
 		case CommaIDListType:
-		case FuncDeclarationListType:
 		case FormalParamsListType:
 		case StatListType:
 		case WritelnPListType:
 		case ParamListType:
 		case ExprListType:
+
+			incrementDotCounter();
+
+			printList(cur_node->field1);
+			decrementDotCounter();
+
+			break;
+
+
+		case DoubleType:
+			printDots();
+			//FIXME: fix this shit, yo
+			//printf("ID(%lf)\n", (double) cur_node->field1);
+			break;
+
+		case StringType:
+			printDots();
+			printf("ID(%s)\n", (char*) cur_node->field1);
+			break;
+
+		case IntType:
+			printDots();
+			printf("ID(%d)\n", (int) cur_node->field1);
+			break;
+
+		case OPType:
+			break;
+
+		default:
+			// do nothing, bro
+			break;
 	}
 }
 
@@ -94,6 +283,10 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 
 	node* new_node = malloc(sizeof(node*));
 	new_node->type_of_node = t;
+
+	if(DEBUG){
+		printf("[DEBUG] type: %d", t);
+	}
 
 	switch (t) {
 
@@ -135,6 +328,11 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 			new_node->field3 = NULL;
 			break;
 
+
+		case DoubleType:
+		case StringType:
+		case OPType:
+		case IntType:
 		default:
 			return NULL;
 	}
@@ -190,4 +388,14 @@ node* makeleafDouble(double* d){
 	leaf->field3 = NULL;
 
 	return leaf;
+}
+
+node* createTree(node* n){
+
+	if(DEBUG){
+		printf("[DEBUG] type: %d", n->type_of_node);
+	}
+
+	root = n;
+	return root;
 }

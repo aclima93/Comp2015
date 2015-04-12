@@ -1502,7 +1502,7 @@ yyreduce:
     {
         case 2:
 #line 65 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ProgType, (yyvsp[(1) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL);}
+    {(yyval.node_pointer) = createTree(makenode(ProgType, (yyvsp[(1) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL));}
     break;
 
   case 3:
@@ -1547,7 +1547,7 @@ yyreduce:
 
   case 11:
 #line 83 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(CommaIDListType, makeleafString((yyvsp[(2) - (3)].string)), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(CommaIDListType, makeleafString((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 12:
@@ -1807,7 +1807,7 @@ yyreduce:
 
   case 63:
 #line 170 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(ExprListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 64:
@@ -2034,7 +2034,11 @@ yyreturn:
 #line 174 "mpaparser.y"
 
 int main(){
+
 	yyparse();
+	
+	printNode(root);
+
 	return 0;
 }
 

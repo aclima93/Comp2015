@@ -62,7 +62,7 @@
 
 %% 
 
-Prog:  ProgHeading ';' ProgBlock '.' 												{root = makenode(ProgType, $1, $3, NULL);} ;
+Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = createTree(makenode(ProgType, $1, $3, NULL));} ;
 
 ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleafString($2), NULL, NULL);} ;
 
@@ -173,6 +173,10 @@ CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprListTyp
 
 %%
 int main(){
+
 	yyparse();
+	
+	printNode(root);
+
 	return 0;
 }
