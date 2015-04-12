@@ -2039,6 +2039,8 @@ int main(){
 	
 	printNode(root);
 
+	freeNode(root);
+
 	return 0;
 }
 

@@ -44,4 +44,6 @@ node* makeleafDouble(double* d);
 
 node* createTree(node* n);
 
+void freeNode(node* cur_node);
+
 #endif

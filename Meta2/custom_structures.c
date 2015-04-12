@@ -190,12 +190,12 @@ void printNode(node* cur_node) {
 
 		case StatType:
 			incrementDotCounter();
-			if ((cur_node->field1)->type_of_node == WritelnPListType) {
+			if (((node*)(cur_node->field1))->type_of_node == WritelnPListType) {
 				printList(cur_node->field1);
 				break;
 			}
 
-			if ((cur_node->field1)->type_of_node == StatListType) {
+			if (((node*)(cur_node->field1))->type_of_node == StatListType) {
 				printList(cur_node->field1);
 				printNode(cur_node->field2);
 				break;
@@ -328,7 +328,6 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 			new_node->field3 = NULL;
 			break;
 
-
 		case DoubleType:
 		case StringType:
 		case OPType:
@@ -336,8 +335,6 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 		default:
 			return NULL;
 	}
-
-
 
 	return new_node;
 }
@@ -398,4 +395,16 @@ node* createTree(node* n){
 
 	root = n;
 	return root;
+}
+
+void freeNode(node* cur_node) {
+
+	if (cur_node == NULL)
+		return;
+
+	freeNode(cur_node->field1);
+	freeNode(cur_node->field2);
+	freeNode(cur_node->field3);
+	freeNode(cur_node->next);
+
 }
