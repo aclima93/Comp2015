@@ -19,6 +19,7 @@ void printDots() {
 }
 
 void printList(node* cur_node) {
+	
 	node* next_node = ((node*)(cur_node->field1))->next;
 
 	while(next_node != NULL) {
@@ -33,7 +34,7 @@ void printNode(node* cur_node) {
 	nodeType t = cur_node->type_of_node;
 
 	if(DEBUG){
-		printf("[DEBUG] type: %d", t);
+		printf("[DEBUG] type: %d\n", t);
 	}
 
 	switch(t) {
@@ -281,12 +282,12 @@ void printNode(node* cur_node) {
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3){
 
+	if(DEBUG){
+		printf("[DEBUG] type: %d\n", t);
+	}
+
 	node* new_node = malloc(sizeof(node*));
 	new_node->type_of_node = t;
-
-	if(DEBUG){
-		printf("[DEBUG] type: %d", t);
-	}
 
 	switch (t) {
 
@@ -341,6 +342,10 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 
 node* makeleafInt(int* i){
 	
+	if(DEBUG){
+		printf("[DEBUG] int leaf\n");
+	}
+
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = IntType;
@@ -353,10 +358,14 @@ node* makeleafInt(int* i){
 
 node* makeleafOP(char* o){
 
+	if(DEBUG){
+		printf("[DEBUG] op leaf\n");
+	}
+
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = OPType;
-	strcpy(leaf->field1, o);
+	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 	
@@ -365,10 +374,14 @@ node* makeleafOP(char* o){
 
 node* makeleafString(char* s){
 
+	if(DEBUG){
+		printf("[DEBUG] string leaf\n");
+	}
+
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = StringType;
-	strcpy(leaf->field1, s);
+	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 	
@@ -377,6 +390,10 @@ node* makeleafString(char* s){
 
 node* makeleafDouble(double* d){
 	
+	if(DEBUG){
+		printf("[DEBUG] double leaf\n");
+	}
+
 	node* leaf = malloc(sizeof(node*));
 	
 	leaf->type_of_node = DoubleType;
@@ -390,7 +407,7 @@ node* makeleafDouble(double* d){
 node* createTree(node* n){
 
 	if(DEBUG){
-		printf("[DEBUG] type: %d", n->type_of_node);
+		printf("[DEBUG] Tree Root\n");
 	}
 
 	root = n;

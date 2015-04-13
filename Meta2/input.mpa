@@ -1,3 +1,4 @@
 program gcd(output);
 begin
+	writeln(x)
 end.

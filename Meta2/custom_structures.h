@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, StringType, OPType, IntType} nodeType;
 

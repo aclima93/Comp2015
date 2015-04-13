@@ -1,9 +1,18 @@
 %{
 
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "custom_structures.h"
+
+void yyerror(char *s);
+
+extern char* yytext;
+extern int yyleng;
+
+extern int line;
+extern int col;
 
 %}
 
@@ -13,7 +22,6 @@
 	double real;
 	node* node_pointer;
 }
-
 
 %token ASSIGN
 %token BEGIN_token
@@ -172,13 +180,27 @@ CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprListTyp
 	;
 
 %%
+
 int main(){
+
+	if(DEBUG)
+		printf("Antes do yyparse\n");
 
 	yyparse();
 	
+	if(DEBUG)
+		printf("Antes do printNode(root)\n");
+
 	printNode(root);
+
+	if(DEBUG)
+		printf("Antes do freeNode(root)\n");
 
 	freeNode(root);
 
 	return 0;
+}
+
+void yyerror(char *s) {
+     printf ("Line %d, col %d: %s: %s\n", line, (int)(col - strlen(yytext)), s, yytext);
 }
