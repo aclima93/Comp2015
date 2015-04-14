@@ -1776,12 +1776,12 @@ yyreduce:
 
   case 55:
 #line 167 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ExprType, makeleafOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(ExprType, makeleafUnaryOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
     break;
 
   case 56:
 #line 168 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ExprType, makeleafOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(ExprType, makeleafUnaryOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
     break;
 
   case 57:
@@ -2043,27 +2043,54 @@ yyreturn:
 #line 182 "mpaparser.y"
 
 
-int main(){
+int main(int argc, char** args){
 
-	if(DEBUG)
-		printf("Antes do yyparse\n");
+	errorCounter = 0;
 
 	yyparse();
 	
-	if(DEBUG)
-		printf("Antes do printNode(root)\n");
+	// terminate program if any errors where found
+	if(errorCounter)
+		return 0;
 
-	printNode(root);
+    // checks which flags were requested
+	char c;
+	for(int i = 1; i < argc; i++) {
 
-	if(DEBUG)
-		printf("Antes do freeNode(root)\n");
+		c = getopt(argc, args, "st");
 
-	freeNode(root);
+		switch(c){
+
+			case 't':
+
+				printTree = 1;
+	      		break;
+	        
+			case 's':
+
+				printSymbolTable = 1;
+	        	break;
+
+			default:
+	    		break;
+		}
+	}
+
+    if(printTree){
+		printNode(root);
+    }
+	
+	if(printSymbolTable){
+		// print the symbol table here
+	}
+
+	//freeNode(root);
 
 	return 0;
 }
 
 void yyerror(char *s) {
      printf ("Line %d, col %d: %s: %s\n", line, (int)(col - strlen(yytext)), s, yytext);
+     errorCounter++;
 }
 

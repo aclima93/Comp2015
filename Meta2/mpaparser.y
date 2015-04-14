@@ -164,8 +164,8 @@ Expr: Expr AND Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2),
 	| Expr OP2 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
 	| Expr OP3 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
 	| Expr OP4 Expr 																{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
-	| OP3 Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
-	| NOT Expr 																		{$$ = makenode(ExprType, makeleafOP($1), $2, NULL);}
+	| OP3 Expr 																		{$$ = makenode(ExprType, makeleafUnaryOP($1), $2, NULL);}
+	| NOT Expr 																		{$$ = makenode(ExprType, makeleafUnaryOP($1), $2, NULL);}
 	| '(' Expr ')' 																	{$$ = makenode(ExprType, $2, NULL, NULL);}
 	| INTLIT 																		{$$ = makeleafInt(&($1));}
 	| REALLIT 																		{$$ = makeleafDouble(&($1));}
@@ -181,26 +181,53 @@ CommaExpr_Repeat: ',' Expr CommaExpr_Repeat 										{$$ = makenode(ExprListTyp
 
 %%
 
-int main(){
+int main(int argc, char** args){
 
-	if(DEBUG)
-		printf("Antes do yyparse\n");
+	errorCounter = 0;
 
 	yyparse();
 	
-	if(DEBUG)
-		printf("Antes do printNode(root)\n");
+	// terminate program if any errors where found
+	if(errorCounter)
+		return 0;
 
-	printNode(root);
+    // checks which flags were requested
+	char c;
+	for(int i = 1; i < argc; i++) {
 
-	if(DEBUG)
-		printf("Antes do freeNode(root)\n");
+		c = getopt(argc, args, "st");
 
-	freeNode(root);
+		switch(c){
+
+			case 't':
+
+				printTree = 1;
+	      		break;
+	        
+			case 's':
+
+				printSymbolTable = 1;
+	        	break;
+
+			default:
+	    		break;
+		}
+	}
+
+    if(printTree){
+		printNode(root);
+    }
+	
+	if(printSymbolTable){
+		// print the symbol table here
+	}
+
+	//freeNode(root);
 
 	return 0;
 }
 
 void yyerror(char *s) {
      printf ("Line %d, col %d: %s: %s\n", line, (int)(col - strlen(yytext)), s, yytext);
+     errorCounter++;
 }

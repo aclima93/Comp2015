@@ -6,7 +6,7 @@ cc -o mpaparser y.tab.c lex.yy.c custom_structures.c -ll -ly
 
 for i in {0..4}
 	do
-		./mpaparser < inputs_outputs/"$i"_input.mpa > inputs_outputs/"$i"_output.txt
+		./mpaparser -t -s < inputs_outputs/"$i"_input.mpa > inputs_outputs/"$i"_output.txt
 done
 
 rm mpaparser.zip
