@@ -2084,7 +2084,7 @@ int main(int argc, char** args){
 		// print the symbol table here
 	}
 
-	//freeNode(root);
+	freeNode(root);
 
 	return 0;
 }

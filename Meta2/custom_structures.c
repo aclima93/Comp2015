@@ -518,18 +518,29 @@ node* createTree(node* n){
 	return root;
 }
 
+int isLeaf(node* cur_node){
+
+	nodeType t = cur_node->type_of_node;
+
+	if(t == DoubleType || t == IDType || t == StringType || t == OPType || t == UnaryOPType || t == IntType || t == CallType)
+		return 1;
+
+	return 0;
+}
+
 void freeNode(node* cur_node) {
 
 	if (cur_node == NULL)
 		return;
 
-	if( !(cur_node->field1 == NULL) )
-		freeNode(cur_node->field1);
+	// Dont' free these sub nodes because they weren't allocated dynamically
+	if( !isLeaf(cur_node) ){
 
-	if( !(cur_node->field2 == NULL) )
+		freeNode(cur_node->field1);
 		freeNode(cur_node->field2);
-	
-	if( !(cur_node->field3 == NULL) )
 		freeNode(cur_node->field3);
+	}
+
+	free(cur_node);
 
 }
