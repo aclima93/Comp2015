@@ -1676,7 +1676,7 @@ yyreduce:
 
   case 35:
 #line 136 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), makenode(StatListType, NULL, NULL, NULL));}
     break;
 
   case 36:

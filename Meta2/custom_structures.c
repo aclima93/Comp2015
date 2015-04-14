@@ -188,6 +188,9 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
+			if(cur_node->field1 == NULL)
+				break;
+
 			if (((node*)(cur_node->field1))->type_of_node == WritelnPListType) {
 				printNode(cur_node->field1);
 				break;
