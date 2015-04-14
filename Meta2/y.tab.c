@@ -1671,37 +1671,37 @@ yyreduce:
 
   case 34:
 #line 135 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (6)].node_pointer), (yyvsp[(4) - (6)].node_pointer), (yyvsp[(6) - (6)].node_pointer));}
+    {(yyval.node_pointer) = makenode(IfElseStatType, (yyvsp[(2) - (6)].node_pointer), (yyvsp[(4) - (6)].node_pointer), (yyvsp[(6) - (6)].node_pointer));}
     break;
 
   case 35:
 #line 136 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), makenode(StatListType, NULL, NULL, NULL));}
+    {(yyval.node_pointer) = makenode(IfElseStatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), makenode(StatListType, NULL, NULL, NULL));}
     break;
 
   case 36:
 #line 137 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(WhileStatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL);}
     break;
 
   case 37:
 #line 138 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(RepeatStatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL);}
     break;
 
   case 38:
 #line 139 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(5) - (9)].node_pointer), makeleafID((yyvsp[(8) - (9)].string)), NULL);}
+    {(yyval.node_pointer) = makenode(ValParamStatType, (yyvsp[(5) - (9)].node_pointer), makeleafID((yyvsp[(8) - (9)].string)), NULL);}
     break;
 
   case 39:
 #line 140 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(AssignStatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
     break;
 
   case 40:
 #line 141 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (2)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(WriteLnStatType, (yyvsp[(2) - (2)].node_pointer), NULL, NULL);}
     break;
 
   case 41:

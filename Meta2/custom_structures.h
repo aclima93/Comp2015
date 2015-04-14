@@ -12,7 +12,7 @@
 
 #define DEBUG 0
 
-typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
+typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, IfElseStatType, WhileStatType, RepeatStatType, ValParamStatType, AssignStatType, WriteLnStatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
 
 typedef struct {
     nodeType type_of_node;

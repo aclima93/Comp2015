@@ -18,6 +18,38 @@ void printDots() {
 	}
 }
 
+char* getStatStr(nodeType t){
+
+	switch (t){
+		case StatType:
+			return NULL;
+		case IfElseStatType:
+			return "IfElse";
+		case WhileStatType:
+			return "While";
+		case RepeatStatType:
+			return "Repeat";
+		case ValParamStatType:
+			return "ValParam";
+		case AssignStatType:
+			return "Assign";
+		case WriteLnStatType:
+			return "WriteLn";
+
+		default:
+			return NULL;
+
+	}
+}
+
+void printChildren(node* cur_node){
+
+	printNode(cur_node->field1);
+	printNode(cur_node->field2);
+	printNode(cur_node->field3);
+
+}
+
 void printNode(node* cur_node) {
 
 	if (cur_node == NULL){
@@ -35,9 +67,10 @@ void printNode(node* cur_node) {
 		case ProgType:
 			
 			dotCounter = 0;
+
 			printf("Program\n");
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
+			
+			printChildren(cur_node);
 			
 			break;
 
@@ -45,8 +78,10 @@ void printNode(node* cur_node) {
 			
 			incrementDotCounter();
 
-			printDots();
-			printNode(cur_node->field1);
+			//printDots();
+			//TODO: print me like one of your french girls
+
+			printChildren(cur_node);
 			
 			decrementDotCounter();
 			
@@ -57,17 +92,9 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			printDots();
-			printf("VarPart\n");
-			printNode(cur_node->field1);
-			
-			printDots();
-			printf("FuncPart\n");
-			printNode(cur_node->field2);
-		
-			printDots();
-			printf("StatList\n");
-			printNode(cur_node->field3);
+			//TODO:
+
+			printChildren(cur_node);
 	
 			decrementDotCounter();
 
@@ -76,15 +103,11 @@ void printNode(node* cur_node) {
 		case VarDeclarationType:
 
 			incrementDotCounter();
+
 			printDots();
 			printf("VarDecl\n");
 			
-			incrementDotCounter();
-
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
-
-			decrementDotCounter();
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -96,7 +119,8 @@ void printNode(node* cur_node) {
 
 			printDots();
 			printf("FuncPart\n");
-			printNode(cur_node->field1);
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -106,8 +130,10 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
+			printDots();
+			printf("FuncDecl\n");
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -117,15 +143,10 @@ void printNode(node* cur_node) {
 		case FuncHeadingType:
 
 			incrementDotCounter();
+
+			//TODO:
 			
-			printNode(cur_node->field1);
-			if (cur_node->field3 !=NULL) {
-				printNode(cur_node->field2);
-				printNode(cur_node->field3);
-			}
-			else {
-				printNode(cur_node->field2);
-			}
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -135,7 +156,9 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			printNode(cur_node->field1);
+			//TODO:
+
+			printChildren(cur_node);
 			
 			decrementDotCounter();
 
@@ -145,8 +168,9 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
+			//TODO:
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -156,8 +180,9 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
+			//TODO:
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -167,8 +192,10 @@ void printNode(node* cur_node) {
 		case StatPartType:
 
 			incrementDotCounter();
-			
-			printNode(cur_node->field1);
+
+			//T Print nothing, intermediate node
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -178,51 +205,50 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printNode(cur_node->field1);
+			// Print nothing, intermediate node
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
 			break;
 
 		case StatType:
+		case IfElseStatType:
+		case WhileStatType:
+		case RepeatStatType:
+		case ValParamStatType:
+		case AssignStatType:
+		case WriteLnStatType:
 
 			incrementDotCounter();
 
-			if(cur_node->field1 == NULL)
-				break;
+			char* stat_str = getStatStr(t);
 
-			if (((node*)(cur_node->field1))->type_of_node == WritelnPListType) {
-				printNode(cur_node->field1);
-				break;
+			if( !(stat_str == NULL) ){
+				printDots();
+				printf("%s\n", stat_str);
 			}
 
-			if (((node*)(cur_node->field1))->type_of_node == StatListType) {
-				printNode(cur_node->field1);
-				printNode(cur_node->field2);
-				break;
-			}
-
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
-			printNode(cur_node->field3);
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
 			break;
+
 
 		case ExprType:
 
 			incrementDotCounter();
 
 			// the operator is always printed first
+			// don't call printChildren !!
+
 			printNode(cur_node->field2);
 
-			incrementDotCounter();
 
 			printNode(cur_node->field1);
 			printNode(cur_node->field3);
-
-			decrementDotCounter();
 			
 			decrementDotCounter();
 
@@ -232,10 +258,24 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
-			printNode(cur_node->field3);
+			printDots();
+			printf("VarPart\n");
 
+			printChildren(cur_node);
+
+			decrementDotCounter();
+
+			break;
+
+		case StatListType:
+
+			incrementDotCounter();
+
+			printDots();
+			printf("StatList\n");
+
+			printChildren(cur_node);
+			
 			decrementDotCounter();
 
 			break;
@@ -245,57 +285,74 @@ void printNode(node* cur_node) {
 		case IDListType:
 		case CommaIDListType:
 		case FormalParamsListType:
-		case StatListType:
 		case WritelnPListType:
 		case ParamListType:
 		case ExprListType:
 
-			//incrementDotCounter();
+			// don't increment dot counter, all members are the same "depth"
 
-			printNode(cur_node->field1);
-			printNode(cur_node->field2);
-			printNode(cur_node->field3);
-
-			//decrementDotCounter();
+			printChildren(cur_node);
 
 			break;
 
 		case DoubleType:
 
+			incrementDotCounter();
+
 			printDots();
 			printf("RealLit(%lf)\n", (double) ( *( (double*) cur_node->field1) ) );
+
+			decrementDotCounter();
 		
 			break;
 
 		case IDType:
 
+			incrementDotCounter();
+
 			printDots();
 			printf("Id(%s)\n", (char*) cur_node->field1);
+
+			decrementDotCounter();
 		
 			break;
 
 		case StringType:
 
+			incrementDotCounter();
+
 			printDots();
 			printf("String(%s)\n", (char*) cur_node->field1);
+
+			decrementDotCounter();
 		
 			break;
 
 		case CallType:
 
+			incrementDotCounter();
+
 			printDots();
 			printf("%s\n", (char*) cur_node->field1);
+
+			decrementDotCounter();
 
 			break;
 
 		case IntType:
 
+			incrementDotCounter();
+
 			printDots();
 			printf("IntLit(%d)\n", (int) cur_node->field1 );
+
+			decrementDotCounter();
 
 			break;
 
 		case UnaryOPType:
+
+			incrementDotCounter();
 
 			printDots();
 
@@ -314,13 +371,18 @@ void printNode(node* cur_node) {
 				unary_op_str = NULL;
 			}
 
-			if( !(unary_op_str == NULL) )
+			if( !(unary_op_str == NULL) ){
 				printf("%s\n", unary_op_str );
+			}
+
+			decrementDotCounter();
 
 			break;
 
 		case OPType:
 		
+			incrementDotCounter();
+
 			printDots();
 
 			char* op_str;
@@ -371,8 +433,11 @@ void printNode(node* cur_node) {
 				op_str = NULL;
 			}
 
-			if( !(op_str == NULL) )
+			if( !(op_str == NULL) ){
 				printf("%s\n", op_str );
+			}
+
+			decrementDotCounter();
 
 			break;
 

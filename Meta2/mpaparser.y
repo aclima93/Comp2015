@@ -132,13 +132,13 @@ SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatListTyp
 	;
 
 Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
-	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(StatType, $2, $4, $6);} 
-	|	IF Expr THEN Stat 															{$$ = makenode(StatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
-	|	WHILE Expr DO Stat 															{$$ = makenode(StatType, $2, $4, NULL);} 
-	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(StatType, $2, $4, NULL);} 
-	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(StatType, $5, makeleafID($8), NULL);} 
-	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
-	|	WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
+	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
+	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
+	|	WHILE Expr DO Stat 															{$$ = makenode(WhileStatType, $2, $4, NULL);} 
+	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
+	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
+	|	IDAssignExpr_Optional 														{$$ = makenode(AssignStatType, $1, NULL, NULL);} 
+	|	WRITELN WritelnPList_Optional 												{$$ = makenode(WriteLnStatType, $2, NULL, NULL);} 
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(StatType, makeleafID($1), $3, NULL);} 
