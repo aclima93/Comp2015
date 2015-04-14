@@ -1047,7 +1047,7 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 176 "mpaparser.l"
-;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext);}
+;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP

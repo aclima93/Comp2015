@@ -173,7 +173,7 @@ INTLIT				{number}
 {REALLIT}				; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.real = strtod(yytext, NULL); return REALLIT;}
 
 
-{RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext);}
+{RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
 
 
 {ASSIGN}				; 	{if(DEBUG) printf("ASSIGN\n"); col=col+strlen(yytext); return ASSIGN;}

@@ -12,14 +12,13 @@
 
 #define DEBUG 0
 
-typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, StringType, OPType, UnaryOPType, IntType} nodeType;
+typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
 
 typedef struct {
     nodeType type_of_node;
     void* field1;
     void* field2;
     void* field3;
-    void* next;
 } node;
 
 node* root;
@@ -35,21 +34,23 @@ void decrementDotCounter();
 
 void printDots();
 
-void printList(node* cur_node);
-
 void printNode(node* cur_node);
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3);
 
-node* makeleafInt(int* i);
+node* makeleafInt(int i);
+
+node* makeleafCall(char* s);
 
 node* makeleafUnaryOP(char* o);
 
 node* makeleafOP(char* o);
 
+node* makeleafID(char* s);
+
 node* makeleafString(char* s);
 
-node* makeleafDouble(double* d);
+node* makeleafDouble(double d);
 
 node* createTree(node* n);
 

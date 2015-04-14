@@ -18,24 +18,6 @@ void printDots() {
 	}
 }
 
-void printList(node* cur_node) {
-
-	if (cur_node == NULL){
-		return;
-	}
-
-	node* next_node = cur_node;
-
-	while(next_node != NULL) {
-
-		printDots();
-		printNode(next_node->field1);
-
-		next_node = (node*) next_node->next;
-	}
-	
-}
-
 void printNode(node* cur_node) {
 
 	if (cur_node == NULL){
@@ -98,14 +80,8 @@ void printNode(node* cur_node) {
 			printf("VarDecl\n");
 			
 			incrementDotCounter();
-			printDots();
+
 			printNode(cur_node->field1);
-
-			node* next_node = ((node*)(cur_node->field1))->next;
-
-			printList(cur_node);
-
-			printDots();
 			printNode(cur_node->field2);
 
 			decrementDotCounter();
@@ -117,10 +93,13 @@ void printNode(node* cur_node) {
 		case FuncPartType:
 
 			incrementDotCounter();
+
 			printDots();
 			printf("FuncPart\n");
 			printNode(cur_node->field1);
+
 			decrementDotCounter();
+
 			break;
 
 		case FuncDeclarationType:
@@ -141,7 +120,7 @@ void printNode(node* cur_node) {
 			
 			printNode(cur_node->field1);
 			if (cur_node->field3 !=NULL) {
-				printList(cur_node->field2);
+				printNode(cur_node->field2);
 				printNode(cur_node->field3);
 			}
 			else {
@@ -166,7 +145,7 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printList(cur_node->field1);
+			printNode(cur_node->field1);
 			printNode(cur_node->field2);
 
 			decrementDotCounter();
@@ -189,7 +168,7 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printList(cur_node->field1);
+			printNode(cur_node->field1);
 
 			decrementDotCounter();
 
@@ -199,7 +178,7 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 			
-			printList(cur_node->field1);
+			printNode(cur_node->field1);
 
 			decrementDotCounter();
 
@@ -210,12 +189,12 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 
 			if (((node*)(cur_node->field1))->type_of_node == WritelnPListType) {
-				printList(cur_node->field1);
+				printNode(cur_node->field1);
 				break;
 			}
 
 			if (((node*)(cur_node->field1))->type_of_node == StatListType) {
-				printList(cur_node->field1);
+				printNode(cur_node->field1);
 				printNode(cur_node->field2);
 				break;
 			}
@@ -232,9 +211,15 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			printNode(cur_node->field1);
+			// the operator is always printed first
 			printNode(cur_node->field2);
+
+			incrementDotCounter();
+
+			printNode(cur_node->field1);
 			printNode(cur_node->field3);
+
+			decrementDotCounter();
 			
 			decrementDotCounter();
 
@@ -250,12 +235,6 @@ void printNode(node* cur_node) {
 
 			decrementDotCounter();
 
-			/*
-			incrementDotCounter();
-			printList(cur_node->field1);
-			decrementDotCounter();
-			*/
-
 			break;
 
 		case FuncDeclarationListType:
@@ -270,7 +249,9 @@ void printNode(node* cur_node) {
 
 			//incrementDotCounter();
 
-			printList(cur_node->field1);
+			printNode(cur_node->field1);
+			printNode(cur_node->field2);
+			printNode(cur_node->field3);
 
 			//decrementDotCounter();
 
@@ -283,18 +264,32 @@ void printNode(node* cur_node) {
 		
 			break;
 
-		case StringType:
+		case IDType:
 
 			printDots();
-			printf("ID(%s)\n", (char*) cur_node->field1);
+			printf("Id(%s)\n", (char*) cur_node->field1);
 		
 			break;
 
-		case IntType:
-		
+		case StringType:
+
 			printDots();
-			printf("IntLit(%d)\n", (int) ( *( (int*) cur_node->field1) ) );
+			printf("String(%s)\n", (char*) cur_node->field1);
 		
+			break;
+
+		case CallType:
+
+			printDots();
+			printf("%s\n", (char*) cur_node->field1);
+
+			break;
+
+		case IntType:
+
+			printDots();
+			printf("IntLit(%d)\n", (int) cur_node->field1 );
+
 			break;
 
 		case UnaryOPType:
@@ -312,8 +307,13 @@ void printNode(node* cur_node) {
 			else if( strcasecmp ( "!", (char*) cur_node->field1 ) == 0){
 				unary_op_str = "Not";
 			}
+			else{
+				unary_op_str = NULL;
+			}
 
-			printf("%s\n", unary_op_str );
+			if( !(unary_op_str == NULL) )
+				printf("%s\n", unary_op_str );
+
 			break;
 
 		case OPType:
@@ -364,8 +364,13 @@ void printNode(node* cur_node) {
 			else if( strcasecmp ( "div", (char*) cur_node->field1 ) == 0){
 				op_str = "RealDiv";
 			}
+			else{
+				op_str = NULL;
+			}
 
-			printf("%s\n", op_str );
+			if( !(op_str == NULL) )
+				printf("%s\n", op_str );
+
 			break;
 
 		default:
@@ -383,63 +388,14 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	node* new_node = (node*) malloc(sizeof(node));
 	new_node->type_of_node = t;
 
-	switch (t) {
-
-		case ProgType:
-		case ProgHeadingType:
-		case ProgBlockType:
-		case VarDeclarationType:
-		case FuncPartType:
-		case FuncDeclarationType:
-		case FuncHeadingType:
-		case FuncIdentType:
-		case FormalParamsType:
-		case FuncBlockType:
-		case StatPartType:
-		case CompStatType:
-		case StatType:
-		case ExprType:
-
-			new_node->field1 = f1;
-			new_node->field2 = f2;
-			new_node->field3 = f3;
-			new_node->next = NULL;
-
-			break;
-
-		case VarPartType:
-		case VarDeclarationListType:
-		case IDListType:
-		case CommaIDListType:
-		case FuncDeclarationListType:
-		case FormalParamsListType:
-		case StatListType:
-		case WritelnPListType:
-		case ParamListType:
-		case ExprListType:
-
-			f1->next = f2;
-
-			new_node->field1 = f1;
-			new_node->field2 = NULL;
-			new_node->field3 = NULL;
-			new_node->next = f1;
-			
-			break;
-
-		case DoubleType:
-		case StringType:
-		case OPType:
-		case IntType:
-		default:
-
-			return NULL;
-	}
+	new_node->field1 = f1;
+	new_node->field2 = f2;
+	new_node->field3 = f3;
 
 	return new_node;
 }
 
-node* makeleafInt(int* i){
+node* makeleafInt(int i){
 	
 	if(DEBUG){
 		printf("[DEBUG] int leaf\n");
@@ -448,7 +404,7 @@ node* makeleafInt(int* i){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = IntType;
-	leaf->field1 = i;
+	memcpy(&leaf->field1, &i, sizeof i);
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 
@@ -487,6 +443,22 @@ node* makeleafOP(char* o){
 	return leaf;
 }
 
+node* makeleafID(char* s){
+
+	if(DEBUG){
+		printf("[DEBUG] id leaf\n");
+	}
+
+	node* leaf = (node*) malloc(sizeof(node));
+	
+	leaf->type_of_node = IDType;
+	leaf->field1 = s;
+	leaf->field2 = NULL;
+	leaf->field3 = NULL;
+	
+	return leaf;
+}
+
 node* makeleafString(char* s){
 
 	if(DEBUG){
@@ -503,7 +475,7 @@ node* makeleafString(char* s){
 	return leaf;
 }
 
-node* makeleafDouble(double* d){
+node* makeleafDouble(double d){
 	
 	if(DEBUG){
 		printf("[DEBUG] double leaf\n");
@@ -512,11 +484,28 @@ node* makeleafDouble(double* d){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = DoubleType;
-	leaf->field1 = d;
+	memcpy(&leaf->field1, &d, sizeof d);
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 
 	return leaf;
+}
+
+node* makeleafCall(char* s) {
+
+	if(DEBUG){
+		printf("[DEBUG] call leaf\n");
+	}
+
+	node* leaf = (node*) malloc(sizeof(node));
+	
+	leaf->type_of_node = CallType;
+	leaf->field1 = s;
+	leaf->field2 = NULL;
+	leaf->field3 = NULL;
+	
+	return leaf;
+
 }
 
 node* createTree(node* n){
@@ -534,9 +523,13 @@ void freeNode(node* cur_node) {
 	if (cur_node == NULL)
 		return;
 
-	freeNode(cur_node->field1);
-	freeNode(cur_node->field2);
-	freeNode(cur_node->field3);
-	freeNode(cur_node->next);
+	if( !(cur_node->field1 == NULL) )
+		freeNode(cur_node->field1);
+
+	if( !(cur_node->field2 == NULL) )
+		freeNode(cur_node->field2);
+	
+	if( !(cur_node->field3 == NULL) )
+		freeNode(cur_node->field3);
 
 }
