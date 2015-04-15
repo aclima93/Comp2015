@@ -76,14 +76,10 @@ void printNode(node* cur_node) {
 
 		case ProgHeadingType:
 			
-			incrementDotCounter();
-
-			//printDots();
-			//TODO: print me like one of your french girls
+			// print nothing, intermediate node
+			// don't even increment dot counter, children are ids and take care of that
 
 			printChildren(cur_node);
-			
-			decrementDotCounter();
 			
 			break;
 
@@ -92,7 +88,7 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			//TODO:
+			//TODO: print me like one of your french girls
 
 			printChildren(cur_node);
 	
@@ -139,52 +135,78 @@ void printNode(node* cur_node) {
 
 			break;
 
-
-		case FuncHeadingType:
+		case FuncDefinitionType:
 
 			incrementDotCounter();
-
-			//TODO:
 			
+			printDots();
+			printf("FuncDef\n");
+
 			printChildren(cur_node);
 
 			decrementDotCounter();
+
+			break;
+
+		case FuncDefinition2Type:
+
+			incrementDotCounter();
+			
+			printDots();
+			printf("FuncDef2\n");
+
+			printChildren(cur_node);
+
+			decrementDotCounter();
+
+			break;
+
+		case FuncHeadingType:
+
+			// Print nothing, intermediate node
+
+			printChildren(cur_node);
 
 			break;
 
 		case FuncIdentType:
 
-			incrementDotCounter();
-
-			//TODO:
+			// Print nothing, intermediate node
 
 			printChildren(cur_node);
-			
+
+			break;
+
+		case FormalParamsListType:
+
+			incrementDotCounter();
+
+			printDots();
+			printf("FuncParams\n");
+
+			printChildren(cur_node);
+
 			decrementDotCounter();
 
 			break;
 
 		case FormalParamsType:
-
-			incrementDotCounter();
 			
-			//TODO:
+			// Print nothing, intermediate node
+		 	// we want to print them all at the same "depth"
 
 			printChildren(cur_node);
-
-			decrementDotCounter();
 
 			break;
 
 		case FuncBlockType:
 
 			incrementDotCounter();
-			
-			//TODO:
 
 			printChildren(cur_node);
 
 			decrementDotCounter();
+
 
 			break;
 
@@ -193,7 +215,7 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			//T Print nothing, intermediate node
+			// Print nothing, intermediate node
 
 			printChildren(cur_node);
 
@@ -284,7 +306,6 @@ void printNode(node* cur_node) {
 		case VarDeclarationListType:
 		case IDListType:
 		case CommaIDListType:
-		case FormalParamsListType:
 		case WritelnPListType:
 		case ParamListType:
 		case ExprListType:
@@ -299,11 +320,26 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
+			double* double_ptr = cur_node->field1;
+
 			printDots();
-			printf("RealLit(%lf)\n", (double) ( *( (double*) cur_node->field1) ) );
+			printf("RealLit(%lf)\n", double_ptr );
 
 			decrementDotCounter();
 		
+			break;
+
+		case IntType:
+
+			incrementDotCounter();
+
+			int* int_ptr = cur_node->field1;
+
+			printDots();
+			printf("IntLit(%d)\n", int_ptr );
+
+			decrementDotCounter();
+
 			break;
 
 		case IDType:
@@ -334,17 +370,6 @@ void printNode(node* cur_node) {
 
 			printDots();
 			printf("%s\n", (char*) cur_node->field1);
-
-			decrementDotCounter();
-
-			break;
-
-		case IntType:
-
-			incrementDotCounter();
-
-			printDots();
-			printf("IntLit(%d)\n", (int) cur_node->field1 );
 
 			decrementDotCounter();
 
@@ -463,6 +488,22 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	return new_node;
 }
 
+node* makeleafDouble(double d){
+	
+	if(DEBUG){
+		printf("[DEBUG] double leaf\n");
+	}
+
+	node* leaf = (node*) malloc(sizeof(node));
+	
+	leaf->type_of_node = DoubleType;
+	memcpy(&leaf->field1, &d, sizeof d);
+	leaf->field2 = NULL;
+	leaf->field3 = NULL;
+
+	return leaf;
+}
+
 node* makeleafInt(int i){
 	
 	if(DEBUG){
@@ -540,22 +581,6 @@ node* makeleafString(char* s){
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 	
-	return leaf;
-}
-
-node* makeleafDouble(double d){
-	
-	if(DEBUG){
-		printf("[DEBUG] double leaf\n");
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = DoubleType;
-	memcpy(&leaf->field1, &d, sizeof d);
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-
 	return leaf;
 }
 

@@ -991,7 +991,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
 #line 152 "mpaparser.l"
-;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols; return 0;}
+;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1032,7 +1032,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
 #line 167 "mpaparser.l"
-;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); return 0;}
+;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP

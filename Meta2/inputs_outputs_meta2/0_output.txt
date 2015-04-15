@@ -1,0 +1,14 @@
+Program
+..Id(echo)
+....VarPart
+......VarDecl
+........Id(x)
+........Id(integer)
+....FuncPart
+........StatList
+..........ValParam
+............IntLit(1)
+............Id(x)
+..........StatList
+............WriteLn
+..............Id(x)

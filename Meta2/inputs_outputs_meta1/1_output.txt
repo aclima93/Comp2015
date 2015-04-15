@@ -1,0 +1,1 @@
+Line 1, col 26: syntax error: '

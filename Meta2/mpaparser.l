@@ -149,7 +149,7 @@ INTLIT				{number}
 
 <COMMENT>"*)"|"}"		;	{if(DEBUG) printf("EXIT COMMENT\n"); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols; }
 
-<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols; return 0;}
+<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols;}
 
 <COMMENT>.				;	{if(DEBUG) printf("TEXT COMMENT\n"); commentCols+=strlen(yytext);}
 <COMMENT>"\n"			;	{if(DEBUG) printf("\\n COMMENT\n"); commentLines++; commentCols=1;}
@@ -164,7 +164,7 @@ INTLIT				{number}
 
 <STRINGLIT>.			;	{if(DEBUG) printf("TEXT STRINGLIT\n"); strcat(readString, yytext);}
 <STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
-<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString); return 0;}
+<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString);}
 
 
 

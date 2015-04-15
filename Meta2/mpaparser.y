@@ -99,8 +99,8 @@ FuncDeclaration_Repeat: FuncDeclaration ';' FuncDeclaration_Repeat					{$$ = mak
 	;
 
 FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarationType, $1, NULL, NULL);} 
-	|	FuncIdent ';' FuncBlock														{$$ = makenode(FuncDeclarationType, $1, $3, NULL);} 
-	|	FuncHeading ';' FuncBlock													{$$ = makenode(FuncDeclarationType, $1, $3, NULL);} 
+	|	FuncIdent ';' FuncBlock														{$$ = makenode(FuncDefinition2Type, $1, $3, NULL);} 
+	|	FuncHeading ';' FuncBlock													{$$ = makenode(FuncDefinitionType, $1, $3, NULL);} 
 	;
 
 FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleafID($2), $3, makeleafID($5));} 
@@ -193,7 +193,8 @@ int main(int argc, char** args){
 
     // checks which flags were requested
 	char c;
-	for(int i = 1; i < argc; i++) {
+	int i;
+	for(i = 1; i < argc; i++) {
 
 		c = getopt(argc, args, "st");
 
@@ -228,6 +229,11 @@ int main(int argc, char** args){
 }
 
 void yyerror(char *s) {
-     printf ("Line %d, col %d: %s: %s\n", line, (int)(col - strlen(yytext)), s, yytext);
+
+     printf ("Line %d, col %d: %s: %s\n", line, (int)(col-strlen(yytext)), s, yytext);
      errorCounter++;
+
 }
+
+
+

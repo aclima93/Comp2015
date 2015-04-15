@@ -1586,12 +1586,12 @@ yyreduce:
 
   case 17:
 #line 102 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncDeclarationType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(FuncDefinition2Type, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 18:
 #line 103 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncDeclarationType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(FuncDefinitionType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 19:
@@ -2055,7 +2055,8 @@ int main(int argc, char** args){
 
     // checks which flags were requested
 	char c;
-	for(int i = 1; i < argc; i++) {
+	int i;
+	for(i = 1; i < argc; i++) {
 
 		c = getopt(argc, args, "st");
 
@@ -2090,7 +2091,12 @@ int main(int argc, char** args){
 }
 
 void yyerror(char *s) {
-     printf ("Line %d, col %d: %s: %s\n", line, (int)(col - strlen(yytext)), s, yytext);
+
+     printf ("Line %d, col %d: %s: %s\n", line, (int)(col-strlen(yytext)), s, yytext);
      errorCounter++;
+
 }
+
+
+
 

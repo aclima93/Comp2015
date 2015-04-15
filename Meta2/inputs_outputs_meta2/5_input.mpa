@@ -5,7 +5,9 @@ var
 	result: integer;
 begin
 	if num1 > num2 then
-		result := num1
+		result := num1;
+	if num1 > num2 then
+		result := num1 + num2
 	else
 		result := num2;
 	max := result;
