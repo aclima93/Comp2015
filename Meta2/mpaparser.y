@@ -109,14 +109,14 @@ FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHea
 
 FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleafID($2), NULL, NULL);} ;
 
-FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FormalParamsListType, $2, $3, NULL);} ;
+FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FuncParamsListType, $2, $3, NULL);} ;
 
-SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FormalParamsListType, $2, $3, NULL);} 
+SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FuncParamsListType, $2, $3, NULL);} 
 	| 																				{$$ = NULL;} 
 	;
 
-FormalParams: VAR IDList ':' ID 													{$$ = makenode(FormalParamsType, $2, makeleafID($4), NULL);} 
-	| IDList ':' ID 																{$$ = makenode(FormalParamsType, $1, makeleafID($3), NULL);} 
+FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, makeleafID($4), NULL);} 
+	| IDList ':' ID 																{$$ = makenode(ParamsType, $1, makeleafID($3), NULL);} 
 	;
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
@@ -145,7 +145,7 @@ IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(StatType, makel
 	| 																				{$$ = NULL;} 
 	;
 
-WritelnPList_Optional: WritelnPList 												{$$ = makenode(WritelnPListType, $1, NULL, NULL);} 
+WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, $1, NULL, NULL);} 
 	| 																				{$$ = NULL;}
 	;
 

@@ -188,7 +188,7 @@ INTLIT				{number}
 {FUNCTION}				; 	{if(DEBUG) printf("FUNCTION\n"); col=col+strlen(yytext); return FUNCTION;}
 {IF}					; 	{if(DEBUG) printf("IF\n"); col=col+strlen(yytext); return IF;}
 {LBRAC}					; 	{if(DEBUG) printf("LBRAC\n"); col=col+strlen(yytext); return '(';}
-{NOT}					; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); return NOT;}
+{NOT}					; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return NOT;}
 {OUTPUT}				; 	{if(DEBUG) printf("OUTPUT\n"); col=col+strlen(yytext); return OUTPUT;}
 {PARAMSTR}				; 	{if(DEBUG) printf("PARAMSTR\n"); col=col+strlen(yytext); return PARAMSTR;}
 {PROGRAM}				; 	{if(DEBUG) printf("PROGRAM\n"); col=col+strlen(yytext); return PROGRAM;}
@@ -203,11 +203,11 @@ INTLIT				{number}
 {WRITELN}				; 	{if(DEBUG) printf("WRITELN\n"); col=col+strlen(yytext); return WRITELN;}
 
 
-{AND}					; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); return AND;}
-{OR}					;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); return OR;}
-{OP2}					; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); return OP2;}
-{OP3}					; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); return OP3;}
-{OP4}					; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); return OP4;}
+{AND}					; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return AND;}
+{OR}					;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OR;}
+{OP2}					; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP2;}
+{OP3}					; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP3;}
+{OP4}					; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP4;}
 
 
 {ID}					; 	{if(DEBUG) printf("ID\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}

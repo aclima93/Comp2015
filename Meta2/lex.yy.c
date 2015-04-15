@@ -1112,7 +1112,7 @@ YY_RULE_SETUP
 case 25:
 YY_RULE_SETUP
 #line 191 "mpaparser.l"
-; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); return NOT;}
+; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return NOT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
@@ -1177,27 +1177,27 @@ YY_RULE_SETUP
 case 38:
 YY_RULE_SETUP
 #line 206 "mpaparser.l"
-; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); return AND;}
+; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 207 "mpaparser.l"
-;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); return OR;}
+;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 208 "mpaparser.l"
-; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); return OP2;}
+; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP2;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 209 "mpaparser.l"
-; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); return OP3;}
+; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP3;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 210 "mpaparser.l"
-; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); return OP4;}
+; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP4;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP

@@ -1,5 +1,5 @@
 Program
 ..Id(gcd)
-....FuncPart
-........StatList
-..........Assign
+..FuncPart
+..StatList
+....Assign

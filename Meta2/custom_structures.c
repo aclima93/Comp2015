@@ -77,7 +77,7 @@ void printNode(node* cur_node) {
 		case ProgHeadingType:
 			
 			// print nothing, intermediate node
-			// don't even increment dot counter, children are ids and take care of that
+			// don't even increment dot counter
 
 			printChildren(cur_node);
 			
@@ -86,13 +86,10 @@ void printNode(node* cur_node) {
 
 		case ProgBlockType:
 
-			incrementDotCounter();
-
-			//TODO: print me like one of your french girls
+			// print nothing, intermediate node
+			// don't even increment dot counter
 
 			printChildren(cur_node);
-	
-			decrementDotCounter();
 
 			break;
 
@@ -163,7 +160,8 @@ void printNode(node* cur_node) {
 
 		case FuncHeadingType:
 
-			// Print nothing, intermediate node
+			// print nothing, intermediate node
+			// don't even increment dot counter
 
 			printChildren(cur_node);
 
@@ -171,13 +169,14 @@ void printNode(node* cur_node) {
 
 		case FuncIdentType:
 
-			// Print nothing, intermediate node
+			// print nothing, intermediate node
+			// don't even increment dot counter
 
 			printChildren(cur_node);
 
 			break;
 
-		case FormalParamsListType:
+		case FuncParamsListType:
 
 			incrementDotCounter();
 
@@ -190,48 +189,57 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case FormalParamsType:
+		case VarParamsType:
 			
-			// Print nothing, intermediate node
-		 	// we want to print them all at the same "depth"
-
-			printChildren(cur_node);
-
-			break;
-
-		case FuncBlockType:
-
 			incrementDotCounter();
+
+			printDots();
+			printf("VarParams\n");
 
 			printChildren(cur_node);
 
 			decrementDotCounter();
 
+			break;
+
+		case ParamsType:
+			
+			incrementDotCounter();
+
+			printDots();
+			printf("Params\n");
+
+			printChildren(cur_node);
+
+			decrementDotCounter();
+
+			break;
+
+		case FuncBlockType:
+
+			// print nothing, intermediate node
+			// don't even increment dot counter
+
+			printChildren(cur_node);
 
 			break;
 
 
 		case StatPartType:
 
-			incrementDotCounter();
-
-			// Print nothing, intermediate node
+			// print nothing, intermediate node
+			// don't even increment dot counter
 
 			printChildren(cur_node);
-
-			decrementDotCounter();
 
 			break;
 
 		case CompStatType:
 
-			incrementDotCounter();
-			
-			// Print nothing, intermediate node
+			// print nothing, intermediate node
+			// don't even increment dot counter
 
 			printChildren(cur_node);
-
-			decrementDotCounter();
 
 			break;
 
@@ -261,13 +269,12 @@ void printNode(node* cur_node) {
 
 		case ExprType:
 
-			incrementDotCounter();
-
 			// the operator is always printed first
 			// don't call printChildren !!
 
 			printNode(cur_node->field2);
 
+			incrementDotCounter();
 
 			printNode(cur_node->field1);
 			printNode(cur_node->field3);
@@ -310,7 +317,9 @@ void printNode(node* cur_node) {
 		case ParamListType:
 		case ExprListType:
 
-			// don't increment dot counter, all members are the same "depth"
+			// print nothing, intermediate node
+			// don't even increment dot counter
+			// all members are the same "depth"
 
 			printChildren(cur_node);
 
@@ -369,7 +378,9 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 
 			printDots();
-			printf("%s\n", (char*) cur_node->field1);
+			printf("Call\n");
+
+			printChildren(cur_node);
 
 			decrementDotCounter();
 
@@ -379,8 +390,6 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			printDots();
-
 			char* unary_op_str;
 
 			if( strcasecmp ( "+", (char*) cur_node->field1 ) == 0){
@@ -389,7 +398,7 @@ void printNode(node* cur_node) {
 			else if( strcasecmp ( "-", (char*) cur_node->field1 ) == 0){
 				unary_op_str = "Minus";
 			}
-			else if( strcasecmp ( "!", (char*) cur_node->field1 ) == 0){
+			else if( strcasecmp ( "not", (char*) cur_node->field1 ) == 0){
 				unary_op_str = "Not";
 			}
 			else{
@@ -397,6 +406,7 @@ void printNode(node* cur_node) {
 			}
 
 			if( !(unary_op_str == NULL) ){
+				printDots();
 				printf("%s\n", unary_op_str );
 			}
 
@@ -407,8 +417,6 @@ void printNode(node* cur_node) {
 		case OPType:
 		
 			incrementDotCounter();
-
-			printDots();
 
 			char* op_str;
 
@@ -459,6 +467,7 @@ void printNode(node* cur_node) {
 			}
 
 			if( !(op_str == NULL) ){
+				printDots();
 				printf("%s\n", op_str );
 			}
 
@@ -523,7 +532,7 @@ node* makeleafInt(int i){
 node* makeleafUnaryOP(char* o){
 
 	if(DEBUG){
-		printf("[DEBUG] unary op leaf\n");
+		printf("[DEBUG] unary op leaf %s\n", o);
 	}
 
 	node* leaf = (node*) malloc(sizeof(node));
@@ -539,7 +548,7 @@ node* makeleafUnaryOP(char* o){
 node* makeleafOP(char* o){
 
 	if(DEBUG){
-		printf("[DEBUG] op leaf\n");
+		printf("[DEBUG] op leaf %s\n", o);
 	}
 
 	node* leaf = (node*) malloc(sizeof(node));

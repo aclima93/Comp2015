@@ -6,13 +6,14 @@
 #include <stdio.h>
 
 #include <string.h>
+#include <strings.h>
 #include <ctype.h>
 #include <unistd.h>
 
 
 #define DEBUG 0
 
-typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncDefinitionType, FuncDefinition2Type, FuncHeadingType, FuncIdentType, FormalParamsListType, FormalParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, IfElseStatType, WhileStatType, RepeatStatType, ValParamStatType, AssignStatType, WriteLnStatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
+typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncDefinitionType, FuncDefinition2Type, FuncHeadingType, FuncIdentType, FuncParamsListType, VarParamsType, ParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, IfElseStatType, WhileStatType, RepeatStatType, ValParamStatType, AssignStatType, WriteLnStatType, WritelnPListType, ExprType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
 
 typedef struct {
     nodeType type_of_node;
