@@ -320,17 +320,83 @@ void printNode(node* cur_node) {
 
 		case SimpleExprType:
 
-			// print nothing, intermediate node
-			// don't even increment dot counter
+			if(cur_node->field1 == NULL){
 
-			printChildren(cur_node);
+				// print nothing, intermediate node
+				// don't even increment dot counter
+
+				printChildren(cur_node);
+				
+			}
+			else{
+
+				// special case
+				// the operator is always printed first
+				// don't call printChildren !!
+
+				printNode(cur_node->field2);
+
+				incrementDotCounter();
+
+				printNode(cur_node->field1);
+				
+				decrementDotCounter();
+
+				printNode(cur_node->field3);
+				
+			}
 
 			break;
 
 		case ExprType:
-		case FactorType:
+
+			// the operator is always printed first
+			// don't call printChildren !!
+
+			if( cur_node->field2 == NULL && cur_node->field3 == NULL ){
+
+				// print nothing, intermediate node
+				// don't even increment dot counter
+
+				printChildren(cur_node);
+
+			}
+			else{
+			
+				printNode(cur_node->field2);
+
+				incrementDotCounter();
+
+				printNode(cur_node->field1);
+				printNode(cur_node->field3);
+				
+				decrementDotCounter();
+
+			}
+
+			break;
+
 		case OPFactorType:
+
 		case OPTermListType: 
+
+			// special case
+			// the operator is always printed first
+			// don't call printChildren !!
+
+			printNode(cur_node->field2);
+
+			incrementDotCounter();
+
+			printNode(cur_node->field1);
+
+			decrementDotCounter();
+
+			printNode(cur_node->field3);
+
+			break;
+
+		case FactorType:
 
 			// the operator is always printed first
 			// don't call printChildren !!
@@ -343,6 +409,16 @@ void printNode(node* cur_node) {
 			printNode(cur_node->field3);
 			
 			decrementDotCounter();
+
+			break;
+
+		case TermType:
+
+			// print nothing, intermediate node
+			// don't even increment dot counter
+			// all members are the same "depth"
+
+			printChildren(cur_node);
 
 			break;
 
@@ -388,8 +464,6 @@ void printNode(node* cur_node) {
 		case WritelnPListType:
 		case ParamListType:
 		case ExprListType:
-		case SimpleExprListType: 
-		case OPFactorListType:
 
 			// print nothing, intermediate node
 			// don't even increment dot counter

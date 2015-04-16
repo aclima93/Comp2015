@@ -160,19 +160,20 @@ CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(Wr
 	| 																				{$$ = NULL;}
 	;
 
-Expr: SimpleExpr 																	{$$ = makenode(SimpleExprType, $1, NULL, NULL);}
-	| SimpleExpr '*' SimpleExpr 													{$$ = makenode(ExprType, $1, makeleafOP("*"), $3);}
+Expr: SimpleExpr 																	{$$ = makenode(ExprType, $1, NULL, NULL);}
 	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
 	;
 
-SimpleExpr: Term OPTerm_Repeat														{$$ = makenode(SimpleExprListType, $1, $2, NULL);} ;
+SimpleExpr: OP3 Term OPTerm_Repeat													{$$ = makenode(SimpleExprType, makeleafUnaryOP($1), $2, $3);} 
+	| Term OPTerm_Repeat															{$$ = makenode(SimpleExprType, NULL, $1, $2);}
+	;
 
 OPTerm_Repeat: OP3 Term OPTerm_Repeat												{$$ = makenode(OPTermListType, $2, makeleafOP($1), $3);} 
 	| OR Term OPTerm_Repeat															{$$ = makenode(OPTermListType, $2, makeleafOP($1), $3);} 
 	| 																				{$$ = NULL;}
 	;
 
-Term: Factor OPFactor_Repeat														{$$ = makenode(OPFactorListType, $1, $2, NULL);} ;
+Term: Factor OPFactor_Repeat														{$$ = makenode(TermType, $1, $2, NULL);} ;
 
 OPFactor_Repeat: OP4 Factor OPFactor_Repeat											{$$ = makenode(OPFactorType, $2, makeleafOP($1), $3);}
 	| AND Factor OPFactor_Repeat													{$$ = makenode(OPFactorType, $2, makeleafOP($1), $3);}
@@ -180,7 +181,7 @@ OPFactor_Repeat: OP4 Factor OPFactor_Repeat											{$$ = makenode(OPFactorTyp
 	;
 
 Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleafUnaryOP($1), $2);}
-	| '(' Expr ')' 																	{$$ = makenode(FactorType, $2, NULL, NULL);}
+	| '(' Expr ')' 																	{$$ = makenode(FactorType, NULL, $2, NULL);}
 	| INTLIT 																		{$$ = makeleafInt($1);}
 	| REALLIT 																		{$$ = makeleafDouble($1);}
 	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleafCall($1), $2);}
