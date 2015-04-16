@@ -21,8 +21,6 @@ void printDots() {
 char* getStatStr(nodeType t){
 
 	switch (t){
-		case StatType:
-			return NULL;
 		case IfElseStatType:
 			return "IfElse";
 		case WhileStatType:
@@ -243,7 +241,6 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case StatType:
 		case IfElseStatType:
 		case WhileStatType:
 		case RepeatStatType:
@@ -263,6 +260,15 @@ void printNode(node* cur_node) {
 			printChildren(cur_node);
 
 			decrementDotCounter();
+
+			break;
+
+		case StatType:
+
+			// print nothing, intermediate node
+			// don't even increment dot counter
+
+			printChildren(cur_node);
 
 			break;
 

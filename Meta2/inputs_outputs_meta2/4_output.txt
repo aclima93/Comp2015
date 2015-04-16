@@ -2,4 +2,3 @@ Program
 ..Id(gcd)
 ..FuncPart
 ..StatList
-....Assign

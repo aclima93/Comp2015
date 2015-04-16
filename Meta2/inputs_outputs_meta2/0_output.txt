@@ -9,7 +9,5 @@ Program
 ....ValParam
 ......IntLit(1)
 ......Id(x)
-....StatList
-......WriteLn
-........WriteLn
-..........Id(x)
+....WriteLn
+......Id(x)
