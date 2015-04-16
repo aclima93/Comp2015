@@ -1362,6 +1362,8 @@ state 112
     AND  shift, and go to state 96
     OP4  shift, and go to state 97
 
+    OP2  error (nonassociative)
+
     $default  reduce using rule 51 (Expr)
 
 
@@ -1377,6 +1379,8 @@ state 113
     OP3  shift, and go to state 95
     AND  shift, and go to state 96
     OP4  shift, and go to state 97
+
+    OR  error (nonassociative)
 
     $default  reduce using rule 50 (Expr)
 
@@ -1406,6 +1410,8 @@ state 115
    53     | Expr . OP4 Expr
 
     OP4  shift, and go to state 97
+
+    AND  error (nonassociative)
 
     $default  reduce using rule 49 (Expr)
 

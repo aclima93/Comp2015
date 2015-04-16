@@ -57,12 +57,12 @@ extern int col;
 %right THEN
 %right ELSE
 
-%left OP2
-%left OR
+%nonassoc OP2
+%nonassoc OR
 %left OP3
-%left AND
+%nonassoc AND
 %left OP4
-%left NOT
+%nonassoc NOT
 
 
 %type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclaration IDList FuncPart FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr ParamList 
