@@ -13,7 +13,7 @@ int col = 1;
 
 int commentCols;
 int commentLines;
-char readString[100];
+char* readString;
 
 %}
 
@@ -157,14 +157,14 @@ INTLIT				{number}
 
 
 
-"'"						;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; strcpy(readString, yytext); }
+"'"						;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; readString = strdup(yytext); }
 
-<STRINGLIT>"''"			;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); strcat(readString, yytext);}
-<STRINGLIT>"'"			;	{if(DEBUG) printf("PLICA STRINGLIT\n"); strcat(readString, yytext); BEGIN 0; col+=strlen(readString); yylval.string = strdup(readString); return STRING;}
+<STRINGLIT>"''"			;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
+<STRINGLIT>"'"			;	{if(DEBUG) printf("PLICA STRINGLIT\n"); readString = strdup(strcat(readString, yytext)); BEGIN 0; col=col+strlen(readString); yylval.string = strdup(readString); yytext = strdup(readString); return STRING;}
 
-<STRINGLIT>.			;	{if(DEBUG) printf("TEXT STRINGLIT\n"); strcat(readString, yytext);}
-<STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
-<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString);}
+<STRINGLIT>.			;	{if(DEBUG) printf("TEXT STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
+<STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1; yytext = strdup(readString); }
+<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); yytext = strdup(readString); }
 
 
 
@@ -173,7 +173,7 @@ INTLIT				{number}
 {REALLIT}				; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.real = strtod(yytext, NULL); return REALLIT;}
 
 
-{RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
+{RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return RESERVED;}
 
 
 {ASSIGN}				; 	{if(DEBUG) printf("ASSIGN\n"); col=col+strlen(yytext); return ASSIGN;}

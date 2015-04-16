@@ -705,7 +705,7 @@ int col = 1;
 
 int commentCols;
 int commentLines;
-char readString[100];
+char* readString;
 
 
 #line 712 "lex.yy.c"
@@ -1007,32 +1007,32 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 160 "mpaparser.l"
-;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; strcpy(readString, yytext); }
+;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; readString = strdup(yytext); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 162 "mpaparser.l"
-;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); strcat(readString, yytext);}
+;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 163 "mpaparser.l"
-;	{if(DEBUG) printf("PLICA STRINGLIT\n"); strcat(readString, yytext); BEGIN 0; col+=strlen(readString); yylval.string = strdup(readString); return STRING;}
+;	{if(DEBUG) printf("PLICA STRINGLIT\n"); readString = strdup(strcat(readString, yytext)); BEGIN 0; col=col+strlen(readString); yylval.string = strdup(readString); yytext = strdup(readString); return STRING;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 165 "mpaparser.l"
-;	{if(DEBUG) printf("TEXT STRINGLIT\n"); strcat(readString, yytext);}
+;	{if(DEBUG) printf("TEXT STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
 #line 166 "mpaparser.l"
-;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1;}
+;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1; yytext = strdup(readString); }
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
 #line 167 "mpaparser.l"
-;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col+=strlen(readString);}
+;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); yytext = strdup(readString); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
@@ -1047,7 +1047,7 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 176 "mpaparser.l"
-;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
+;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return RESERVED;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP

@@ -1,6 +1,7 @@
-(* bccc*)program echo(output);
+(* bccc*) program echo(output);
 var x(* bccc*): integer;
 begin
+	'uma string catita
 	{}
 	val(paramstr((* bccc*)1), x);
 	writeln(x){(**)}

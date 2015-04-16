@@ -57,16 +57,17 @@
      VAR = 273,
      WHILE = 274,
      WRITELN = 275,
-     ID = 276,
-     STRING = 277,
-     REALLIT = 278,
-     INTLIT = 279,
-     OP2 = 280,
-     OR = 281,
-     OP3 = 282,
-     AND = 283,
-     OP4 = 284,
-     NOT = 285
+     RESERVED = 276,
+     ID = 277,
+     STRING = 278,
+     REALLIT = 279,
+     INTLIT = 280,
+     OP2 = 281,
+     OR = 282,
+     OP3 = 283,
+     AND = 284,
+     OP4 = 285,
+     NOT = 286
    };
 #endif
 /* Tokens.  */
@@ -88,16 +89,17 @@
 #define VAR 273
 #define WHILE 274
 #define WRITELN 275
-#define ID 276
-#define STRING 277
-#define REALLIT 278
-#define INTLIT 279
-#define OP2 280
-#define OR 281
-#define OP3 282
-#define AND 283
-#define OP4 284
-#define NOT 285
+#define RESERVED 276
+#define ID 277
+#define STRING 278
+#define REALLIT 279
+#define INTLIT 280
+#define OP2 281
+#define OR 282
+#define OP3 283
+#define AND 284
+#define OP4 285
+#define NOT 286
 
 
 
@@ -112,7 +114,7 @@ typedef union YYSTYPE
 	node* node_pointer;
 }
 /* Line 1529 of yacc.c.  */
-#line 116 "y.tab.h"
+#line 118 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

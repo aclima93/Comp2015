@@ -1,4 +1,3 @@
 Program
 ..Id(gcd)
 ..FuncPart
-..StatList

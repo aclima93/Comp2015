@@ -242,6 +242,52 @@ void printNode(node* cur_node) {
 			break;
 
 		case IfElseStatType:
+
+			incrementDotCounter();
+
+			char* ifelse_stat_str = getStatStr(t);
+
+			if( !(ifelse_stat_str == NULL) ){
+				printDots();
+				printf("%s\n", ifelse_stat_str);
+			}
+
+			// always print the Expr in if
+
+			printNode(cur_node->field1);
+
+			// if any of the statements is empty print "StatList"
+
+			if( !( ((node*)(cur_node->field2))->field1 == NULL) ){
+				printNode(cur_node->field2);
+			}
+			else{
+
+				incrementDotCounter();
+
+				printDots();
+				printf("StatList\n");
+				
+				decrementDotCounter();
+			}
+
+			if( !( ((node*)(cur_node->field3))->field1 == NULL) ){
+				printNode(cur_node->field3);
+			}
+			else{
+
+				incrementDotCounter();
+
+				printDots();
+				printf("StatList\n");
+				
+				decrementDotCounter();
+			}
+
+			decrementDotCounter();
+
+			break;
+
 		case WhileStatType:
 		case RepeatStatType:
 		case ValParamStatType:
@@ -272,8 +318,19 @@ void printNode(node* cur_node) {
 
 			break;
 
+		case SimpleExprType:
+
+			// print nothing, intermediate node
+			// don't even increment dot counter
+
+			printChildren(cur_node);
+
+			break;
 
 		case ExprType:
+		case FactorType:
+		case OPFactorType:
+		case OPTermListType: 
 
 			// the operator is always printed first
 			// don't call printChildren !!
@@ -304,14 +361,23 @@ void printNode(node* cur_node) {
 
 		case StatListType:
 
-			incrementDotCounter();
+			if( !(cur_node == NULL) && !(cur_node->field2 == NULL) ){
 
-			printDots();
-			printf("StatList\n");
+				incrementDotCounter();
 
-			printChildren(cur_node);
-			
-			decrementDotCounter();
+				printDots();
+				printf("StatList\n");
+
+				printChildren(cur_node);
+				
+				decrementDotCounter();
+			}
+			else{
+
+				// Don't print StatList if it only has one element, it's not a list
+
+				printChildren(cur_node);
+			}
 
 			break;
 
@@ -322,6 +388,8 @@ void printNode(node* cur_node) {
 		case WritelnPListType:
 		case ParamListType:
 		case ExprListType:
+		case SimpleExprListType: 
+		case OPFactorListType:
 
 			// print nothing, intermediate node
 			// don't even increment dot counter
