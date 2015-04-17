@@ -59,16 +59,16 @@ extern int col;
 %right THEN
 %right ELSE
 
-%nonassoc OP2
-%nonassoc OR
-%left OP3
-%nonassoc AND
-%left OP4
-%nonassoc NOT
+%left OP2
+%left OR OP3
+%left AND OP4
+%right NOT
+%left '(' ')'
+%right ASSIGN
 
 
-%type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclaration IDList FuncPart FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr SimpleExpr UnaryTerm Term Factor ParamList 
-%type <node_pointer> VarDeclarationSemic_Repeat CommaID_Repeat FuncDeclaration_Repeat SemicFormalParams_Repeat SemicStat_Repeat IDAssignExpr_Optional WritelnPList_Optional CommaExprString_Repeat CommaExpr_Repeat OPTerm_Repeat OPFactor_Repeat
+%type <node_pointer> Prog ProgHeading ProgBlock VarPart VarDeclaration IDList FuncPart FuncDeclaration FuncHeading FuncIdent FormalParamList FormalParams FuncBlock StatPart CompStat StatList Stat WritelnPList Expr SimpleExpr Term Factor ParamList 
+%type <node_pointer> VarDeclarationSemic_Repeat CommaID_Repeat FuncDeclaration_Repeat SemicFormalParams_Repeat SemicStat_Repeat IDAssignExpr_Optional WritelnPList_Optional CommaExprString_Repeat CommaExpr_Repeat 
 
 %% 
 
@@ -164,25 +164,15 @@ Expr: SimpleExpr 																	{$$ = makenode(ExprType, $1, NULL, NULL);}
 	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
 	;
 
-SimpleExpr: UnaryTerm OP3 OPTerm_Repeat												{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);} 
-	| UnaryTerm OR OPTerm_Repeat													{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);}
-	| UnaryTerm 																	{$$ = makenode(SimpleExprType, $1, NULL, NULL);}
+SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);} 
+	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);}
+	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleafUnaryOP($1), $2);}
+	| Term 																			{$$ = $1;}
 	;
 
-UnaryTerm: OP3 Term 																{$$ = makenode(UnaryTermType, NULL, makeleafUnaryOP($1), $2);}
-	| Term 																			{$$ = makenode(UnaryTermType, NULL, NULL, $1);}
-	;
-
-OPTerm_Repeat: Term OP3 OPTerm_Repeat 												{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
-	| Term OR OPTerm_Repeat 														{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
-	| Term 																			{$$ = makenode(OPTermListType, NULL, NULL, $1);}
-	;
-
-Term: OPFactor_Repeat																{$$ = makenode(TermType, $1, NULL, NULL);} ;
-
-OPFactor_Repeat: Factor OP4 OPFactor_Repeat											{$$ = makenode(OPFactorListType, $1, makeleafOP($2), $3);}
-	| Factor AND OPFactor_Repeat													{$$ = makenode(OPFactorListType, $1, makeleafOP($2), $3);}
-	| Factor 																		{$$ = makenode(OPFactorListType, NULL, NULL, $1);}
+Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
+	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
+	| Factor 																		{$$ = $1;}
 	;
 
 Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleafUnaryOP($1), $2);}

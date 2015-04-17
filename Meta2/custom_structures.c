@@ -399,7 +399,6 @@ void printNode(node* cur_node) {
 			break;
 
 		case FactorType:
-		case OPFactorListType:
 		case OPTermListType: 
 
 			// print inner OPTermLists first
@@ -568,6 +567,10 @@ void printNode(node* cur_node) {
 			}
 
 			decrementDotCounter();
+
+			if( strcasecmp ( "not", (char*) cur_node->field1 ) == 0){
+				incrementDotCounter();
+			}
 
 			break;
 
