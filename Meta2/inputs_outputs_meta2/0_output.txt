@@ -7,7 +7,7 @@ Program
 ..FuncPart
 ..StatList
 ....ValParam
-......IntLit(1)
+..........IntLit(1)
 ......Id(x)
 ....WriteLn
-......Id(x)
+..........Id(x)

@@ -123,7 +123,7 @@ FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, m
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
 
-StatPart: CompStat 																	{$$ = makenode(StatType, $1, NULL, NULL);} ;
+StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL);} ;
 
 CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
@@ -133,18 +133,18 @@ SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $
 	| 																				{$$ = NULL;} 
 	;
 
-Stat: CompStat 																		{$$ = makenode(StatListType, $1, NULL, NULL);} 
+Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
 	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
 	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatType, NULL, NULL, NULL));} 
 	|	WHILE Expr DO Stat 															{$$ = makenode(WhileStatType, $2, $4, NULL);} 
 	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
 	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
-	|	IDAssignExpr_Optional 														{$$ = $1;} 
-	|	WRITELN WritelnPList_Optional 												{$$ = $2;} 
+	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
+	|	WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleafID($1), $3, NULL);} 
-	| 																				{$$ = NULL;/*makenode(EmptyStatListType, NULL, NULL, NULL);*/}
+	| 																				{$$ = makenode(EmptyStatListType, NULL, NULL, NULL);}
 	;
 
 WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, $1, NULL, NULL);} 

@@ -31,10 +31,12 @@ typedef struct {
 
 node* root;
 
+
 int dotCounter;
 int errorCounter;
 int printTree;
 int printSymbolTable;
+
 
 void incrementDotCounter();
 
