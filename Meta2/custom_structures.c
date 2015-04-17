@@ -57,7 +57,7 @@ void printNode(node* cur_node) {
 	nodeType t = cur_node->type_of_node;
 
 	if(DEBUG_TYPE){
-		char* enumString[] = {"ProgType", "ProgHeadingType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", "FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType", "ParamsType", "FuncBlockType", "StatPartType", "CompStatType", "StatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "TermType", "ExprListType", "ParamListType", "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"};
+		char* enumString[] = {"ProgType", "ProgHeadingType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", "FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType", "ParamsType", "FuncBlockType", "StatPartType", "CompStatType", "StatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "UnaryTermType", "TermType", "ExprListType", "ParamListType", "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"};
 		printf("[DEBUG] type: %s\n", enumString[t]);
 	}
 
@@ -157,30 +157,39 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case FuncHeadingType:
-
-			// print nothing, intermediate node
-			// don't even increment dot counter
-
-			printChildren(cur_node);
-
-			break;
-
 		case FuncIdentType:
 
 			// print nothing, intermediate node
 			// don't even increment dot counter
 
-			printChildren(cur_node);
+			printNode(cur_node->field1);
+			printNode(cur_node->field2);
+			printNode(cur_node->field3);
+
+			break;
+
+		case FuncHeadingType:
+
+			// print nothing, intermediate node
+			// don't even increment dot counter
+
+			printNode(cur_node->field1);
+
+			incrementDotCounter();
+
+			printDots();
+			printf("FuncParams\n");
+
+			decrementDotCounter();
+
+			printNode(cur_node->field2);
+			printNode(cur_node->field3);
 
 			break;
 
 		case FuncParamsListType:
 
 			incrementDotCounter();
-
-			printDots();
-			printf("FuncParams\n");
 
 			printChildren(cur_node);
 
@@ -190,14 +199,7 @@ void printNode(node* cur_node) {
 
 		case VarParamsType:
 			
-			incrementDotCounter();
-
-			printDots();
-			printf("VarParams\n");
-
 			printChildren(cur_node);
-
-			decrementDotCounter();
 
 			break;
 
@@ -356,29 +358,6 @@ void printNode(node* cur_node) {
 			break;
 
 		case SimpleExprType:
-
-			// print in reverse
-				
-			printNode(cur_node->field3);
-
-			if( cur_node->field1 == NULL ){
-
-				printNode(cur_node->field2);
-
-			}
-			else{
-
-				printNode(cur_node->field1);
-
-				incrementDotCounter();
-
-				printNode(cur_node->field2);
-
-				decrementDotCounter();
-			}
-
-			break;
-
 		case ExprType:
 
 			if( cur_node->field2 == NULL && cur_node->field3 == NULL ){
@@ -408,46 +387,61 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case OPFactorListType:
-		case OPTermListType: 
+		case UnaryTermType:
 
-				// print inner OPTermLists first
-				printNode(cur_node->field3);
-
-				printNode(cur_node->field1);
-
-				incrementDotCounter();
+			// print inner OPTermLists first
+				
+			if( !(cur_node->field2 == NULL) ){
 
 				printNode(cur_node->field2);
 
-				decrementDotCounter();
+				incrementDotCounter();
+
+				printNode(cur_node->field1);
+
+				printNode(cur_node->field3);
+				
+				decrementDotCounter();		
+			
+			}
+			else{
+
+				printChildren(cur_node);
+				
+			}
+
+			break;
+
+		case FactorType:
+		case OPFactorListType:
+		case OPTermListType: 
+
+			// print inner OPTermLists first
+				
+			if( !(cur_node->field1 == NULL) ){
+
+				printNode(cur_node->field2);
+
+				incrementDotCounter();
+
+				printNode(cur_node->field1);
+
+				printNode(cur_node->field3);
+				
+				decrementDotCounter();		
+			
+			}
+			else{
+
+				printChildren(cur_node);
+				
+			}
 
 			break;
 
 		case TermType:
 
-			// print in reverse
-
-			printNode(cur_node->field1);
-
-			printNode(cur_node->field2);
-
-			break;
-
-		case FactorType:
-
-			// the operator is always printed first
-			// don't call printChildren !!
-
-			printNode(cur_node->field2);
-
-			incrementDotCounter();
-
-			printNode(cur_node->field1);
-
-			printNode(cur_node->field3);
-			
-			decrementDotCounter();
+			printChildren(cur_node);
 
 			break;
 

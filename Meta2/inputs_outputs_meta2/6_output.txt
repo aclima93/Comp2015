@@ -11,6 +11,7 @@ Program
 ..FuncPart
 ....FuncDef
 ......Id(myFunction)
+......FuncParams
 ......Id(integer)
 ......VarPart
 ........VarDecl

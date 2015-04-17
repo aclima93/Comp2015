@@ -14,11 +14,13 @@ Program
 ....FuncDef2
 ......Id(myFunc2)
 ......VarPart
+......StatList
 ....FuncDef
 ......Id(myFunction)
 ......FuncParams
 ......Id(integer)
 ......VarPart
+......StatList
 ....FuncDef
 ......Id(myFunction1)
 ......FuncParams
@@ -27,6 +29,7 @@ Program
 ..........Id(integer)
 ......Id(integer)
 ......VarPart
+......StatList
 ....FuncDef
 ......Id(myFunction2)
 ......FuncParams
@@ -36,3 +39,5 @@ Program
 ..........Id(integer)
 ......Id(integer)
 ......VarPart
+......StatList
+..StatList

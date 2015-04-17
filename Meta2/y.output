@@ -84,38 +84,42 @@ Grammar
    49 Expr: SimpleExpr
    50     | SimpleExpr OP2 SimpleExpr
 
-   51 SimpleExpr: OP3 Term OPTerm_Repeat
-   52           | Term OPTerm_Repeat
+   51 SimpleExpr: UnaryTerm OP3 OPTerm_Repeat
+   52           | UnaryTerm OR OPTerm_Repeat
+   53           | UnaryTerm
 
-   53 OPTerm_Repeat: OP3 Term OPTerm_Repeat
-   54              | OR Term OPTerm_Repeat
-   55              | /* empty */
+   54 UnaryTerm: OP3 Term
+   55          | Term
 
-   56 Term: Factor OPFactor_Repeat
+   56 OPTerm_Repeat: Term OP3 OPTerm_Repeat
+   57              | Term OR OPTerm_Repeat
+   58              | Term
 
-   57 OPFactor_Repeat: OP4 Factor OPFactor_Repeat
-   58                | AND Factor OPFactor_Repeat
-   59                | /* empty */
+   59 Term: OPFactor_Repeat
 
-   60 Factor: NOT Factor
-   61       | '(' Expr ')'
-   62       | INTLIT
-   63       | REALLIT
-   64       | ID ParamList
-   65       | ID
+   60 OPFactor_Repeat: Factor OP4 OPFactor_Repeat
+   61                | Factor AND OPFactor_Repeat
+   62                | Factor
 
-   66 ParamList: '(' Expr CommaExpr_Repeat ')'
+   63 Factor: NOT Factor
+   64       | '(' Expr ')'
+   65       | INTLIT
+   66       | REALLIT
+   67       | ID ParamList
+   68       | ID
 
-   67 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat
-   68                 | /* empty */
+   69 ParamList: '(' Expr CommaExpr_Repeat ')'
+
+   70 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat
+   71                 | /* empty */
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 2 21 37 44 45 61 66
-')' (41) 2 21 37 44 45 61 66
-',' (44) 10 37 46 47 67
+'(' (40) 2 21 37 44 45 64 69
+')' (41) 2 21 37 44 45 64 69
+',' (44) 10 37 46 47 70
 '.' (46) 1
 ':' (58) 8 18 19 24 25
 ';' (59) 1 4 6 13 15 16 17 22 30
@@ -139,16 +143,16 @@ VAR (273) 4 24
 WHILE (274) 35
 WRITELN (275) 39
 RESERVED (276)
-ID (277) 2 8 9 10 18 19 20 24 25 37 40 64 65
+ID (277) 2 8 9 10 18 19 20 24 25 37 40 67 68
 STRING (278) 45 47
-REALLIT (279) 63
-INTLIT (280) 62
+REALLIT (279) 66
+INTLIT (280) 65
 OP2 (281) 50
-OR (282) 54
-OP3 (283) 51 53
-AND (284) 58
-OP4 (285) 57
-NOT (286) 60
+OR (282) 52 57
+OP3 (283) 51 54 56
+AND (284) 61
+OP4 (285) 60
+NOT (286) 63
 
 
 Nonterminals, with rules where they appear
@@ -208,21 +212,23 @@ WritelnPList (63)
 CommaExprString_Repeat (64)
     on left: 46 47 48, on right: 44 45 46 47
 Expr (65)
-    on left: 49 50, on right: 33 34 35 36 37 40 44 46 61 66 67
+    on left: 49 50, on right: 33 34 35 36 37 40 44 46 64 69 70
 SimpleExpr (66)
-    on left: 51 52, on right: 49 50
-OPTerm_Repeat (67)
-    on left: 53 54 55, on right: 51 52 53 54
-Term (68)
-    on left: 56, on right: 51 52 53 54
-OPFactor_Repeat (69)
-    on left: 57 58 59, on right: 56 57 58
-Factor (70)
-    on left: 60 61 62 63 64 65, on right: 56 57 58 60
-ParamList (71)
-    on left: 66, on right: 64
-CommaExpr_Repeat (72)
-    on left: 67 68, on right: 66 67
+    on left: 51 52 53, on right: 49 50
+UnaryTerm (67)
+    on left: 54 55, on right: 51 52 53
+OPTerm_Repeat (68)
+    on left: 56 57 58, on right: 51 52 56 57
+Term (69)
+    on left: 59, on right: 54 55 56 57 58
+OPFactor_Repeat (70)
+    on left: 60 61 62, on right: 59 60 61
+Factor (71)
+    on left: 63 64 65 66 67 68, on right: 60 61 62 63
+ParamList (72)
+    on left: 69, on right: 67
+CommaExpr_Repeat (73)
+    on left: 70 71, on right: 69 70
 
 
 state 0
@@ -606,10 +612,12 @@ state 41
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 69
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 69
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 42
@@ -627,7 +635,7 @@ state 42
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    StatList               go to state 73
+    StatList               go to state 75
     Stat                   go to state 49
     IDAssignExpr_Optional  go to state 50
 
@@ -636,7 +644,7 @@ state 43
 
    37 Stat: VAL . '(' PARAMSTR '(' Expr ')' ',' ID ')'
 
-    '('  shift, and go to state 74
+    '('  shift, and go to state 76
 
 
 state 44
@@ -650,29 +658,31 @@ state 44
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 75
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 77
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 45
 
    39 Stat: WRITELN . WritelnPList_Optional
 
-    '('  shift, and go to state 76
+    '('  shift, and go to state 78
 
     $default  reduce using rule 43 (WritelnPList_Optional)
 
-    WritelnPList_Optional  go to state 77
-    WritelnPList           go to state 78
+    WritelnPList_Optional  go to state 79
+    WritelnPList           go to state 80
 
 
 state 46
 
    40 IDAssignExpr_Optional: ID . ASSIGN Expr
 
-    ASSIGN  shift, and go to state 79
+    ASSIGN  shift, and go to state 81
 
 
 state 47
@@ -686,18 +696,18 @@ state 48
 
    28 CompStat: BEGIN_token StatList . END
 
-    END  shift, and go to state 80
+    END  shift, and go to state 82
 
 
 state 49
 
    29 StatList: Stat . SemicStat_Repeat
 
-    ';'  shift, and go to state 81
+    ';'  shift, and go to state 83
 
     $default  reduce using rule 31 (SemicStat_Repeat)
 
-    SemicStat_Repeat  go to state 82
+    SemicStat_Repeat  go to state 84
 
 
 state 50
@@ -727,7 +737,7 @@ state 53
 
     BEGIN_token  shift, and go to state 28
 
-    StatPart  go to state 83
+    StatPart  go to state 85
     CompStat  go to state 30
 
 
@@ -760,7 +770,7 @@ state 57
 
     $default  reduce using rule 7 (VarDeclarationSemic_Repeat)
 
-    VarDeclarationSemic_Repeat  go to state 84
+    VarDeclarationSemic_Repeat  go to state 86
     VarDeclaration              go to state 36
     IDList                      go to state 14
 
@@ -771,25 +781,25 @@ state 58
 
     ID  shift, and go to state 12
 
-    IDList  go to state 85
+    IDList  go to state 87
 
 
 state 59
 
    25 FormalParams: IDList . ':' ID
 
-    ':'  shift, and go to state 86
+    ':'  shift, and go to state 88
 
 
 state 60
 
    21 FormalParamList: '(' FormalParams . SemicFormalParams_Repeat ')'
 
-    ';'  shift, and go to state 87
+    ';'  shift, and go to state 89
 
     $default  reduce using rule 23 (SemicFormalParams_Repeat)
 
-    SemicFormalParams_Repeat  go to state 88
+    SemicFormalParams_Repeat  go to state 90
 
 
 state 61
@@ -803,38 +813,38 @@ state 62
 
    18 FuncHeading: FUNCTION ID FormalParamList ':' . ID
 
-    ID  shift, and go to state 89
+    ID  shift, and go to state 91
 
 
 state 63
 
-   64 Factor: ID . ParamList
-   65       | ID .
+   67 Factor: ID . ParamList
+   68       | ID .
 
-    '('  shift, and go to state 90
+    '('  shift, and go to state 92
 
-    $default  reduce using rule 65 (Factor)
+    $default  reduce using rule 68 (Factor)
 
-    ParamList  go to state 91
+    ParamList  go to state 93
 
 
 state 64
 
-   63 Factor: REALLIT .
+   66 Factor: REALLIT .
 
-    $default  reduce using rule 63 (Factor)
+    $default  reduce using rule 66 (Factor)
 
 
 state 65
 
-   62 Factor: INTLIT .
+   65 Factor: INTLIT .
 
-    $default  reduce using rule 62 (Factor)
+    $default  reduce using rule 65 (Factor)
 
 
 state 66
 
-   51 SimpleExpr: OP3 . Term OPTerm_Repeat
+   54 UnaryTerm: OP3 . Term
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -842,13 +852,14 @@ state 66
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Term    go to state 92
-    Factor  go to state 72
+    Term             go to state 94
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 67
 
-   60 Factor: NOT . Factor
+   63 Factor: NOT . Factor
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -856,12 +867,12 @@ state 67
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Factor  go to state 93
+    Factor  go to state 95
 
 
 state 68
 
-   61 Factor: '(' . Expr ')'
+   64 Factor: '(' . Expr ')'
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -870,10 +881,12 @@ state 68
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 94
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 96
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 69
@@ -881,7 +894,7 @@ state 69
    33 Stat: IF Expr . THEN Stat ELSE Stat
    34     | IF Expr . THEN Stat
 
-    THEN  shift, and go to state 95
+    THEN  shift, and go to state 97
 
 
 state 70
@@ -889,57 +902,71 @@ state 70
    49 Expr: SimpleExpr .
    50     | SimpleExpr . OP2 SimpleExpr
 
-    OP2  shift, and go to state 96
+    OP2  shift, and go to state 98
 
     $default  reduce using rule 49 (Expr)
 
 
 state 71
 
-   52 SimpleExpr: Term . OPTerm_Repeat
+   51 SimpleExpr: UnaryTerm . OP3 OPTerm_Repeat
+   52           | UnaryTerm . OR OPTerm_Repeat
+   53           | UnaryTerm .
 
-    OR   shift, and go to state 97
-    OP3  shift, and go to state 98
+    OR   shift, and go to state 99
+    OP3  shift, and go to state 100
 
-    $default  reduce using rule 55 (OPTerm_Repeat)
-
-    OPTerm_Repeat  go to state 99
+    $default  reduce using rule 53 (SimpleExpr)
 
 
 state 72
 
-   56 Term: Factor . OPFactor_Repeat
+   55 UnaryTerm: Term .
 
-    AND  shift, and go to state 100
-    OP4  shift, and go to state 101
-
-    $default  reduce using rule 59 (OPFactor_Repeat)
-
-    OPFactor_Repeat  go to state 102
+    $default  reduce using rule 55 (UnaryTerm)
 
 
 state 73
+
+   59 Term: OPFactor_Repeat .
+
+    $default  reduce using rule 59 (Term)
+
+
+state 74
+
+   60 OPFactor_Repeat: Factor . OP4 OPFactor_Repeat
+   61                | Factor . AND OPFactor_Repeat
+   62                | Factor .
+
+    AND  shift, and go to state 101
+    OP4  shift, and go to state 102
+
+    $default  reduce using rule 62 (OPFactor_Repeat)
+
+
+state 75
 
    36 Stat: REPEAT StatList . UNTIL Expr
 
     UNTIL  shift, and go to state 103
 
 
-state 74
+state 76
 
    37 Stat: VAL '(' . PARAMSTR '(' Expr ')' ',' ID ')'
 
     PARAMSTR  shift, and go to state 104
 
 
-state 75
+state 77
 
    35 Stat: WHILE Expr . DO Stat
 
     DO  shift, and go to state 105
 
 
-state 76
+state 78
 
    44 WritelnPList: '(' . Expr CommaExprString_Repeat ')'
    45             | '(' . STRING CommaExprString_Repeat ')'
@@ -952,27 +979,29 @@ state 76
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 107
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 107
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
-state 77
+state 79
 
    39 Stat: WRITELN WritelnPList_Optional .
 
     $default  reduce using rule 39 (Stat)
 
 
-state 78
+state 80
 
    42 WritelnPList_Optional: WritelnPList .
 
     $default  reduce using rule 42 (WritelnPList_Optional)
 
 
-state 79
+state 81
 
    40 IDAssignExpr_Optional: ID ASSIGN . Expr
 
@@ -983,20 +1012,22 @@ state 79
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 108
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 108
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
-state 80
+state 82
 
    28 CompStat: BEGIN_token StatList END .
 
     $default  reduce using rule 28 (CompStat)
 
 
-state 81
+state 83
 
    30 SemicStat_Repeat: ';' . Stat SemicStat_Repeat
 
@@ -1015,42 +1046,42 @@ state 81
     IDAssignExpr_Optional  go to state 50
 
 
-state 82
+state 84
 
    29 StatList: Stat SemicStat_Repeat .
 
     $default  reduce using rule 29 (StatList)
 
 
-state 83
+state 85
 
    26 FuncBlock: VarPart StatPart .
 
     $default  reduce using rule 26 (FuncBlock)
 
 
-state 84
+state 86
 
     6 VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat .
 
     $default  reduce using rule 6 (VarDeclarationSemic_Repeat)
 
 
-state 85
+state 87
 
    24 FormalParams: VAR IDList . ':' ID
 
     ':'  shift, and go to state 110
 
 
-state 86
+state 88
 
    25 FormalParams: IDList ':' . ID
 
     ID  shift, and go to state 111
 
 
-state 87
+state 89
 
    22 SemicFormalParams_Repeat: ';' . FormalParams SemicFormalParams_Repeat
 
@@ -1061,23 +1092,23 @@ state 87
     FormalParams  go to state 112
 
 
-state 88
+state 90
 
    21 FormalParamList: '(' FormalParams SemicFormalParams_Repeat . ')'
 
     ')'  shift, and go to state 113
 
 
-state 89
+state 91
 
    18 FuncHeading: FUNCTION ID FormalParamList ':' ID .
 
     $default  reduce using rule 18 (FuncHeading)
 
 
-state 90
+state 92
 
-   66 ParamList: '(' . Expr CommaExpr_Repeat ')'
+   69 ParamList: '(' . Expr CommaExpr_Repeat ')'
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -1086,46 +1117,43 @@ state 90
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 114
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
-
-
-state 91
-
-   64 Factor: ID ParamList .
-
-    $default  reduce using rule 64 (Factor)
-
-
-state 92
-
-   51 SimpleExpr: OP3 Term . OPTerm_Repeat
-
-    OR   shift, and go to state 97
-    OP3  shift, and go to state 98
-
-    $default  reduce using rule 55 (OPTerm_Repeat)
-
-    OPTerm_Repeat  go to state 115
+    Expr             go to state 114
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 93
 
-   60 Factor: NOT Factor .
+   67 Factor: ID ParamList .
 
-    $default  reduce using rule 60 (Factor)
+    $default  reduce using rule 67 (Factor)
 
 
 state 94
 
-   61 Factor: '(' Expr . ')'
+   54 UnaryTerm: OP3 Term .
 
-    ')'  shift, and go to state 116
+    $default  reduce using rule 54 (UnaryTerm)
 
 
 state 95
+
+   63 Factor: NOT Factor .
+
+    $default  reduce using rule 63 (Factor)
+
+
+state 96
+
+   64 Factor: '(' Expr . ')'
+
+    ')'  shift, and go to state 115
+
+
+state 97
 
    33 Stat: IF Expr THEN . Stat ELSE Stat
    34     | IF Expr THEN . Stat
@@ -1141,11 +1169,11 @@ state 95
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    Stat                   go to state 117
+    Stat                   go to state 116
     IDAssignExpr_Optional  go to state 50
 
 
-state 96
+state 98
 
    50 Expr: SimpleExpr OP2 . SimpleExpr
 
@@ -1156,49 +1184,32 @@ state 96
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    SimpleExpr  go to state 118
-    Term        go to state 71
-    Factor      go to state 72
-
-
-state 97
-
-   54 OPTerm_Repeat: OR . Term OPTerm_Repeat
-
-    ID       shift, and go to state 63
-    REALLIT  shift, and go to state 64
-    INTLIT   shift, and go to state 65
-    NOT      shift, and go to state 67
-    '('      shift, and go to state 68
-
-    Term    go to state 119
-    Factor  go to state 72
-
-
-state 98
-
-   53 OPTerm_Repeat: OP3 . Term OPTerm_Repeat
-
-    ID       shift, and go to state 63
-    REALLIT  shift, and go to state 64
-    INTLIT   shift, and go to state 65
-    NOT      shift, and go to state 67
-    '('      shift, and go to state 68
-
-    Term    go to state 120
-    Factor  go to state 72
+    SimpleExpr       go to state 117
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 99
 
-   52 SimpleExpr: Term OPTerm_Repeat .
+   52 SimpleExpr: UnaryTerm OR . OPTerm_Repeat
 
-    $default  reduce using rule 52 (SimpleExpr)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    OPTerm_Repeat    go to state 118
+    Term             go to state 119
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 100
 
-   58 OPFactor_Repeat: AND . Factor OPFactor_Repeat
+   51 SimpleExpr: UnaryTerm OP3 . OPTerm_Repeat
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -1206,12 +1217,15 @@ state 100
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Factor  go to state 121
+    OPTerm_Repeat    go to state 120
+    Term             go to state 119
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 101
 
-   57 OPFactor_Repeat: OP4 . Factor OPFactor_Repeat
+   61 OPFactor_Repeat: Factor AND . OPFactor_Repeat
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -1219,14 +1233,22 @@ state 101
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Factor  go to state 122
+    OPFactor_Repeat  go to state 121
+    Factor           go to state 74
 
 
 state 102
 
-   56 Term: Factor OPFactor_Repeat .
+   60 OPFactor_Repeat: Factor OP4 . OPFactor_Repeat
 
-    $default  reduce using rule 56 (Term)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    OPFactor_Repeat  go to state 122
+    Factor           go to state 74
 
 
 state 103
@@ -1240,10 +1262,12 @@ state 103
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 123
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 123
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 104
@@ -1305,7 +1329,7 @@ state 109
 
    30 SemicStat_Repeat: ';' Stat . SemicStat_Repeat
 
-    ';'  shift, and go to state 81
+    ';'  shift, and go to state 83
 
     $default  reduce using rule 31 (SemicStat_Repeat)
 
@@ -1330,7 +1354,7 @@ state 112
 
    22 SemicFormalParams_Repeat: ';' FormalParams . SemicFormalParams_Repeat
 
-    ';'  shift, and go to state 87
+    ';'  shift, and go to state 89
 
     $default  reduce using rule 23 (SemicFormalParams_Repeat)
 
@@ -1346,30 +1370,23 @@ state 113
 
 state 114
 
-   66 ParamList: '(' Expr . CommaExpr_Repeat ')'
+   69 ParamList: '(' Expr . CommaExpr_Repeat ')'
 
     ','  shift, and go to state 132
 
-    $default  reduce using rule 68 (CommaExpr_Repeat)
+    $default  reduce using rule 71 (CommaExpr_Repeat)
 
     CommaExpr_Repeat  go to state 133
 
 
 state 115
 
-   51 SimpleExpr: OP3 Term OPTerm_Repeat .
+   64 Factor: '(' Expr ')' .
 
-    $default  reduce using rule 51 (SimpleExpr)
+    $default  reduce using rule 64 (Factor)
 
 
 state 116
-
-   61 Factor: '(' Expr ')' .
-
-    $default  reduce using rule 61 (Factor)
-
-
-state 117
 
    33 Stat: IF Expr THEN Stat . ELSE Stat
    34     | IF Expr THEN Stat .
@@ -1379,59 +1396,51 @@ state 117
     $default  reduce using rule 34 (Stat)
 
 
-state 118
+state 117
 
    50 Expr: SimpleExpr OP2 SimpleExpr .
 
     $default  reduce using rule 50 (Expr)
 
 
+state 118
+
+   52 SimpleExpr: UnaryTerm OR OPTerm_Repeat .
+
+    $default  reduce using rule 52 (SimpleExpr)
+
+
 state 119
 
-   54 OPTerm_Repeat: OR Term . OPTerm_Repeat
+   56 OPTerm_Repeat: Term . OP3 OPTerm_Repeat
+   57              | Term . OR OPTerm_Repeat
+   58              | Term .
 
-    OR   shift, and go to state 97
-    OP3  shift, and go to state 98
+    OR   shift, and go to state 135
+    OP3  shift, and go to state 136
 
-    $default  reduce using rule 55 (OPTerm_Repeat)
-
-    OPTerm_Repeat  go to state 135
+    $default  reduce using rule 58 (OPTerm_Repeat)
 
 
 state 120
 
-   53 OPTerm_Repeat: OP3 Term . OPTerm_Repeat
+   51 SimpleExpr: UnaryTerm OP3 OPTerm_Repeat .
 
-    OR   shift, and go to state 97
-    OP3  shift, and go to state 98
-
-    $default  reduce using rule 55 (OPTerm_Repeat)
-
-    OPTerm_Repeat  go to state 136
+    $default  reduce using rule 51 (SimpleExpr)
 
 
 state 121
 
-   58 OPFactor_Repeat: AND Factor . OPFactor_Repeat
+   61 OPFactor_Repeat: Factor AND OPFactor_Repeat .
 
-    AND  shift, and go to state 100
-    OP4  shift, and go to state 101
-
-    $default  reduce using rule 59 (OPFactor_Repeat)
-
-    OPFactor_Repeat  go to state 137
+    $default  reduce using rule 61 (OPFactor_Repeat)
 
 
 state 122
 
-   57 OPFactor_Repeat: OP4 Factor . OPFactor_Repeat
+   60 OPFactor_Repeat: Factor OP4 OPFactor_Repeat .
 
-    AND  shift, and go to state 100
-    OP4  shift, and go to state 101
-
-    $default  reduce using rule 59 (OPFactor_Repeat)
-
-    OPFactor_Repeat  go to state 138
+    $default  reduce using rule 60 (OPFactor_Repeat)
 
 
 state 123
@@ -1452,10 +1461,12 @@ state 124
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 139
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 137
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 125
@@ -1471,31 +1482,33 @@ state 126
    47                       | ',' . STRING CommaExprString_Repeat
 
     ID       shift, and go to state 63
-    STRING   shift, and go to state 140
+    STRING   shift, and go to state 138
     REALLIT  shift, and go to state 64
     INTLIT   shift, and go to state 65
     OP3      shift, and go to state 66
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 141
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 139
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 127
 
    45 WritelnPList: '(' STRING CommaExprString_Repeat . ')'
 
-    ')'  shift, and go to state 142
+    ')'  shift, and go to state 140
 
 
 state 128
 
    44 WritelnPList: '(' Expr CommaExprString_Repeat . ')'
 
-    ')'  shift, and go to state 143
+    ')'  shift, and go to state 141
 
 
 state 129
@@ -1521,7 +1534,7 @@ state 131
 
 state 132
 
-   67 CommaExpr_Repeat: ',' . Expr CommaExpr_Repeat
+   70 CommaExpr_Repeat: ',' . Expr CommaExpr_Repeat
 
     ID       shift, and go to state 63
     REALLIT  shift, and go to state 64
@@ -1530,17 +1543,19 @@ state 132
     NOT      shift, and go to state 67
     '('      shift, and go to state 68
 
-    Expr        go to state 144
-    SimpleExpr  go to state 70
-    Term        go to state 71
-    Factor      go to state 72
+    Expr             go to state 142
+    SimpleExpr       go to state 70
+    UnaryTerm        go to state 71
+    Term             go to state 72
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 133
 
-   66 ParamList: '(' Expr CommaExpr_Repeat . ')'
+   69 ParamList: '(' Expr CommaExpr_Repeat . ')'
 
-    ')'  shift, and go to state 145
+    ')'  shift, and go to state 143
 
 
 state 134
@@ -1558,46 +1573,50 @@ state 134
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    Stat                   go to state 146
+    Stat                   go to state 144
     IDAssignExpr_Optional  go to state 50
 
 
 state 135
 
-   54 OPTerm_Repeat: OR Term OPTerm_Repeat .
+   57 OPTerm_Repeat: Term OR . OPTerm_Repeat
 
-    $default  reduce using rule 54 (OPTerm_Repeat)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    OPTerm_Repeat    go to state 145
+    Term             go to state 119
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 136
 
-   53 OPTerm_Repeat: OP3 Term OPTerm_Repeat .
+   56 OPTerm_Repeat: Term OP3 . OPTerm_Repeat
 
-    $default  reduce using rule 53 (OPTerm_Repeat)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    OPTerm_Repeat    go to state 146
+    Term             go to state 119
+    OPFactor_Repeat  go to state 73
+    Factor           go to state 74
 
 
 state 137
-
-   58 OPFactor_Repeat: AND Factor OPFactor_Repeat .
-
-    $default  reduce using rule 58 (OPFactor_Repeat)
-
-
-state 138
-
-   57 OPFactor_Repeat: OP4 Factor OPFactor_Repeat .
-
-    $default  reduce using rule 57 (OPFactor_Repeat)
-
-
-state 139
 
    37 Stat: VAL '(' PARAMSTR '(' Expr . ')' ',' ID ')'
 
     ')'  shift, and go to state 147
 
 
-state 140
+state 138
 
    47 CommaExprString_Repeat: ',' STRING . CommaExprString_Repeat
 
@@ -1608,7 +1627,7 @@ state 140
     CommaExprString_Repeat  go to state 148
 
 
-state 141
+state 139
 
    46 CommaExprString_Repeat: ',' Expr . CommaExprString_Repeat
 
@@ -1619,43 +1638,57 @@ state 141
     CommaExprString_Repeat  go to state 149
 
 
-state 142
+state 140
 
    45 WritelnPList: '(' STRING CommaExprString_Repeat ')' .
 
     $default  reduce using rule 45 (WritelnPList)
 
 
-state 143
+state 141
 
    44 WritelnPList: '(' Expr CommaExprString_Repeat ')' .
 
     $default  reduce using rule 44 (WritelnPList)
 
 
-state 144
+state 142
 
-   67 CommaExpr_Repeat: ',' Expr . CommaExpr_Repeat
+   70 CommaExpr_Repeat: ',' Expr . CommaExpr_Repeat
 
     ','  shift, and go to state 132
 
-    $default  reduce using rule 68 (CommaExpr_Repeat)
+    $default  reduce using rule 71 (CommaExpr_Repeat)
 
     CommaExpr_Repeat  go to state 150
 
 
-state 145
+state 143
 
-   66 ParamList: '(' Expr CommaExpr_Repeat ')' .
+   69 ParamList: '(' Expr CommaExpr_Repeat ')' .
 
-    $default  reduce using rule 66 (ParamList)
+    $default  reduce using rule 69 (ParamList)
 
 
-state 146
+state 144
 
    33 Stat: IF Expr THEN Stat ELSE Stat .
 
     $default  reduce using rule 33 (Stat)
+
+
+state 145
+
+   57 OPTerm_Repeat: Term OR OPTerm_Repeat .
+
+    $default  reduce using rule 57 (OPTerm_Repeat)
+
+
+state 146
+
+   56 OPTerm_Repeat: Term OP3 OPTerm_Repeat .
+
+    $default  reduce using rule 56 (OPTerm_Repeat)
 
 
 state 147
@@ -1681,9 +1714,9 @@ state 149
 
 state 150
 
-   67 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat .
+   70 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat .
 
-    $default  reduce using rule 67 (CommaExpr_Repeat)
+    $default  reduce using rule 70 (CommaExpr_Repeat)
 
 
 state 151
