@@ -1037,12 +1037,12 @@ case YY_STATE_EOF(STRINGLIT):
 case 10:
 YY_RULE_SETUP
 #line 172 "mpaparser.l"
-; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.integer = atoi(yytext); return INTLIT;}
+; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return INTLIT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 173 "mpaparser.l"
-; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.real = strtod(yytext, NULL); return REALLIT;}
+; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return REALLIT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP

@@ -46,8 +46,8 @@ extern int col;
 
 %token <string> ID
 %token <string> STRING
-%token <real> REALLIT
-%token <integer> INTLIT
+%token <string> REALLIT
+%token <string> INTLIT
 
 %token <string> OP2
 %token <string> OR

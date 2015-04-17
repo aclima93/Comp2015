@@ -46,9 +46,9 @@ void printNode(node* cur_node);
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3);
 
-node* makeleafDouble(double d);
+node* makeleafDouble(char* d);
 
-node* makeleafInt(int i);
+node* makeleafInt(char* i);
 
 node* makeleafCall(char* s);
 

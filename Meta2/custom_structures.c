@@ -399,6 +399,19 @@ void printNode(node* cur_node) {
 			break;
 
 		case FactorType:
+
+			printNode(cur_node->field2);
+
+			incrementDotCounter();
+
+			printNode(cur_node->field1);
+
+			printNode(cur_node->field3);
+			
+			decrementDotCounter();		
+
+			break;
+
 		case OPTermListType: 
 
 			// print inner OPTermLists first
@@ -485,10 +498,8 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			double* double_ptr = cur_node->field1;
-
 			printDots();
-			printf("RealLit(%lf)\n", double_ptr );
+			printf("RealLit(%s)\n", cur_node->field1 );
 
 			decrementDotCounter();
 		
@@ -498,10 +509,8 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			int* int_ptr = cur_node->field1;
-
 			printDots();
-			printf("IntLit(%d)\n", int_ptr );
+			printf("IntLit(%s)\n", (char*) cur_node->field1 );
 
 			decrementDotCounter();
 
@@ -657,7 +666,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	return new_node;
 }
 
-node* makeleafDouble(double d){
+node* makeleafDouble(char* d){
 	
 	if(DEBUG){
 		printf("[DEBUG] double leaf\n");
@@ -666,14 +675,14 @@ node* makeleafDouble(double d){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = DoubleType;
-	memcpy(&leaf->field1, &d, sizeof d);
+	leaf->field1 = d;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 
 	return leaf;
 }
 
-node* makeleafInt(int i){
+node* makeleafInt(char* i){
 	
 	if(DEBUG){
 		printf("[DEBUG] int leaf\n");
@@ -682,7 +691,7 @@ node* makeleafInt(int i){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = IntType;
-	memcpy(&leaf->field1, &i, sizeof i);
+	leaf->field1 = i;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 

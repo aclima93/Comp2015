@@ -169,8 +169,8 @@ INTLIT				{number}
 
 
 
-{INTLIT}				; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.integer = atoi(yytext); return INTLIT;}
-{REALLIT}				; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.real = strtod(yytext, NULL); return REALLIT;}
+{INTLIT}				; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return INTLIT;}
+{REALLIT}				; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return REALLIT;}
 
 
 {RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return RESERVED;}

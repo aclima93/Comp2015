@@ -1806,12 +1806,12 @@ yyreduce:
 
   case 61:
 #line 180 "mpaparser.y"
-    {(yyval.node_pointer) = makeleafInt((yyvsp[(1) - (1)].integer));}
+    {(yyval.node_pointer) = makeleafInt((yyvsp[(1) - (1)].string));}
     break;
 
   case 62:
 #line 181 "mpaparser.y"
-    {(yyval.node_pointer) = makeleafDouble((yyvsp[(1) - (1)].real));}
+    {(yyval.node_pointer) = makeleafDouble((yyvsp[(1) - (1)].string));}
     break;
 
   case 63:
