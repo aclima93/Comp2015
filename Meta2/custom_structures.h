@@ -44,6 +44,10 @@ void decrementDotCounter();
 
 void printDots();
 
+void cleanUselessNodes(node* cur_node);
+
+char* getStatStr(nodeType t);
+
 void printNode(node* cur_node);
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3);

@@ -17,6 +17,78 @@ void printDots() {
 	}
 }
 
+int returnSonIfAlsoOfType(nodeType parent_type, nodeType parent_child_type, node* parent_child){
+
+	if (parent_child == NULL){
+		return 0;
+	}
+
+	// if parent child is of the same type as parent return it's child
+
+	if( parent_child_type == parent_type ){
+
+		if( !( parent_child->field1 == NULL ) )
+			return 1;
+
+	}
+
+	// else, keep the structure
+
+	return 0;
+
+}
+
+void cleanUselessNodes(node* cur_node){
+
+	if (cur_node == NULL ){
+		return ;
+	}
+
+	cleanUselessNodes(cur_node->field1);
+	cleanUselessNodes(cur_node->field2);
+	cleanUselessNodes(cur_node->field3);
+
+	nodeType t = cur_node->type_of_node;
+	nodeType t_child;
+
+	if( t == StatListType ){
+
+
+		if( !( cur_node->field1 == NULL ) ){
+
+			t_child = ((node*)(cur_node->field1))->type_of_node;
+
+			if( returnSonIfAlsoOfType( t, t_child, cur_node->field1) ){
+				cur_node->field1 = ((node*)(cur_node->field1))->field1;
+			}
+		}
+
+
+		if( !( cur_node->field2 == NULL ) ){
+
+			t_child = ((node*)(cur_node->field2))->type_of_node;
+
+			if( returnSonIfAlsoOfType( t, t_child, cur_node->field2) ){
+				cur_node->field2 = ((node*)(cur_node->field2))->field1;
+			}
+		}
+
+
+		if( !( cur_node->field3 == NULL ) ){
+
+			t_child = ((node*)(cur_node->field3))->type_of_node;
+
+			if( returnSonIfAlsoOfType( t, t_child, cur_node->field3) ){
+				cur_node->field3 = ((node*)(cur_node->field3))->field1;
+			}
+
+		}
+
+	}
+
+	// Do the same for the children. Won't any one please think of the children?
+}
+
 char* getStatStr(nodeType t){
 
 	switch (t){
@@ -645,6 +717,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	}
 
 	node* new_node = (node*) malloc(sizeof(node));
+
 	new_node->type_of_node = t;
 
 	new_node->field1 = f1;
@@ -663,6 +736,7 @@ node* makeleafDouble(double d){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = DoubleType;
+
 	memcpy(&leaf->field1, &d, sizeof d);
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -679,6 +753,7 @@ node* makeleafInt(int i){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = IntType;
+
 	memcpy(&leaf->field1, &i, sizeof i);
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -695,6 +770,7 @@ node* makeleafUnaryOP(char* o){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = UnaryOPType;
+
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -711,6 +787,7 @@ node* makeleafOP(char* o){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = OPType;
+
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -727,6 +804,7 @@ node* makeleafID(char* s){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = IDType;
+
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -743,6 +821,7 @@ node* makeleafString(char* s){
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = StringType;
+
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
@@ -759,6 +838,7 @@ node* makeleafCall(char* s) {
 	node* leaf = (node*) malloc(sizeof(node));
 	
 	leaf->type_of_node = CallType;
+
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;

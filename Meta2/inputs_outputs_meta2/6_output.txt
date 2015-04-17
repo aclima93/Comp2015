@@ -24,6 +24,6 @@ Program
 ......StatList
 ........Assign
 ..........Id(a2)
-..............Id(a1)
+..........Id(a1)
 ........StatList
 ..StatList
