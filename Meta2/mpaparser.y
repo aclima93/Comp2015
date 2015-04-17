@@ -135,7 +135,7 @@ SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $
 
 Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
 	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
-	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
+	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatType, NULL, NULL, NULL));} 
 	|	WHILE Expr DO Stat 															{$$ = makenode(WhileStatType, $2, $4, NULL);} 
 	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
 	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 

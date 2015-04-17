@@ -12,6 +12,7 @@
 
 
 #define DEBUG 0
+#define DEBUG_TYPE 0
 
 typedef enum {ProgType, ProgHeadingType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, FuncDeclarationListType, FuncDeclarationType, FuncDefinitionType, FuncDefinition2Type, FuncHeadingType, FuncIdentType, FuncParamsListType, VarParamsType, ParamsType, FuncBlockType, StatPartType, CompStatType, StatListType, StatType, IfElseStatType, WhileStatType, RepeatStatType, ValParamStatType, AssignStatType, WriteLnStatType, WritelnPListType, ExprType, SimpleExprType, OPFactorListType, FactorType, OPTermListType, TermType, ExprListType, ParamListType, DoubleType, IDType, StringType, OPType, UnaryOPType, IntType, CallType} nodeType;
 

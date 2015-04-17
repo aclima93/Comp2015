@@ -1,0 +1,8 @@
+Program
+..Id(gcd)
+..VarPart
+....VarDecl
+......Id(a)
+......Id(b)
+......Id(integer)
+..FuncPart

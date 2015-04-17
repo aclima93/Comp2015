@@ -56,8 +56,9 @@ void printNode(node* cur_node) {
 
 	nodeType t = cur_node->type_of_node;
 
-	if(DEBUG){
-		printf("[DEBUG] type: %d\n", t);
+	if(DEBUG_TYPE){
+		char* enumString[] = {"ProgType", "ProgHeadingType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", "FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType", "ParamsType", "FuncBlockType", "StatPartType", "CompStatType", "StatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "TermType", "ExprListType", "ParamListType", "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"};
+		printf("[DEBUG] type: %s\n", enumString[t]);
 	}
 
 	switch(t) {
@@ -288,11 +289,44 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case WhileStatType:
 		case RepeatStatType:
 
+			/*
 			// TODO: este vai dar bode no Stalist
 
+			incrementDotCounter();
+
+			char* repeat_stat_str = getStatStr(t);
+
+			if( !(repeat_stat_str == NULL) ){
+				printDots();
+				printf("%s\n", repeat_stat_str);
+			}
+
+			// if any of the statements is empty print "StatList"
+
+			if( !( ((node*)(cur_node->field1))->field1 == NULL) ){
+				printNode(cur_node->field1);
+			}
+			else{
+
+				incrementDotCounter();
+
+				printDots();
+				printf("StatList\n");
+				
+				decrementDotCounter();
+			}
+
+			printNode(cur_node->field2);
+
+			decrementDotCounter();
+
+			break;
+			*/
+
+
+		case WhileStatType:
 		case ValParamStatType:
 		case AssignStatType:
 		case WriteLnStatType:
@@ -327,9 +361,21 @@ void printNode(node* cur_node) {
 				
 			printNode(cur_node->field3);
 
-			printNode(cur_node->field2);
+			if( cur_node->field1 == NULL ){
 
-			printNode(cur_node->field1);
+				printNode(cur_node->field2);
+
+			}
+			else{
+
+				printNode(cur_node->field1);
+
+				incrementDotCounter();
+
+				printNode(cur_node->field2);
+
+				decrementDotCounter();
+			}
 
 			break;
 
@@ -365,17 +411,16 @@ void printNode(node* cur_node) {
 		case OPFactorListType:
 		case OPTermListType: 
 
-			// print in reverse
-				
-			printNode(cur_node->field1);
+				// print inner OPTermLists first
+				printNode(cur_node->field3);
 
-			incrementDotCounter();
+				printNode(cur_node->field1);
 
-			printNode(cur_node->field2);
+				incrementDotCounter();
 
-			printNode(cur_node->field3);
+				printNode(cur_node->field2);
 
-			decrementDotCounter();
+				decrementDotCounter();
 
 			break;
 
@@ -383,9 +428,9 @@ void printNode(node* cur_node) {
 
 			// print in reverse
 
-			printNode(cur_node->field2);
-
 			printNode(cur_node->field1);
+
+			printNode(cur_node->field2);
 
 			break;
 
@@ -399,7 +444,7 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 
 			printNode(cur_node->field1);
-			
+
 			printNode(cur_node->field3);
 			
 			decrementDotCounter();

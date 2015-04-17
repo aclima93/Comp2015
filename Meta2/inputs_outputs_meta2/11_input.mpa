@@ -1,0 +1,8 @@
+program gcd(output);
+var a, b: integer;
+begin
+	begin
+		begin
+		end			
+	end
+end.
