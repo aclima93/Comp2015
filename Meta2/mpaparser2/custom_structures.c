@@ -240,18 +240,7 @@ void printNode(node* cur_node) {
 			// print nothing, intermediate node
 			// don't even increment dot counter
 
-			/*
-			incrementDotCounter();
-
-			printDots();
-			printf("StatList\n");
-
-			*/
-
 			printChildren(cur_node);
-			
-			//decrementDotCounter();
-
 
 			break;
 
@@ -281,33 +270,9 @@ void printNode(node* cur_node) {
 
 			printNode(cur_node->field1);
 
-			// if any of the statements is empty print "StatList"
+			printNode(cur_node->field2);
 
-			if( !( ((node*)(cur_node->field2))->field1 == NULL) ){
-				printNode(cur_node->field2);
-			}
-			else{
-
-				incrementDotCounter();
-
-				printDots();
-				printf("StatList\n");
-				
-				decrementDotCounter();
-			}
-
-			if( !( ((node*)(cur_node->field3))->field1 == NULL) ){
-				printNode(cur_node->field3);
-			}
-			else{
-
-				incrementDotCounter();
-
-				printDots();
-				printf("StatList\n");
-				
-				decrementDotCounter();
-			}
+			printNode(cur_node->field3);
 
 			decrementDotCounter();
 
@@ -647,13 +612,13 @@ void printNode(node* cur_node) {
 				op_str = "Mul";
 			}
 			else if( strcasecmp ( "/", (char*) cur_node->field1 ) == 0){
-				op_str = "RealDiv";
+				op_str = "Div";
 			}
 			else if( strcasecmp ( "mod", (char*) cur_node->field1 ) == 0){
 				op_str = "Mod";
 			}
 			else if( strcasecmp ( "div", (char*) cur_node->field1 ) == 0){
-				op_str = "Div";
+				op_str = "RealDiv";
 			}
 			else{
 				op_str = NULL;

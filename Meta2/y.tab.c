@@ -1650,7 +1650,7 @@ yyreduce:
 
   case 28:
 #line 126 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatPartType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
     break;
 
   case 29:
@@ -1675,7 +1675,7 @@ yyreduce:
 
   case 33:
 #line 136 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(StatListType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
     break;
 
   case 34:
@@ -1705,12 +1705,12 @@ yyreduce:
 
   case 39:
 #line 142 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 40:
 #line 143 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (2)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);}
     break;
 
   case 41:
@@ -1720,7 +1720,7 @@ yyreduce:
 
   case 42:
 #line 147 "mpaparser.y"
-    {(yyval.node_pointer) = NULL;}
+    {(yyval.node_pointer) = NULL;/*makenode(EmptyStatListType, NULL, NULL, NULL);*/}
     break;
 
   case 43:
@@ -1780,7 +1780,7 @@ yyreduce:
 
   case 54:
 #line 169 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL);}
+    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 55:
