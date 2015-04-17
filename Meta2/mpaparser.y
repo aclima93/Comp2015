@@ -168,15 +168,15 @@ SimpleExpr: OP3 Term OPTerm_Repeat													{$$ = makenode(SimpleExprType, ma
 	| Term OPTerm_Repeat															{$$ = makenode(SimpleExprType, NULL, $1, $2);}
 	;
 
-OPTerm_Repeat: OP3 Term OPTerm_Repeat												{$$ = makenode(OPTermListType, $2, makeleafOP($1), $3);} 
-	| OR Term OPTerm_Repeat															{$$ = makenode(OPTermListType, $2, makeleafOP($1), $3);} 
+OPTerm_Repeat: OP3 Term OPTerm_Repeat												{$$ = makenode(OPTermListType, makeleafOP($1), $2, $3);} 
+	| OR Term OPTerm_Repeat															{$$ = makenode(OPTermListType, makeleafOP($1), $2, $3);} 
 	| 																				{$$ = NULL;}
 	;
 
 Term: Factor OPFactor_Repeat														{$$ = makenode(TermType, $1, $2, NULL);} ;
 
-OPFactor_Repeat: OP4 Factor OPFactor_Repeat											{$$ = makenode(OPFactorType, $2, makeleafOP($1), $3);}
-	| AND Factor OPFactor_Repeat													{$$ = makenode(OPFactorType, $2, makeleafOP($1), $3);}
+OPFactor_Repeat: OP4 Factor OPFactor_Repeat											{$$ = makenode(OPFactorListType, makeleafOP($1), $2, $3);}
+	| AND Factor OPFactor_Repeat													{$$ = makenode(OPFactorListType, makeleafOP($1), $2, $3);}
 	|																				{$$ = NULL;}
 	;
 

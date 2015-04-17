@@ -290,6 +290,9 @@ void printNode(node* cur_node) {
 
 		case WhileStatType:
 		case RepeatStatType:
+
+			// TODO: este vai dar bode no Stalist
+
 		case ValParamStatType:
 		case AssignStatType:
 		case WriteLnStatType:
@@ -320,38 +323,17 @@ void printNode(node* cur_node) {
 
 		case SimpleExprType:
 
-			if(cur_node->field1 == NULL){
-
-				// print nothing, intermediate node
-				// don't even increment dot counter
-
-				printChildren(cur_node);
+			// print in reverse
 				
-			}
-			else{
+			printNode(cur_node->field3);
 
-				// special case
-				// the operator is always printed first
-				// don't call printChildren !!
+			printNode(cur_node->field2);
 
-				printNode(cur_node->field2);
-
-				incrementDotCounter();
-
-				printNode(cur_node->field1);
-				
-				decrementDotCounter();
-
-				printNode(cur_node->field3);
-				
-			}
+			printNode(cur_node->field1);
 
 			break;
 
 		case ExprType:
-
-			// the operator is always printed first
-			// don't call printChildren !!
 
 			if( cur_node->field2 == NULL && cur_node->field3 == NULL ){
 
@@ -363,11 +345,15 @@ void printNode(node* cur_node) {
 			}
 			else{
 			
+				// the operator is always printed first
+				// don't call printChildren !!
+
 				printNode(cur_node->field2);
 
 				incrementDotCounter();
 
 				printNode(cur_node->field1);
+
 				printNode(cur_node->field3);
 				
 				decrementDotCounter();
@@ -376,23 +362,30 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case OPFactorType:
-
+		case OPFactorListType:
 		case OPTermListType: 
 
-			// special case
-			// the operator is always printed first
-			// don't call printChildren !!
-
-			printNode(cur_node->field2);
+			// print in reverse
+				
+			printNode(cur_node->field1);
 
 			incrementDotCounter();
 
-			printNode(cur_node->field1);
+			printNode(cur_node->field2);
+
+			printNode(cur_node->field3);
 
 			decrementDotCounter();
 
-			printNode(cur_node->field3);
+			break;
+
+		case TermType:
+
+			// print in reverse
+
+			printNode(cur_node->field2);
+
+			printNode(cur_node->field1);
 
 			break;
 
@@ -406,19 +399,10 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 
 			printNode(cur_node->field1);
+			
 			printNode(cur_node->field3);
 			
 			decrementDotCounter();
-
-			break;
-
-		case TermType:
-
-			// print nothing, intermediate node
-			// don't even increment dot counter
-			// all members are the same "depth"
-
-			printChildren(cur_node);
 
 			break;
 
@@ -437,7 +421,7 @@ void printNode(node* cur_node) {
 
 		case StatListType:
 
-			if( !(cur_node == NULL) && !(cur_node->field2 == NULL) ){
+			if( !(cur_node->field2 == NULL) ){
 
 				incrementDotCounter();
 

@@ -1774,12 +1774,12 @@ yyreduce:
 
   case 54:
 #line 171 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(2) - (3)].node_pointer), makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPTermListType, makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 55:
 #line 172 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(2) - (3)].node_pointer), makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPTermListType, makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 56:
@@ -1794,12 +1794,12 @@ yyreduce:
 
   case 58:
 #line 178 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPFactorType, (yyvsp[(2) - (3)].node_pointer), makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPFactorListType, makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 59:
 #line 179 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPFactorType, (yyvsp[(2) - (3)].node_pointer), makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPFactorListType, makeleafOP((yyvsp[(1) - (3)].string)), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 60:
