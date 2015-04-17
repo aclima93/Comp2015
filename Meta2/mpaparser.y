@@ -235,8 +235,6 @@ int main(int argc, char** args){
 		}
 	}
 
-	//cleanUselessNodes(root);
-
     if(printTree){
 		printNode(root);
     }

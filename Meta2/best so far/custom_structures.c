@@ -612,13 +612,13 @@ void printNode(node* cur_node) {
 				op_str = "Mul";
 			}
 			else if( strcasecmp ( "/", (char*) cur_node->field1 ) == 0){
-				op_str = "Div";
+				op_str = "RealDiv";
 			}
 			else if( strcasecmp ( "mod", (char*) cur_node->field1 ) == 0){
 				op_str = "Mod";
 			}
 			else if( strcasecmp ( "div", (char*) cur_node->field1 ) == 0){
-				op_str = "RealDiv";
+				op_str = "Div";
 			}
 			else{
 				op_str = NULL;

@@ -31,22 +31,16 @@ typedef struct {
 
 node* root;
 
-
 int dotCounter;
 int errorCounter;
 int printTree;
 int printSymbolTable;
-
 
 void incrementDotCounter();
 
 void decrementDotCounter();
 
 void printDots();
-
-void cleanUselessNodes(node* cur_node);
-
-char* getStatStr(nodeType t);
 
 void printNode(node* cur_node);
 

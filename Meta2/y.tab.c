@@ -1665,7 +1665,7 @@ yyreduce:
 
   case 31:
 #line 132 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(StatListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 32:
@@ -2125,8 +2125,6 @@ int main(int argc, char** args){
 	    		break;
 		}
 	}
-
-	//cleanUselessNodes(root);
 
     if(printTree){
 		printNode(root);
