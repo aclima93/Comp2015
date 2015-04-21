@@ -175,7 +175,6 @@ Program
 ............Id(b1)
 ............Id(c1)
 ..........Id(a1)
-..StatList
-....Assign
-......Id(a1)
-......Id(a2)
+..Assign
+....Id(a1)
+....Id(a2)

@@ -17,149 +17,6 @@ void printDots() {
 	}
 }
 
-char* getIndependantStr(NodeType t){
-	
-	switch(t){
-		case VarDeclarationType:
-			return "VarDecl";
-
-		case FuncPartType:
-			return "FuncPart";
-
-		case FuncDeclarationType:
-			return "FuncDecl";
-
-		case FuncDefinitionType:
-			return "FuncDef";
-
-		case FuncDefinition2Type:
-			return "FuncDef2";
-
-		case ParamsType:
-			return "Params";
-
-		case VarPartType:
-			return "VarPart";
-
-		default:
-			return NULL;
-
-	}
-
-}
-
-char* getLeafStr(NodeType t){
-
-	switch(t){
-		case DoubleType:
-			return "RealLit";
-
-		case IntType:
-			return "IntLit";
-
-		case IDType:
-			return "Id";
-
-		case StringType:
-			return "String";
-
-		default:
-			return NULL;
-	}
-}
-
-char* getStatStr(NodeType t){
-
-	switch(t){
-		case IfElseStatType:
-			return "IfElse";
-
-		case WhileStatType:
-			return "While";
-		
-		case RepeatStatType:
-			return "Repeat";
-		
-		case ValParamStatType:
-			return "ValParam";
-		
-		case AssignStatType:
-			return "Assign";
-		
-		case WriteLnStatType:
-			return "WriteLn";
-
-		default:
-			return NULL;
-
-	}
-}
-
-char* getUnaryOPStr(char* str){
-
-	if( strcasecmp ( "+", str ) == 0){
-		return "Plus";
-	}
-	else if( strcasecmp ( "-", str ) == 0){
-		return "Minus";
-	}
-	else if( strcasecmp ( "not", str ) == 0){
-		return "Not";
-	}
-	else{
-		return NULL;
-	}
-}
-
-char* getOPStr(char* str){
-
-	if( strcasecmp ( "and", str ) == 0){
-		return "Add";
-	}
-	else if( strcasecmp ( "or", str ) == 0){
-		return "Or";
-	}
-	else if( strcasecmp ( "<>", str ) == 0){
-		return "Neq";
-	}
-	else if( strcasecmp ( "<=", str ) == 0){
-		return "Leq";
-	}
-	else if( strcasecmp ( ">=", str ) == 0){
-		return "Geq";
-	}
-	else if( strcasecmp ( "<", str ) == 0){
-		return "Lt";
-	}
-	else if( strcasecmp ( ">", str ) == 0){
-		return "Gt";
-	}
-	else if( strcasecmp ( "=", str ) == 0){
-		return "Eq";
-	}
-	else if( strcasecmp ( "+", str ) == 0){
-		return "Add";
-	}
-	else if( strcasecmp ( "-", str ) == 0){
-		return "Sub";
-	}
-	else if( strcasecmp ( "*", str ) == 0){
-		return "Mul";
-	}
-	else if( strcasecmp ( "/", str ) == 0){
-		return "RealDiv";
-	}
-	else if( strcasecmp ( "mod", str ) == 0){
-		return "Mod";
-	}
-	else if( strcasecmp ( "div", str ) == 0){
-		return "Div";
-	}
-	else{
-		return NULL;
-	}
-}
-
 void printChildrenMiddleFirst(node* cur_node){
 
 	printNode(cur_node->field2, cur_node->type_of_node);
@@ -180,6 +37,9 @@ void printChildren(node* cur_node){
 	printNode(cur_node->field3, cur_node->type_of_node);
 
 }
+
+
+// recursive function to print the AST, one node at a time
 
 void printNode(node* cur_node, NodeType lastNodeType) {
 
@@ -450,7 +310,7 @@ int getNodeDepth(node* n){
 
 	NodeType t = n->type_of_node;
 
-	if( t == StatType || t == IfElseStatType || t == RepeatStatType || t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType )
+	if( t == StatType || t == StatListType || t == IfElseStatType || t == RepeatStatType || t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType )
 		return 1;
 
 	return 0;
@@ -459,7 +319,18 @@ int getNodeDepth(node* n){
 node* makenode(NodeType t, node* f1, node* f2, node* f3){
 
 	if(DEBUG){
-		printf("[DEBUG] type: %d\n", t);
+
+		printf("\n\n[DEBUG] type: %s\n", getNodeTypeStr(t));
+
+		if( t == StatListType ){
+
+			if(f1 != NULL)
+				printf("f1 type %s\n", getNodeTypeStr(f1->type_of_node));
+			if(f2 != NULL)
+				printf("f2 type %s\n", getNodeTypeStr(f2->type_of_node));
+			if(f3 != NULL)
+				printf("f3 type %s\n", getNodeTypeStr(f3->type_of_node));
+		}
 	}
 
 	node* new_node = (node*) malloc(sizeof(node));
@@ -470,6 +341,8 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field3 = f3;
 
 	new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
+
+
 
 	return new_node;
 }
@@ -579,3 +452,166 @@ void freeNode(node* cur_node) {
 	free(cur_node);
 
 }
+
+
+/*
+ * Functions that fetch strings for output & debug
+ */
+
+char* getNodeTypeStr(NodeType t){
+
+	char* str[] = 
+	{
+	"ProgType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", 
+	"FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType",
+	 "ParamsType", "FuncBlockType", "StatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", 
+	 "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "UnaryTermType", "TermType", "ExprListType", "ParamListType", 
+	 "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"
+	};
+
+	return str[t];
+}
+
+char* getIndependantStr(NodeType t){
+	
+	switch(t){
+		case VarDeclarationType:
+			return "VarDecl";
+
+		case FuncPartType:
+			return "FuncPart";
+
+		case FuncDeclarationType:
+			return "FuncDecl";
+
+		case FuncDefinitionType:
+			return "FuncDef";
+
+		case FuncDefinition2Type:
+			return "FuncDef2";
+
+		case ParamsType:
+			return "Params";
+
+		case VarPartType:
+			return "VarPart";
+
+		default:
+			return NULL;
+
+	}
+
+}
+
+char* getLeafStr(NodeType t){
+
+	switch(t){
+		case DoubleType:
+			return "RealLit";
+
+		case IntType:
+			return "IntLit";
+
+		case IDType:
+			return "Id";
+
+		case StringType:
+			return "String";
+
+		default:
+			return NULL;
+	}
+}
+
+char* getStatStr(NodeType t){
+
+	switch(t){
+		case IfElseStatType:
+			return "IfElse";
+
+		case WhileStatType:
+			return "While";
+		
+		case RepeatStatType:
+			return "Repeat";
+		
+		case ValParamStatType:
+			return "ValParam";
+		
+		case AssignStatType:
+			return "Assign";
+		
+		case WriteLnStatType:
+			return "WriteLn";
+
+		default:
+			return NULL;
+
+	}
+}
+
+char* getUnaryOPStr(char* str){
+
+	if( strcasecmp ( "+", str ) == 0){
+		return "Plus";
+	}
+	else if( strcasecmp ( "-", str ) == 0){
+		return "Minus";
+	}
+	else if( strcasecmp ( "not", str ) == 0){
+		return "Not";
+	}
+	else{
+		return NULL;
+	}
+}
+
+char* getOPStr(char* str){
+
+	if( strcasecmp ( "and", str ) == 0){
+		return "Add";
+	}
+	else if( strcasecmp ( "or", str ) == 0){
+		return "Or";
+	}
+	else if( strcasecmp ( "<>", str ) == 0){
+		return "Neq";
+	}
+	else if( strcasecmp ( "<=", str ) == 0){
+		return "Leq";
+	}
+	else if( strcasecmp ( ">=", str ) == 0){
+		return "Geq";
+	}
+	else if( strcasecmp ( "<", str ) == 0){
+		return "Lt";
+	}
+	else if( strcasecmp ( ">", str ) == 0){
+		return "Gt";
+	}
+	else if( strcasecmp ( "=", str ) == 0){
+		return "Eq";
+	}
+	else if( strcasecmp ( "+", str ) == 0){
+		return "Add";
+	}
+	else if( strcasecmp ( "-", str ) == 0){
+		return "Sub";
+	}
+	else if( strcasecmp ( "*", str ) == 0){
+		return "Mul";
+	}
+	else if( strcasecmp ( "/", str ) == 0){
+		return "RealDiv";
+	}
+	else if( strcasecmp ( "mod", str ) == 0){
+		return "Mod";
+	}
+	else if( strcasecmp ( "div", str ) == 0){
+		return "Div";
+	}
+	else{
+		return NULL;
+	}
+}
+

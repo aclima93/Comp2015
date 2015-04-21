@@ -39,25 +39,10 @@ int errorCounter;
 int printTree;
 int printSymbolTable;
 
-void incrementDotCounter();
 
-void decrementDotCounter();
-
-void printDots();
-
-char* getIndependantStr(NodeType t);
-
-char* getLeafStr(NodeType t);
-
-char* getStatStr(NodeType t);
-
-char* getUnaryOPStr(char* str);
-
-char* getOPStr(char* str);
-
-void printChildren(node* cur_node);
-
-void printNode(node* cur_node, NodeType lastNodeType);
+/*
+ * AST creation and deletion functions
+ */
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3);
 
@@ -70,6 +55,38 @@ int isLeaf(node* cur_node);
 void cleanStatLists(node* cur_node);
 
 void freeNode(node* cur_node);
+
+/*
+ * AST printing functions
+ */
+
+void incrementDotCounter();
+
+void decrementDotCounter();
+
+void printDots();
+
+void printChildrenMiddleFirst(node* cur_node);
+
+void printChildren(node* cur_node);
+
+void printNode(node* cur_node, NodeType lastNodeType);
+
+/*
+ * Functions that fetch strings for output & debug
+ */
+
+char* getNodeTypeStr(NodeType t);
+
+char* getIndependantStr(NodeType t);
+
+char* getLeafStr(NodeType t);
+
+char* getStatStr(NodeType t);
+
+char* getUnaryOPStr(char* str);
+
+char* getOPStr(char* str);
 
 #endif
 

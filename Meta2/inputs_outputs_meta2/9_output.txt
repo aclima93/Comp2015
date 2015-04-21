@@ -108,12 +108,11 @@ Program
 ......Id(i)
 ......IntLit(0)
 ....Repeat
-......StatList
-........Assign
+......Assign
+........Id(i)
+........Add
 ..........Id(i)
-..........Add
-............Id(i)
-............IntLit(1)
+..........IntLit(1)
 ......Eq
 ........Id(i)
 ........IntLit(10)

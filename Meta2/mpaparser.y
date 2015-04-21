@@ -127,7 +127,12 @@ CompStat: BEGIN_token StatList END													{$$ = $2;} ;
 
 StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
 
-SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $2, $3, NULL);} 
+SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
+																						if($3 != NULL)
+																							$$ = makenode(StatType, $2, $3, NULL);
+																						else
+																							$$ = $2;
+																					} 
 	| 																				{$$ = NULL;} 
 	;
 
