@@ -72,7 +72,7 @@ extern int col;
 
 Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = createTree(makenode(ProgType, $1, $3, NULL));} ;
 
-ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleaf(IDType, $2), NULL, NULL);} ;
+ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makeleaf(IDType, $2);} ;
 
 ProgBlock: VarPart FuncPart StatPart 												{$$ = makenode(ProgBlockType, $1, $2, $3);} ;
 
@@ -121,9 +121,9 @@ FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, m
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
 
-StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL);} ;
+StatPart: CompStat 																	{$$ = $1;} ;
 
-CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
+CompStat: BEGIN_token StatList END													{$$ = $2;} ;
 
 StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
 
@@ -131,7 +131,7 @@ SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $
 	| 																				{$$ = NULL;} 
 	;
 
-Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
+Stat: CompStat 																		{$$ = $1;} 
 	| IF Expr THEN Stat ELSE Stat 													{$$ = makenode(IfElseStatType, $2, $4, $6);} 
 	| IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
 	| WHILE Expr DO Stat 															{
@@ -142,8 +142,8 @@ Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);}
 																					} 
 	| REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
 	| VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 										{$$ = makenode(ValParamStatType, $5, makeleaf(IDType, $8), NULL);} 
-	| IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
-	| WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
+	| IDAssignExpr_Optional 														{$$ = $1;} 
+	| WRITELN WritelnPList_Optional 												{$$ = $2;} 
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleaf(IDType, $1), $3, NULL);} 
@@ -227,6 +227,9 @@ int main(int argc, char** args){
 	    		break;
 		}
 	}
+
+	//remove useless consecutive StatLists 
+	cleanStatLists(root);
 
     if(printTree){
 		printNode(root);

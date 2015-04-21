@@ -17,7 +17,7 @@ void printDots() {
 	}
 }
 
-char* getIndependantStr(nodeType t){
+char* getIndependantStr(NodeType t){
 	
 	switch(t){
 		case VarDeclarationType:
@@ -48,7 +48,7 @@ char* getIndependantStr(nodeType t){
 
 }
 
-char* getLeafStr(nodeType t){
+char* getLeafStr(NodeType t){
 
 	switch(t){
 		case DoubleType:
@@ -68,7 +68,7 @@ char* getLeafStr(nodeType t){
 	}
 }
 
-char* getStatStr(nodeType t){
+char* getStatStr(NodeType t){
 
 	switch(t){
 		case IfElseStatType:
@@ -92,6 +92,71 @@ char* getStatStr(nodeType t){
 		default:
 			return NULL;
 
+	}
+}
+
+char* getUnaryOPStr(char* str){
+
+	if( strcasecmp ( "+", str ) == 0){
+		return "Plus";
+	}
+	else if( strcasecmp ( "-", str ) == 0){
+		return "Minus";
+	}
+	else if( strcasecmp ( "not", str ) == 0){
+		return "Not";
+	}
+	else{
+		return NULL;
+	}
+}
+
+char* getOPStr(char* str){
+
+	if( strcasecmp ( "and", str ) == 0){
+		return "Add";
+	}
+	else if( strcasecmp ( "or", str ) == 0){
+		return "Or";
+	}
+	else if( strcasecmp ( "<>", str ) == 0){
+		return "Neq";
+	}
+	else if( strcasecmp ( "<=", str ) == 0){
+		return "Leq";
+	}
+	else if( strcasecmp ( ">=", str ) == 0){
+		return "Geq";
+	}
+	else if( strcasecmp ( "<", str ) == 0){
+		return "Lt";
+	}
+	else if( strcasecmp ( ">", str ) == 0){
+		return "Gt";
+	}
+	else if( strcasecmp ( "=", str ) == 0){
+		return "Eq";
+	}
+	else if( strcasecmp ( "+", str ) == 0){
+		return "Add";
+	}
+	else if( strcasecmp ( "-", str ) == 0){
+		return "Sub";
+	}
+	else if( strcasecmp ( "*", str ) == 0){
+		return "Mul";
+	}
+	else if( strcasecmp ( "/", str ) == 0){
+		return "RealDiv";
+	}
+	else if( strcasecmp ( "mod", str ) == 0){
+		return "Mod";
+	}
+	else if( strcasecmp ( "div", str ) == 0){
+		return "Div";
+	}
+	else{
+		return NULL;
 	}
 }
 
@@ -122,7 +187,7 @@ void printNode(node* cur_node) {
 		return;
 	}
 
-	nodeType t = cur_node->type_of_node;
+	NodeType t = cur_node->type_of_node;
 	int d;
 
 	switch(t) {
@@ -148,7 +213,7 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 			
 			printDots();
-			printf("%s\n", getIndependantStr(cur_node->type_of_node) );
+			printf("%s\n", getIndependantStr(t) );
 
 			printChildren(cur_node);
 
@@ -185,13 +250,10 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case ProgHeadingType:
 		case ProgBlockType:
-		case StatPartType:
 		case FuncIdentType:
 		case VarParamsType:
 		case FuncBlockType:
-		case CompStatType:
 		case StatType:
 
 			// print nothing, intermediate node
@@ -330,7 +392,7 @@ void printNode(node* cur_node) {
 			incrementDotCounter();
 
 			printDots();
-			printf("%s(%s)\n", getLeafStr(cur_node->type_of_node), cur_node->field1 );
+			printf("%s(%s)\n", getLeafStr(t), cur_node->field1 );
 
 			decrementDotCounter();
 		
@@ -356,25 +418,8 @@ void printNode(node* cur_node) {
 
 			incrementDotCounter();
 
-			char* unary_op_str;
-
-			if( strcasecmp ( "+", (char*) cur_node->field1 ) == 0){
-				unary_op_str = "Plus";
-			}
-			else if( strcasecmp ( "-", (char*) cur_node->field1 ) == 0){
-				unary_op_str = "Minus";
-			}
-			else if( strcasecmp ( "not", (char*) cur_node->field1 ) == 0){
-				unary_op_str = "Not";
-			}
-			else{
-				unary_op_str = NULL;
-			}
-
-			if( !(unary_op_str == NULL) ){
-				printDots();
-				printf("%s\n", unary_op_str );
-			}
+			printDots();
+			printf("%s\n", getUnaryOPStr(cur_node->field1) );
 
 			decrementDotCounter();
 
@@ -384,58 +429,8 @@ void printNode(node* cur_node) {
 		
 			incrementDotCounter();
 
-			char* op_str;
-
-			if( strcasecmp ( "and", (char*) cur_node->field1 ) == 0){
-				op_str = "Add";
-			}
-			else if( strcasecmp ( "or", (char*) cur_node->field1 ) == 0){
-				op_str = "Or";
-			}
-			else if( strcasecmp ( "<>", (char*) cur_node->field1 ) == 0){
-				op_str = "Neq";
-			}
-			else if( strcasecmp ( "<=", (char*) cur_node->field1 ) == 0){
-				op_str = "Leq";
-			}
-			else if( strcasecmp ( ">=", (char*) cur_node->field1 ) == 0){
-				op_str = "Geq";
-			}
-			else if( strcasecmp ( "<", (char*) cur_node->field1 ) == 0){
-				op_str = "Lt";
-			}
-			else if( strcasecmp ( ">", (char*) cur_node->field1 ) == 0){
-				op_str = "Gt";
-			}
-			else if( strcasecmp ( "=", (char*) cur_node->field1 ) == 0){
-				op_str = "Eq";
-			}
-			else if( strcasecmp ( "+", (char*) cur_node->field1 ) == 0){
-				op_str = "Add";
-			}
-			else if( strcasecmp ( "-", (char*) cur_node->field1 ) == 0){
-				op_str = "Sub";
-			}
-			else if( strcasecmp ( "*", (char*) cur_node->field1 ) == 0){
-				op_str = "Mul";
-			}
-			else if( strcasecmp ( "/", (char*) cur_node->field1 ) == 0){
-				op_str = "RealDiv";
-			}
-			else if( strcasecmp ( "mod", (char*) cur_node->field1 ) == 0){
-				op_str = "Mod";
-			}
-			else if( strcasecmp ( "div", (char*) cur_node->field1 ) == 0){
-				op_str = "Div";
-			}
-			else{
-				op_str = NULL;
-			}
-
-			if( !(op_str == NULL) ){
-				printDots();
-				printf("%s\n", op_str );
-			}
+			printDots();
+			printf("%s\n", getOPStr(cur_node->field1) );
 
 			decrementDotCounter();
 
@@ -454,7 +449,7 @@ int getNodeDepth(node* n){
 	return n->depth;
 }
 
-node* makenode(nodeType t, node* f1, node* f2, node* f3){
+node* makenode(NodeType t, node* f1, node* f2, node* f3){
 
 	if(DEBUG){
 		printf("[DEBUG] type: %d\n", t);
@@ -472,7 +467,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	return new_node;
 }
 
-node* makeleaf(nodeType t, char* str){
+node* makeleaf(NodeType t, char* str){
 
 	node* leaf = (node*) malloc(sizeof(node));	
 
@@ -486,23 +481,56 @@ node* makeleaf(nodeType t, char* str){
 }
 
 node* createTree(node* n){
-
-	if(DEBUG){
-		printf("[DEBUG] Tree Root\n");
-	}
-
 	root = n;
 	return root;
 }
 
 int isLeaf(node* cur_node){
 
-	nodeType t = cur_node->type_of_node;
+	NodeType t = cur_node->type_of_node;
 
 	if(t == DoubleType || t == IDType || t == StringType || t == OPType || t == UnaryOPType || t == IntType || t == CallType)
 		return 1;
 
 	return 0;
+}
+
+void cleanStatLists(node* cur_node){
+
+	/*
+
+	if( cur_node->type_of_node == StatListType ){
+
+		int statListChildren = 0;
+
+		if (cur_node->field1 != NULL && cur_node->field1->type_of_node == StatListType)
+		{
+			statListChildren++;
+		}
+		if (cur_node->field2 != NULL && cur_node->field2->type_of_node == StatListType)
+		{
+			statListChildren++;
+		}
+		if (cur_node->field3 != NULL && cur_node->field3->type_of_node == StatListType)
+		{
+			statListChildren++;
+		}
+
+		// we can only do this is the 
+		if (statListChildren == 1){
+
+
+
+		}
+
+	}
+
+	cleanStatLists(cur_node->field1);
+	cleanStatLists(cur_node->field2);
+	cleanStatLists(cur_node->field3);
+
+	*/
+
 }
 
 void freeNode(node* cur_node) {
