@@ -299,9 +299,6 @@ void printNode(node* cur_node) {
 
 			if( cur_node->field2 == NULL && cur_node->field3 == NULL ){
 
-				// print nothing, intermediate node
-				// don't even increment dot counter
-
 				printChildren(cur_node);
 
 			}
@@ -326,7 +323,7 @@ void printNode(node* cur_node) {
 
 			// print inner OPTermLists first
 				
-			if( !(cur_node->field1 == NULL) ){
+			if( cur_node->field1 != NULL ){
 
 				printChildrenMiddleFirst(cur_node);
 			
@@ -354,14 +351,17 @@ void printNode(node* cur_node) {
 
 		case StatListType:
 			
-			d = cur_node->depth;//depthStatList(cur_node);
+			d = cur_node->depth;
+			//d = depthStatList(cur_node);
 
+			
 			if(DEBUG)
 				printf("Depth: %d\n", d);
+			
 
 			if( d == 1){
 
-				// Don't print StatList if it only has one element, it's not a list
+				// Don't print StatList if it only has one statement, it's not a list
 				//printStatListElements(cur_node);
 				printChildren(cur_node);
 
@@ -372,8 +372,6 @@ void printNode(node* cur_node) {
 
 				printDots();
 				printf("StatList\n");
-				
-				printChildren(cur_node);
 
 				decrementDotCounter();
 
@@ -385,7 +383,6 @@ void printNode(node* cur_node) {
 				printDots();
 				printf("StatList\n");
 
-				//printStatListElements(cur_node);
 				printChildren(cur_node);
 				
 				decrementDotCounter();
@@ -553,7 +550,11 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	new_node->field1 = f1;
 	new_node->field2 = f2;
 	new_node->field3 = f3;
-	new_node->depth = 0;
+
+	if(t != StatType)
+		new_node->depth = 1;
+	else
+		new_node->depth = 0;
 
 	return new_node;
 }
