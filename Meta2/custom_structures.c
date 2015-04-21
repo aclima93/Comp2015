@@ -448,7 +448,12 @@ int getNodeDepth(node* n){
 	if( n == NULL)
 		return 0;
 
-	return n->numStats;
+	NodeType t = n->type_of_node;
+
+	if( t == StatType || t == IfElseStatType || t == RepeatStatType || t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType )
+		return 1;
+
+	return 0;
 }
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3){
@@ -464,10 +469,7 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field2 = f2;
 	new_node->field3 = f3;
 
-	if( t == StatType || t == IfElseStatType || t == RepeatStatType || t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType)
-		new_node->numStats = 1;
-	else
-		new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
+	new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
 
 	return new_node;
 }
@@ -486,6 +488,7 @@ node* makeleaf(NodeType t, char* str){
 }
 
 node* createTree(node* n){
+
 	root = n;
 	return root;
 }
