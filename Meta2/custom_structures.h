@@ -57,7 +57,7 @@ char* getOPStr(char* str);
 
 void printChildren(node* cur_node);
 
-void printNode(node* cur_node);
+void printNode(node* cur_node, NodeType lastNodeType);
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3);
 

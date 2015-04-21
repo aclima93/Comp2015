@@ -162,12 +162,12 @@ char* getOPStr(char* str){
 
 void printChildrenMiddleFirst(node* cur_node){
 
-	printNode(cur_node->field2);
+	printNode(cur_node->field2, cur_node->type_of_node);
 
 	incrementDotCounter();
 
-	printNode(cur_node->field1);
-	printNode(cur_node->field3);
+	printNode(cur_node->field1, cur_node->type_of_node);
+	printNode(cur_node->field3, cur_node->type_of_node);
 
 	decrementDotCounter();
 
@@ -175,19 +175,20 @@ void printChildrenMiddleFirst(node* cur_node){
 
 void printChildren(node* cur_node){
 
-	printNode(cur_node->field1);
-	printNode(cur_node->field2);
-	printNode(cur_node->field3);
+	printNode(cur_node->field1, cur_node->type_of_node);
+	printNode(cur_node->field2, cur_node->type_of_node);
+	printNode(cur_node->field3, cur_node->type_of_node);
 
 }
 
-void printNode(node* cur_node) {
+void printNode(node* cur_node, NodeType lastNodeType) {
 
 	if( cur_node == NULL ){
 		return;
 	}
 
 	NodeType t = cur_node->type_of_node;
+
 	int d;
 
 	switch(t) {
@@ -226,7 +227,7 @@ void printNode(node* cur_node) {
 			// print nothing, intermediate node
 			// don't even increment dot counter
 
-			printNode(cur_node->field1);
+			printNode(cur_node->field1, t);
 
 			incrementDotCounter();
 
@@ -235,8 +236,8 @@ void printNode(node* cur_node) {
 
 			decrementDotCounter();
 
-			printNode(cur_node->field2);
-			printNode(cur_node->field3);
+			printNode(cur_node->field2, t);
+			printNode(cur_node->field3, t);
 
 			break;
 
@@ -338,9 +339,9 @@ void printNode(node* cur_node) {
 				printf("Depth: %d\n", d);
 			
 
-			if( d == 1){
+			// Don't print StatList if it only has one statement (it's not a real list...) or if the last node was also a StatList 
+			if( d == 1 || lastNodeType == StatListType){
 
-				// Don't print StatList if it only has one statement, it's not a list
 				printChildren(cur_node);
 
 			}
@@ -497,30 +498,53 @@ int isLeaf(node* cur_node){
 
 void cleanStatLists(node* cur_node){
 
-	/*
+	if(cur_node == NULL || cur_node->type_of_node == NULL)
+		return;
 
 	if( cur_node->type_of_node == StatListType ){
 
 		int statListChildren = 0;
 
-		if (cur_node->field1 != NULL && cur_node->field1->type_of_node == StatListType)
+		if (cur_node->field1 != NULL && ((node*)(cur_node->field1))->type_of_node == StatListType)
 		{
 			statListChildren++;
 		}
-		if (cur_node->field2 != NULL && cur_node->field2->type_of_node == StatListType)
+		if (cur_node->field2 != NULL && ((node*)(cur_node->field2))->type_of_node == StatListType)
 		{
 			statListChildren++;
 		}
-		if (cur_node->field3 != NULL && cur_node->field3->type_of_node == StatListType)
+		if (cur_node->field3 != NULL && ((node*)(cur_node->field3))->type_of_node == StatListType)
 		{
 			statListChildren++;
 		}
 
-		// we can only do this is the 
+		// we can do this if the the parent only has one child and it is of type StatList as well
 		if (statListChildren == 1){
 
+			node* temp_ref = NULL;
 
+			// copy grandchildren, free child afterwards
 
+			if (cur_node->field1 != NULL && ((node*)(cur_node->field1))->type_of_node == StatListType){
+
+				temp_ref = cur_node->field1;
+			}
+			else if (cur_node->field2 != NULL && ((node*)(cur_node->field2))->type_of_node == StatListType){
+
+				temp_ref = cur_node->field2;
+			}
+			else if (cur_node->field3 != NULL && ((node*)(cur_node->field3))->type_of_node == StatListType){
+
+				temp_ref = cur_node->field3;
+			}
+
+			if( temp_ref != NULL){
+				cur_node->field1 = temp_ref->field1;
+				cur_node->field2 = temp_ref->field2;
+				cur_node->field3 = temp_ref->field3;
+			}
+
+			free(temp_ref);
 		}
 
 	}
@@ -529,7 +553,6 @@ void cleanStatLists(node* cur_node){
 	cleanStatLists(cur_node->field2);
 	cleanStatLists(cur_node->field3);
 
-	*/
 
 }
 

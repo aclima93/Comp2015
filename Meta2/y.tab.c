@@ -2099,7 +2099,7 @@ int main(int argc, char** args){
 	cleanStatLists(root);
 
     if(printTree){
-		printNode(root);
+		printNode(root, ProgType);
     }
 	
 	if(printSymbolTable){
