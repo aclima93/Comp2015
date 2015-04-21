@@ -63,19 +63,7 @@ void printNode(node* cur_node);
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3);
 
-node* makeleafDouble(char* d);
-
-node* makeleafInt(char* i);
-
-node* makeleafCall(char* s);
-
-node* makeleafUnaryOP(char* o);
-
-node* makeleafOP(char* o);
-
-node* makeleafID(char* s);
-
-node* makeleafString(char* s);
+node* makeleaf(nodeType t, char* str);
 
 node* createTree(node* n);
 

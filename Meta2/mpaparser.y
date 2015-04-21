@@ -72,7 +72,7 @@ extern int col;
 
 Prog:  ProgHeading ';' ProgBlock '.' 												{$$ = createTree(makenode(ProgType, $1, $3, NULL));} ;
 
-ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleafID($2), NULL, NULL);} ;
+ProgHeading: PROGRAM ID '(' OUTPUT ')' 												{$$ = makenode(ProgHeadingType, makeleaf(IDType, $2), NULL, NULL);} ;
 
 ProgBlock: VarPart FuncPart StatPart 												{$$ = makenode(ProgBlockType, $1, $2, $3);} ;
 
@@ -84,11 +84,11 @@ VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat			{$$ 
 	|																				{$$ = NULL;} 
 	;
 
-VarDeclaration: IDList ':' ID														{$$ = makenode(VarDeclarationType, $1, makeleafID($3), NULL);} ;
+VarDeclaration: IDList ':' ID														{$$ = makenode(VarDeclarationType, $1, makeleaf(IDType, $3), NULL);} ;
 
-IDList: ID CommaID_Repeat															{$$ = makenode(IDListType, makeleafID($1), $2, NULL);} ;
+IDList: ID CommaID_Repeat															{$$ = makenode(IDListType, makeleaf(IDType, $1), $2, NULL);} ;
 
-CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, makeleafID($2), $3, NULL);} ;
+CommaID_Repeat: ',' ID CommaID_Repeat												{$$ = makenode(CommaIDListType, makeleaf(IDType, $2), $3, NULL);} ;
 	| 																				{$$ = NULL;} 
 	;
 
@@ -103,11 +103,11 @@ FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarati
 	|	FuncHeading ';' FuncBlock													{$$ = makenode(FuncDefinitionType, $1, $3, NULL);} 
 	;
 
-FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleafID($2), $3, makeleafID($5));} 
-	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleafID($2), makeleafID($4), makenode(FuncParamsListType, NULL, NULL, NULL));} 
+FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleaf(IDType, $2), $3, makeleaf(IDType, $5));} 
+	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleaf(IDType, $2), makeleaf(IDType, $4), makenode(FuncParamsListType, NULL, NULL, NULL));} 
 	;
 
-FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleafID($2), NULL, NULL);} ;
+FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleaf(IDType, $2), NULL, NULL);} ;
 
 FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FuncParamsListType, $2, $3, NULL);} ;
 
@@ -115,8 +115,8 @@ SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = ma
 	| 																				{$$ = NULL;} 
 	;
 
-FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, makeleafID($4), NULL);} 
-	| IDList ':' ID 																{$$ = makenode(ParamsType, $1, makeleafID($3), NULL);} 
+FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, makeleaf(IDType, $4), NULL);} 
+	| IDList ':' ID 																{$$ = makenode(ParamsType, $1, makeleaf(IDType, $3), NULL);} 
 	;
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
@@ -141,12 +141,12 @@ Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);}
 																						$$ = makenode(WhileStatType, $2, $4, NULL);
 																					} 
 	| REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
-	| VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 										{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
+	| VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 										{$$ = makenode(ValParamStatType, $5, makeleaf(IDType, $8), NULL);} 
 	| IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
 	| WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
 	;
 
-IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleafID($1), $3, NULL);} 
+IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleaf(IDType, $1), $3, NULL);} 
 	| 																				{$$ = NULL;}
 	;
 
@@ -155,35 +155,35 @@ WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, 
 	;
 
 WritelnPList: '(' Expr CommaExprString_Repeat ')' 									{$$ = makenode(WritelnPListType, $2, $3, NULL);} 
-	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, makeleafString($2), $3, NULL);} 
+	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, makeleaf(StringType, $2), $3, NULL);} 
 	;
 
 CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(WritelnPListType, $2, $3, NULL);}
-	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, makeleafString($2), $3, NULL);}
+	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, makeleaf(StringType, $2), $3, NULL);}
 	| 																				{$$ = NULL;}
 	;
 
 Expr: SimpleExpr 																	{$$ = makenode(ExprType, $1, NULL, NULL);}
-	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleafOP($2), $3);}
+	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, $2), $3);}
 	;
 
-SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);} 
-	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleafOP($2), $3);}
-	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleafUnaryOP($1), $2);}
+SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, $2), $3);} 
+	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, $2), $3);}
+	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, $1), $2);}
 	| Term 																			{$$ = $1;}
 	;
 
-Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
-	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleafOP($2), $3);}
+Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, $2), $3);}
+	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, $2), $3);}
 	| Factor 																		{$$ = $1;}
 	;
 
-Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleafUnaryOP($1), $2);}
+Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleaf(UnaryOPType, $1), $2);}
 	| '(' Expr ')' 																	{$$ = makenode(FactorType, NULL, $2, NULL);}
-	| INTLIT 																		{$$ = makeleafInt($1);}
-	| REALLIT 																		{$$ = makeleafDouble($1);}
-	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleafCall($1), $2);}
-	| ID 					 														{$$ = makeleafID($1);}
+	| INTLIT 																		{$$ = makeleaf(IntType, $1);}
+	| REALLIT 																		{$$ = makeleaf(DoubleType, $1);}
+	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleaf(CallType, $1), $2);}
+	| ID 					 														{$$ = makeleaf(IDType, $1);}
 	;
 
 ParamList: '(' Expr CommaExpr_Repeat ')' 											{$$ = makenode(ParamListType, $2, $3, NULL);} ;

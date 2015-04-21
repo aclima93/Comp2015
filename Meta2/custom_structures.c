@@ -472,124 +472,17 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	return new_node;
 }
 
-node* makeleafDouble(char* d){
-	
-	if(DEBUG){
-		printf("[DEBUG] double leaf\n");
-	}
+node* makeleaf(nodeType t, char* str){
 
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = DoubleType;
-	leaf->field1 = d;
+	node* leaf = (node*) malloc(sizeof(node));	
+
+	leaf->type_of_node = t;
+	leaf->field1 = str;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
 	leaf->depth = 1;
 
 	return leaf;
-}
-
-node* makeleafInt(char* i){
-	
-	if(DEBUG){
-		printf("[DEBUG] int leaf\n");
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = IntType;
-	leaf->field1 = i;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-
-	return leaf;
-}
-
-node* makeleafUnaryOP(char* o){
-
-	if(DEBUG){
-		printf("[DEBUG] unary op leaf %s\n", o);
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = UnaryOPType;
-	leaf->field1 = o;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-	
-	return leaf;
-}
-
-node* makeleafOP(char* o){
-
-	if(DEBUG){
-		printf("[DEBUG] op leaf %s\n", o);
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = OPType;
-	leaf->field1 = o;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-	
-	return leaf;
-}
-
-node* makeleafID(char* s){
-
-	if(DEBUG){
-		printf("[DEBUG] id leaf\n");
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = IDType;
-	leaf->field1 = s;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-	
-	return leaf;
-}
-
-node* makeleafString(char* s){
-
-	if(DEBUG){
-		printf("[DEBUG] string leaf\n");
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = StringType;
-	leaf->field1 = s;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-	
-	return leaf;
-}
-
-node* makeleafCall(char* s) {
-
-	if(DEBUG){
-		printf("[DEBUG] call leaf\n");
-	}
-
-	node* leaf = (node*) malloc(sizeof(node));
-	
-	leaf->type_of_node = CallType;
-	leaf->field1 = s;
-	leaf->field2 = NULL;
-	leaf->field3 = NULL;
-	leaf->depth = 1;
-	
-	return leaf;
-
 }
 
 node* createTree(node* n){

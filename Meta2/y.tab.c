@@ -1514,7 +1514,7 @@ yyreduce:
 
   case 3:
 #line 75 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ProgHeadingType, makeleafID((yyvsp[(2) - (5)].string)), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(ProgHeadingType, makeleaf(IDType, (yyvsp[(2) - (5)].string)), NULL, NULL);}
     break;
 
   case 4:
@@ -1544,17 +1544,17 @@ yyreduce:
 
   case 9:
 #line 87 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(VarDeclarationType, (yyvsp[(1) - (3)].node_pointer), makeleafID((yyvsp[(3) - (3)].string)), NULL);}
+    {(yyval.node_pointer) = makenode(VarDeclarationType, (yyvsp[(1) - (3)].node_pointer), makeleaf(IDType, (yyvsp[(3) - (3)].string)), NULL);}
     break;
 
   case 10:
 #line 89 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(IDListType, makeleafID((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(IDListType, makeleaf(IDType, (yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer), NULL);}
     break;
 
   case 11:
 #line 91 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(CommaIDListType, makeleafID((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(CommaIDListType, makeleaf(IDType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 12:
@@ -1594,17 +1594,17 @@ yyreduce:
 
   case 19:
 #line 106 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleafID((yyvsp[(2) - (5)].string)), (yyvsp[(3) - (5)].node_pointer), makeleafID((yyvsp[(5) - (5)].string)));}
+    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, (yyvsp[(2) - (5)].string)), (yyvsp[(3) - (5)].node_pointer), makeleaf(IDType, (yyvsp[(5) - (5)].string)));}
     break;
 
   case 20:
 #line 107 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleafID((yyvsp[(2) - (4)].string)), makeleafID((yyvsp[(4) - (4)].string)), makenode(FuncParamsListType, NULL, NULL, NULL));}
+    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, (yyvsp[(2) - (4)].string)), makeleaf(IDType, (yyvsp[(4) - (4)].string)), makenode(FuncParamsListType, NULL, NULL, NULL));}
     break;
 
   case 21:
 #line 110 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncIdentType, makeleafID((yyvsp[(2) - (2)].string)), NULL, NULL);}
+    {(yyval.node_pointer) = makenode(FuncIdentType, makeleaf(IDType, (yyvsp[(2) - (2)].string)), NULL, NULL);}
     break;
 
   case 22:
@@ -1624,12 +1624,12 @@ yyreduce:
 
   case 25:
 #line 118 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(VarParamsType, (yyvsp[(2) - (4)].node_pointer), makeleafID((yyvsp[(4) - (4)].string)), NULL);}
+    {(yyval.node_pointer) = makenode(VarParamsType, (yyvsp[(2) - (4)].node_pointer), makeleaf(IDType, (yyvsp[(4) - (4)].string)), NULL);}
     break;
 
   case 26:
 #line 119 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ParamsType, (yyvsp[(1) - (3)].node_pointer), makeleafID((yyvsp[(3) - (3)].string)), NULL);}
+    {(yyval.node_pointer) = makenode(ParamsType, (yyvsp[(1) - (3)].node_pointer), makeleaf(IDType, (yyvsp[(3) - (3)].string)), NULL);}
     break;
 
   case 27:
@@ -1694,7 +1694,7 @@ yyreduce:
 
   case 38:
 #line 144 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ValParamStatType, (yyvsp[(5) - (9)].node_pointer), makeleafID((yyvsp[(8) - (9)].string)), NULL);}
+    {(yyval.node_pointer) = makenode(ValParamStatType, (yyvsp[(5) - (9)].node_pointer), makeleaf(IDType, (yyvsp[(8) - (9)].string)), NULL);}
     break;
 
   case 39:
@@ -1709,7 +1709,7 @@ yyreduce:
 
   case 41:
 #line 149 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(AssignStatType, makeleafID((yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(AssignStatType, makeleaf(IDType, (yyvsp[(1) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 42:
@@ -1734,7 +1734,7 @@ yyreduce:
 
   case 46:
 #line 158 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(WritelnPListType, makeleafString((yyvsp[(2) - (4)].string)), (yyvsp[(3) - (4)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, (yyvsp[(2) - (4)].string)), (yyvsp[(3) - (4)].node_pointer), NULL);}
     break;
 
   case 47:
@@ -1744,7 +1744,7 @@ yyreduce:
 
   case 48:
 #line 162 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(WritelnPListType, makeleafString((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 49:
@@ -1759,22 +1759,22 @@ yyreduce:
 
   case 51:
 #line 167 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleafOP((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 52:
 #line 170 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleafOP((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 53:
 #line 171 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleafOP((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 54:
 #line 172 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, NULL, makeleafUnaryOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
+    {(yyval.node_pointer) = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, (yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
     break;
 
   case 55:
@@ -1784,12 +1784,12 @@ yyreduce:
 
   case 56:
 #line 176 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleafOP((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 57:
 #line 177 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleafOP((yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, (yyvsp[(2) - (3)].string)), (yyvsp[(3) - (3)].node_pointer));}
     break;
 
   case 58:
@@ -1799,7 +1799,7 @@ yyreduce:
 
   case 59:
 #line 181 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleafUnaryOP((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
+    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(UnaryOPType, (yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
     break;
 
   case 60:
@@ -1809,22 +1809,22 @@ yyreduce:
 
   case 61:
 #line 183 "mpaparser.y"
-    {(yyval.node_pointer) = makeleafInt((yyvsp[(1) - (1)].string));}
+    {(yyval.node_pointer) = makeleaf(IntType, (yyvsp[(1) - (1)].string));}
     break;
 
   case 62:
 #line 184 "mpaparser.y"
-    {(yyval.node_pointer) = makeleafDouble((yyvsp[(1) - (1)].string));}
+    {(yyval.node_pointer) = makeleaf(DoubleType, (yyvsp[(1) - (1)].string));}
     break;
 
   case 63:
 #line 185 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleafCall((yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
+    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(CallType, (yyvsp[(1) - (2)].string)), (yyvsp[(2) - (2)].node_pointer));}
     break;
 
   case 64:
 #line 186 "mpaparser.y"
-    {(yyval.node_pointer) = makeleafID((yyvsp[(1) - (1)].string));}
+    {(yyval.node_pointer) = makeleaf(IDType, (yyvsp[(1) - (1)].string));}
     break;
 
   case 65:
