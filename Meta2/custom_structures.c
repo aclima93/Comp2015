@@ -333,7 +333,7 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 
 		case StatListType:
 			
-			d = cur_node->depth;
+			d = cur_node->numStats;
 			
 			if(DEBUG)
 				printf("Depth: %d\n", d);
@@ -448,7 +448,7 @@ int getNodeDepth(node* n){
 	if( n == NULL)
 		return 0;
 
-	return n->depth;
+	return n->numStats;
 }
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3){
@@ -464,10 +464,10 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field2 = f2;
 	new_node->field3 = f3;
 
-	if( t == StatType )
-		new_node->depth = 1;
+	if( t == StatType || t == IfElseStatType || t == RepeatStatType || t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType)
+		new_node->numStats = 1;
 	else
-		new_node->depth = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
+		new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
 
 	return new_node;
 }
@@ -480,7 +480,7 @@ node* makeleaf(NodeType t, char* str){
 	leaf->field1 = str;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->numStats = 0;
 
 	return leaf;
 }

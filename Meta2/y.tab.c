@@ -1804,7 +1804,7 @@ yyreduce:
 
   case 60:
 #line 182 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FactorType, NULL, (yyvsp[(2) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = (yyvsp[(2) - (3)].node_pointer);}
     break;
 
   case 61:
