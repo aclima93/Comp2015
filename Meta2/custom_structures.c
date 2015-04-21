@@ -339,7 +339,8 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 				printf("Depth: %d\n", d);
 			
 
-			// Don't print StatList if it only has one statement (it's not a real list...) or if the last node was also a StatList 
+			// Don't print StatList if it only has one statement (it's not a real list...) 
+			// or if the last node was also a StatList 
 			if( d == 1 || lastNodeType == StatListType){
 
 				printChildren(cur_node);
@@ -463,7 +464,10 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field2 = f2;
 	new_node->field3 = f3;
 
-	new_node->depth = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
+	if( t == StatType )
+		new_node->depth = 1;
+	else
+		new_node->depth = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
 
 	return new_node;
 }
@@ -476,7 +480,7 @@ node* makeleaf(NodeType t, char* str){
 	leaf->field1 = str;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 1;
+	leaf->depth = 0;
 
 	return leaf;
 }
@@ -498,7 +502,7 @@ int isLeaf(node* cur_node){
 
 void cleanStatLists(node* cur_node){
 
-	if(cur_node == NULL || cur_node->type_of_node == NULL)
+	if( cur_node == NULL || isLeaf(cur_node) )
 		return;
 
 	if( cur_node->type_of_node == StatListType ){

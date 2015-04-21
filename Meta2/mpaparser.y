@@ -179,7 +179,7 @@ Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(
 	;
 
 Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleaf(UnaryOPType, $1), $2);}
-	| '(' Expr ')' 																	{$$ = makenode(FactorType, NULL, $2, NULL);}
+	| '(' Expr ')' 																	{$$ = $2;}
 	| INTLIT 																		{$$ = makeleaf(IntType, $1);}
 	| REALLIT 																		{$$ = makeleaf(DoubleType, $1);}
 	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleaf(CallType, $1), $2);}
