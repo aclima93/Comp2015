@@ -126,17 +126,26 @@ StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL)
 CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
 StatList: Stat SemicStat_Repeat 													{
-																						if( !($1 == NULL) ) {
-																							($1)->next = $2;
-																						}
 																						$$ = makenode(StatListType, $1, $2, NULL);	
+																						
+																						if( $1 != NULL ) {
+																							($$)->depth += ($1)->depth;
+																						}
+																						if( $2 != NULL ) {
+																							($$)->depth += ($2)->depth;
+																						}
 																					} ;
 
 SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
-																						if( !($2 == NULL) ) {
-																							($2)->next = $3;
-																						}
 																						$$ = makenode(StatType, $2, $3, NULL);	
+
+																						if( $2 != NULL ) {
+																							($$)->depth += ($2)->depth;
+																						}
+																						if( $3 != NULL ) {
+																							($$)->depth += ($3)->depth;
+																						}
+
 																					} 
 	| 																				{$$ = NULL;} 
 	;
@@ -144,7 +153,12 @@ SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
 Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
 	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
 	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, NULL);} 
-	|	WHILE Expr DO Stat 															{if($4 == NULL){$4 = makenode(StatListType, NULL, NULL, NULL);}; $$ = makenode(WhileStatType, $2, $4, NULL);} 
+	|	WHILE Expr DO Stat 															{
+																						if($4 == NULL){
+																							$4 = makenode(StatListType, NULL, NULL, NULL);
+																						}
+																						$$ = makenode(WhileStatType, $2, $4, NULL);
+																					} 
 	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
 	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
 	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 

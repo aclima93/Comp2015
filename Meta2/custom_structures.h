@@ -29,7 +29,7 @@ typedef struct {
     void* field1;
     void* field2;
     void* field3;
-    void* next;
+    int depth;
 } node;
 
 node* root;
@@ -43,13 +43,15 @@ void incrementDotCounter();
 
 void decrementDotCounter();
 
+/*
 void printStatListElements(node* cur_node);
 
 int depthStatList(node* cur_node);
+*/
 
 void printDots();
 
-char* getIndependantStr(nodeType t)
+char* getIndependantStr(nodeType t);
 
 char* getLeafStr(nodeType t);
 

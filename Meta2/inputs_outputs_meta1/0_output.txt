@@ -5,4 +5,9 @@ Program
 ......Id(x)
 ......Id(integer)
 ..FuncPart
-Depth: 1
+..StatList
+....ValParam
+......IntLit(1)
+......Id(x)
+....WriteLn
+......Id(x)

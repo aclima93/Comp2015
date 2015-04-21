@@ -19,7 +19,7 @@ void printDots() {
 
 char* getIndependantStr(nodeType t){
 	
-	switch (t){
+	switch(t){
 		case VarDeclarationType:
 			return "VarDecl";
 
@@ -47,7 +47,7 @@ char* getIndependantStr(nodeType t){
 
 char* getLeafStr(nodeType t){
 
-	switch (t){
+	switch(t){
 		case DoubleType:
 			return "RealLit";
 
@@ -67,7 +67,7 @@ char* getLeafStr(nodeType t){
 
 char* getStatStr(nodeType t){
 
-	switch (t){
+	switch(t){
 		case IfElseStatType:
 			return "IfElse";
 
@@ -113,6 +113,7 @@ void printChildren(node* cur_node){
 
 }
 
+/*
 void printStatListElements(node* cur_node){
 
 	node* element = cur_node;
@@ -127,7 +128,7 @@ void printStatListElements(node* cur_node){
 			printNode(element);
 		}
 
-		element = element->next;
+		element = element->depth;
 	}
 
 }
@@ -140,16 +141,17 @@ int depthStatList(node* cur_node){
 	while( !(element == NULL) ){
 		
 		d++;
-		element = element->next;
+		element = element->depth;
 	}
 
 	return d;
 
 }
+*/
 
 void printNode(node* cur_node) {
 
-	if (cur_node == NULL){
+	if( cur_node == NULL ){
 		return;
 	}
 
@@ -352,14 +354,16 @@ void printNode(node* cur_node) {
 
 		case StatListType:
 			
-			d = depthStatList(cur_node);
+			d = cur_node->depth;//depthStatList(cur_node);
 
-			printf("Depth: %d\n", d);
+			if(DEBUG)
+				printf("Depth: %d\n", d);
 
 			if( d == 1){
 
 				// Don't print StatList if it only has one element, it's not a list
-				printStatListElements(cur_node);
+				//printStatListElements(cur_node);
+				printChildren(cur_node);
 
 			}
 			else if( d == 0 ){
@@ -381,7 +385,8 @@ void printNode(node* cur_node) {
 				printDots();
 				printf("StatList\n");
 
-				printStatListElements(cur_node);
+				//printStatListElements(cur_node);
+				printChildren(cur_node);
 				
 				decrementDotCounter();
 			}
@@ -548,6 +553,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	new_node->field1 = f1;
 	new_node->field2 = f2;
 	new_node->field3 = f3;
+	new_node->depth = 0;
 
 	return new_node;
 }
@@ -564,6 +570,7 @@ node* makeleafDouble(char* d){
 	leaf->field1 = d;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 
 	return leaf;
 }
@@ -580,6 +587,7 @@ node* makeleafInt(char* i){
 	leaf->field1 = i;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 
 	return leaf;
 }
@@ -596,6 +604,7 @@ node* makeleafUnaryOP(char* o){
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 	
 	return leaf;
 }
@@ -612,6 +621,7 @@ node* makeleafOP(char* o){
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 	
 	return leaf;
 }
@@ -628,6 +638,7 @@ node* makeleafID(char* s){
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 	
 	return leaf;
 }
@@ -644,6 +655,7 @@ node* makeleafString(char* s){
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 	
 	return leaf;
 }
@@ -660,6 +672,7 @@ node* makeleafCall(char* s) {
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->depth = 0;
 	
 	return leaf;
 
