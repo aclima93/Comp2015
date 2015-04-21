@@ -38,6 +38,9 @@ char* getIndependantStr(nodeType t){
 		case ParamsType:
 			return "Params";
 
+		case VarPartType:
+			return "VarPart";
+
 		default:
 			return NULL;
 
@@ -113,42 +116,6 @@ void printChildren(node* cur_node){
 
 }
 
-/*
-void printStatListElements(node* cur_node){
-
-	node* element = cur_node;
-
-	while( !(element == NULL) ){
-
-		//printf("element addr: %d\n", element);
-
-		// don't print superfluous StatLists 
-		
-		if( element->type_of_node != StatListType ){
-			printNode(element);
-		}
-
-		element = element->depth;
-	}
-
-}
-
-int depthStatList(node* cur_node){
-
-	node* element = cur_node;
-	int d = 0;
-
-	while( !(element == NULL) ){
-		
-		d++;
-		element = element->depth;
-	}
-
-	return d;
-
-}
-*/
-
 void printNode(node* cur_node) {
 
 	if( cur_node == NULL ){
@@ -157,13 +124,6 @@ void printNode(node* cur_node) {
 
 	nodeType t = cur_node->type_of_node;
 	int d;
-
-	/*
-	if(DEBUG_TYPE){
-		char* enumString[] = {"ProgType", "ProgHeadingType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", "FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType", "ParamsType", "FuncBlockType", "StatPartType", "CompStatType", "StatListType", "EmptyStatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "UnaryTermType", "TermType", "ExprListType", "ParamListType", "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"};
-		printf("[DEBUG] type: %s\n", enumString[t]);
-	}
-	*/
 
 	switch(t) {
 
@@ -177,22 +137,13 @@ void printNode(node* cur_node) {
 			
 			break;
 
-		case ProgHeadingType:
-		case ProgBlockType:
-
-			// print nothing, intermediate node
-			// don't even increment dot counter
-
-			printChildren(cur_node);
-
-			break;
-
 		case VarDeclarationType:
 		case FuncPartType:
 		case FuncDeclarationType:
 		case FuncDefinitionType:
 		case FuncDefinition2Type:
 		case ParamsType:
+		case VarPartType:
 
 			incrementDotCounter();
 			
@@ -234,10 +185,12 @@ void printNode(node* cur_node) {
 
 			break;
 
+		case ProgHeadingType:
+		case ProgBlockType:
+		case StatPartType:
 		case FuncIdentType:
 		case VarParamsType:
 		case FuncBlockType:
-		case StatPartType:
 		case CompStatType:
 		case StatType:
 
@@ -286,15 +239,6 @@ void printNode(node* cur_node) {
 
 			break;
 
-		case SimpleExprType:
-
-			// the operator is always printed first
-			// don't call printChildren !!
-
-			printChildrenMiddleFirst(cur_node);
-
-			break;
-
 		case ExprType:
 
 			if( cur_node->field2 == NULL && cur_node->field3 == NULL ){
@@ -313,47 +257,20 @@ void printNode(node* cur_node) {
 
 			break;
 
+		case SimpleExprType:
 		case FactorType:
-
-			printChildrenMiddleFirst(cur_node);
-
-			break;
-
 		case OPTermListType: 
 
-			// print inner OPTermLists first
-				
-			if( cur_node->field1 != NULL ){
+			// the operator is always printed first
+			// don't call printChildren !!
 
-				printChildrenMiddleFirst(cur_node);
-			
-			}
-			else{
-
-				printChildren(cur_node);
-				
-			}
-
-			break;
-
-		case VarPartType:
-
-			incrementDotCounter();
-
-			printDots();
-			printf("VarPart\n");
-
-			printChildren(cur_node);
-
-			decrementDotCounter();
+			printChildrenMiddleFirst(cur_node);
 
 			break;
 
 		case StatListType:
 			
 			d = cur_node->depth;
-			//d = depthStatList(cur_node);
-
 			
 			if(DEBUG)
 				printf("Depth: %d\n", d);
@@ -362,7 +279,6 @@ void printNode(node* cur_node) {
 			if( d == 1){
 
 				// Don't print StatList if it only has one statement, it's not a list
-				//printStatListElements(cur_node);
 				printChildren(cur_node);
 
 			}
@@ -462,13 +378,6 @@ void printNode(node* cur_node) {
 
 			decrementDotCounter();
 
-			// because we can't find a fucking reason for this not to work
-			/*
-			if( strcmp ( "Not", unary_op_str ) == 0){
-				incrementDotCounter();
-			}
-			*/
-
 			break;
 
 		case OPType:
@@ -537,6 +446,13 @@ void printNode(node* cur_node) {
 	}
 }
 
+int getNodeDepth(node* n){
+
+	if( n == NULL)
+		return 0;
+
+	return n->depth;
+}
 
 node* makenode(nodeType t, node* f1, node* f2, node* f3){
 
@@ -551,10 +467,7 @@ node* makenode(nodeType t, node* f1, node* f2, node* f3){
 	new_node->field2 = f2;
 	new_node->field3 = f3;
 
-	if(t != StatType)
-		new_node->depth = 1;
-	else
-		new_node->depth = 0;
+	new_node->depth = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
 
 	return new_node;
 }
@@ -571,7 +484,7 @@ node* makeleafDouble(char* d){
 	leaf->field1 = d;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 
 	return leaf;
 }
@@ -588,7 +501,7 @@ node* makeleafInt(char* i){
 	leaf->field1 = i;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 
 	return leaf;
 }
@@ -605,7 +518,7 @@ node* makeleafUnaryOP(char* o){
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 	
 	return leaf;
 }
@@ -622,7 +535,7 @@ node* makeleafOP(char* o){
 	leaf->field1 = o;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 	
 	return leaf;
 }
@@ -639,7 +552,7 @@ node* makeleafID(char* s){
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 	
 	return leaf;
 }
@@ -656,7 +569,7 @@ node* makeleafString(char* s){
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 	
 	return leaf;
 }
@@ -673,7 +586,7 @@ node* makeleafCall(char* s) {
 	leaf->field1 = s;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->depth = 0;
+	leaf->depth = 1;
 	
 	return leaf;
 

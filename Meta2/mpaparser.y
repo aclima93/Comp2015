@@ -125,53 +125,25 @@ StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL)
 
 CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
-StatList: Stat SemicStat_Repeat 													{
-																						$$ = makenode(StatListType, $1, $2, NULL);	
-																						if(DEBUG) printf("\n\n[1] addr: %p depth in statlist: %d\n", ($$), ($$)->depth);
-																						
-																						if( $1 != NULL ) {
-																							($$)->depth += ($1)->depth;
-																							if(DEBUG) printf("addr: %p depth in statlist: %d\n", ($1), ($1)->depth);
-																						}
-																						if( $2 != NULL ) {
-																							if(DEBUG) printf("addr: %p depth in statlist: %d\n", ($2), ($2)->depth);
-																							($$)->depth += ($2)->depth;
-																						}
-																						if(DEBUG) printf("[2] addr: %p depth in statlist: %d\n\n\n", ($$), ($$)->depth);
+StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
 
-																					} ;
-
-SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
-																						$$ = makenode(StatType, $2, $3, NULL);	
-																						if(DEBUG) printf("\n\n[3] addr: %p depth in statrepeat: %d\n", ($$), ($$)->depth);
-
-																						if( $2 != NULL ) {
-																							if(DEBUG) printf("addr: %p depth in statrepeat: %d\n", ($2), ($2)->depth);
-																							($$)->depth += ($2)->depth;
-																						}
-																						if( $3 != NULL ) {
-																							if(DEBUG) printf("addr: %p depth in statrepeat: %d\n", ($3), ($3)->depth);
-																							($$)->depth += ($3)->depth;
-																						}
-																						if(DEBUG) printf("[4] addr: %p depth in statrepeat: %d\n\n\n", ($$), ($$)->depth);
-
-																					} 
+SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $2, $3, NULL);} 
 	| 																				{$$ = NULL;} 
 	;
 
 Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
-	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
-	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
-	|	WHILE Expr DO Stat 															{
+	| IF Expr THEN Stat ELSE Stat 													{$$ = makenode(IfElseStatType, $2, $4, $6);} 
+	| IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatListType, NULL, NULL, NULL));} 
+	| WHILE Expr DO Stat 															{
 																						if($4 == NULL){
 																							$4 = makenode(StatListType, NULL, NULL, NULL);
 																						}
 																						$$ = makenode(WhileStatType, $2, $4, NULL);
 																					} 
-	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
-	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
-	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
-	|	WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
+	| REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
+	| VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 										{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
+	| IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
+	| WRITELN WritelnPList_Optional 												{$$ = makenode(StatType, $2, NULL, NULL);} 
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleafID($1), $3, NULL);} 

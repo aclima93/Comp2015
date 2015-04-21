@@ -2,3 +2,4 @@ Program
 ..Id(gcd)
 ..VarPart
 ..FuncPart
+..StatList

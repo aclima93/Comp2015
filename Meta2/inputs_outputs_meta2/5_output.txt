@@ -52,6 +52,7 @@ Program
 ..........Assign
 ............Id(result)
 ............Id(num1)
+..........StatList
 ........Assign
 ..........Id(min)
 ..........Id(result)
