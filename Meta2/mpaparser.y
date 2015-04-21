@@ -17,9 +17,7 @@ extern int col;
 %}
 
 %union {
-	int integer;
 	char* string;
-	double real;
 	node* node_pointer;
 }
 
@@ -106,7 +104,7 @@ FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarati
 	;
 
 FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleafID($2), $3, makeleafID($5));} 
-	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleafID($2), makeleafID($4), NULL);} 
+	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleafID($2), makeleafID($4), makenode(FuncParamsListType, NULL, NULL, NULL));} 
 	;
 
 FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleafID($2), NULL, NULL);} ;
@@ -127,16 +125,26 @@ StatPart: CompStat 																	{$$ = makenode(StatPartType, $1, NULL, NULL)
 
 CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
-StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
+StatList: Stat SemicStat_Repeat 													{
+																						if( !($1 == NULL) ) {
+																							($1)->next = $2;
+																						}
+																						$$ = makenode(StatListType, $1, $2, NULL);	
+																					} ;
 
-SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{$$ = makenode(StatType, $2, $3, NULL);} 
+SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
+																						if( !($2 == NULL) ) {
+																							($2)->next = $3;
+																						}
+																						$$ = makenode(StatType, $2, $3, NULL);	
+																					} 
 	| 																				{$$ = NULL;} 
 	;
 
 Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);} 
 	|	IF Expr THEN Stat ELSE Stat 												{$$ = makenode(IfElseStatType, $2, $4, $6);} 
-	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, makenode(StatType, NULL, NULL, NULL));} 
-	|	WHILE Expr DO Stat 															{$$ = makenode(WhileStatType, $2, $4, NULL);} 
+	|	IF Expr THEN Stat 															{$$ = makenode(IfElseStatType, $2, $4, NULL);} 
+	|	WHILE Expr DO Stat 															{if($4 == NULL){$4 = makenode(StatListType, NULL, NULL, NULL);}; $$ = makenode(WhileStatType, $2, $4, NULL);} 
 	|	REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL);} 
 	|	VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 									{$$ = makenode(ValParamStatType, $5, makeleafID($8), NULL);} 
 	|	IDAssignExpr_Optional 														{$$ = makenode(StatType, $1, NULL, NULL);} 
@@ -144,7 +152,7 @@ Stat: CompStat 																		{$$ = makenode(StatType, $1, NULL, NULL);}
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleafID($1), $3, NULL);} 
-	| 																				{$$ = makenode(EmptyStatListType, NULL, NULL, NULL);}
+	| 																				{$$ = NULL;}
 	;
 
 WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, $1, NULL, NULL);} 

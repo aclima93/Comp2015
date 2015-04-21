@@ -108,13 +108,11 @@
 typedef union YYSTYPE
 #line 19 "mpaparser.y"
 {
-	int integer;
 	char* string;
-	double real;
 	node* node_pointer;
 }
 /* Line 1529 of yacc.c.  */
-#line 118 "y.tab.h"
+#line 116 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -1,4 +1,6 @@
 
+
+
 #ifndef CUSTOM_STRUCTURES
 #define CUSTOM_STRUCTURES
 
@@ -27,6 +29,7 @@ typedef struct {
     void* field1;
     void* field2;
     void* field3;
+    void* next;
 } node;
 
 node* root;
@@ -40,7 +43,19 @@ void incrementDotCounter();
 
 void decrementDotCounter();
 
+void printStatListElements(node* cur_node);
+
+int depthStatList(node* cur_node);
+
 void printDots();
+
+char* getIndependantStr(nodeType t)
+
+char* getLeafStr(nodeType t);
+
+char* getStatStr(nodeType t);
+
+void printChildren(node* cur_node);
 
 void printNode(node* cur_node);
 
@@ -67,3 +82,7 @@ int isLeaf(node* cur_node);
 void freeNode(node* cur_node);
 
 #endif
+
+
+
+

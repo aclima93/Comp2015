@@ -21,9 +21,5 @@ Program
 ..........Id(b2)
 ..........Id(c2)
 ..........Id(integer)
-......StatList
-........Assign
-..........Id(a2)
-..........Id(a1)
-........StatList
-..StatList
+Depth: 1
+Depth: 1

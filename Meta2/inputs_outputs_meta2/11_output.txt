@@ -6,4 +6,4 @@ Program
 ......Id(b)
 ......Id(integer)
 ..FuncPart
-..StatList
+Depth: 1
