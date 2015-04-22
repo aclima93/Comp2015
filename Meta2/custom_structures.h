@@ -29,7 +29,6 @@ typedef struct {
     void* field1;
     void* field2;
     void* field3;
-    //int numStats;
 } node;
 
 node* root;
@@ -43,6 +42,8 @@ int printSymbolTable;
 /*
  * AST creation and deletion functions
  */
+
+int getNodeDepth(node* n);
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3);
 

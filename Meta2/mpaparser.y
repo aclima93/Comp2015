@@ -121,7 +121,7 @@ FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, m
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
 
-StatPart: CompStat 																	{$$ = $1;} ;
+StatPart: CompStat 																	{$$ = makenode(StatListType, $1, NULL, NULL);} ;
 
 CompStat: BEGIN_token StatList END													{$$ = $2;} ;
 
@@ -168,7 +168,7 @@ CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(Wr
 	| 																				{$$ = NULL;}
 	;
 
-Expr: SimpleExpr 																	{$$ = makenode(ExprType, $1, NULL, NULL);}
+Expr: SimpleExpr 																	{$$ = makenode(ExprType, NULL, $1, NULL);}
 	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, $2), $3);}
 	;
 
