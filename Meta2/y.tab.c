@@ -2072,7 +2072,7 @@ int main(int argc, char** args){
 
 	yyparse();
 	
-	// terminate program if any errors where found
+	// terminate program if any errors were found
 	if(errorCounter)
 		return 0;
 
@@ -2107,6 +2107,11 @@ int main(int argc, char** args){
 		printNode(root, ProgType);
     }
 	
+	// mandatory, as per request
+    if( printTree && printSymbolTable ){
+    	printf("\n");
+    }
+
 	if(printSymbolTable){
 		// print the symbol table here
 	}

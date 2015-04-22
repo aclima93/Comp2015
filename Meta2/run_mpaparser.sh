@@ -6,18 +6,19 @@ cc -o mpaparser *.c -ll -ly
 
 for i in {0..8}
 	do
-		./mpaparser -t -s < inputs_outputs_meta1/"$i"_input.mpa > inputs_outputs_meta1/"$i"_output.txt
+		./mpaparser -t < inputs_outputs_meta1/"$i"_input.mpa > inputs_outputs_meta1/"$i"_output.txt
 done
 
-for i in {0..11}
+for i in {0..15}
 	do
-		./mpaparser -t -s < inputs_outputs_meta2/"$i"_input.mpa > inputs_outputs_meta2/"$i"_output.txt
+		./mpaparser -t < inputs_outputs_meta2/"$i"_input.mpa > inputs_outputs_meta2/"$i"_output.txt
 
 		# diff it
 		result=$(diff -y -W 72 inputs_outputs_meta2/"$i"_output_expected.txt inputs_outputs_meta2/"$i"_output.txt)
 
 		if [ $? -ne 0 ]
 		then
+			#say "god damn it"
 			echo ""
 	        echo "file " $i " is different"
 	        echo ""

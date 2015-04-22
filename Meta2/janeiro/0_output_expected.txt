@@ -1,18 +1,0 @@
-Line 1, col 22: illegal character ('')
-Line 1, col 38: illegal character ('')
-Line 1, col 44: illegal character ('')
-Line 1, col 66: illegal character ('')
-Line 1, col 78: illegal character ('')
-Program
-..Id(echo)
-..VarPart
-....VarDecl
-......Id(x)
-......Id(integer)
-..FuncPart
-..StatList
-....ValParam
-......IntLit(1)
-......Id(x)
-....WriteLn
-......Id(x)

@@ -125,6 +125,38 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 			break;
 
 		case IfElseStatType:
+
+			incrementDotCounter();
+
+			printDots();
+			printf("%s\n", getStatStr(t));
+
+			printNode(cur_node->field1, t);
+
+			if( cur_node->field2 != NULL ){
+				printNode(cur_node->field2, t);
+			}
+			else{
+				incrementDotCounter();
+				printDots();
+				printf("StatList\n");
+				decrementDotCounter();
+			}
+
+			if( cur_node->field3 != NULL ){
+				printNode(cur_node->field3, t);
+			}
+			else{
+				incrementDotCounter();
+				printDots();
+				printf("StatList\n");
+				decrementDotCounter();
+			}
+
+			decrementDotCounter();
+
+			break;
+
 		case RepeatStatType:
 		case WhileStatType:
 		case ValParamStatType:
