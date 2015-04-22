@@ -1614,7 +1614,7 @@ yyreduce:
 
   case 23:
 #line 114 "mpaparser.y"
-    {(yyval.node_pointer) = makenode(FuncParamsListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
+    {(yyval.node_pointer) = makenode(FuncParamsListType2, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL);}
     break;
 
   case 24:

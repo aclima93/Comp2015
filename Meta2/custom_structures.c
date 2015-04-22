@@ -70,6 +70,7 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 		case FuncDefinition2Type:
 		case ParamsType:
 		case VarPartType:
+		case VarParamsType:
 
 			incrementDotCounter();
 			
@@ -113,7 +114,6 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 
 		case ProgBlockType:
 		case FuncIdentType:
-		case VarParamsType:
 		case FuncBlockType:
 		case StatType:
 
@@ -229,6 +229,8 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 
 			break;
 
+
+		case FuncParamsListType2:
 		case FuncDeclarationListType:
 		case VarDeclarationListType:
 		case IDListType:
@@ -460,7 +462,7 @@ char* getNodeTypeStr(NodeType t){
 	char* str[] = 
 	{
 	"ProgType", "ProgBlockType", "VarPartType", "VarDeclarationListType", "VarDeclarationType", "IDListType", "CommaIDListType", "FuncPartType", 
-	"FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType", "VarParamsType",
+	"FuncDeclarationListType", "FuncDeclarationType", "FuncDefinitionType", "FuncDefinition2Type", "FuncHeadingType", "FuncIdentType", "FuncParamsListType" "FuncParamsListType2", "VarParamsType",
 	 "ParamsType", "FuncBlockType", "StatListType", "StatType", "IfElseStatType", "WhileStatType", "RepeatStatType", "ValParamStatType", "AssignStatType", 
 	 "WriteLnStatType", "WritelnPListType", "ExprType", "SimpleExprType", "OPFactorListType", "FactorType", "OPTermListType", "UnaryTermType", "TermType", "ExprListType", "ParamListType", 
 	 "DoubleType", "IDType", "StringType", "OPType", "UnaryOPType", "IntType", "CallType"
@@ -487,6 +489,8 @@ char* getIndependantStr(NodeType t){
 		case FuncDefinition2Type:
 			return "FuncDef2";
 
+		case VarParamsType:
+			return "VarParams";
 		case ParamsType:
 			return "Params";
 

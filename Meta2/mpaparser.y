@@ -111,7 +111,7 @@ FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleaf(ID
 
 FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'						{$$ = makenode(FuncParamsListType, $2, $3, NULL);} ;
 
-SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FuncParamsListType, $2, $3, NULL);} 
+SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat					{$$ = makenode(FuncParamsListType2, $2, $3, NULL);} 
 	| 																				{$$ = NULL;} 
 	;
 

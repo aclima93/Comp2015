@@ -38,11 +38,12 @@ Program
 ....FuncDef
 ......Id(teste3)
 ......FuncParams
-........Id(x3)
-........Id(real)
-..........Params
-............Id(i)
-............Id(integer)
+........VarParams
+..........Id(x3)
+..........Id(real)
+........Params
+..........Id(i)
+..........Id(integer)
 ......Id(real)
 ......VarPart
 ......StatList
