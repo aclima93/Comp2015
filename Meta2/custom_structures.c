@@ -193,8 +193,9 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 
 		case StatListType:
 			
-			d = cur_node->numStats;
-			
+			//d = cur_node->numStats;
+			d = getNodeDepth(cur_node->field1) + getNodeDepth(cur_node->field2) + getNodeDepth(cur_node->field3);
+
 			if(DEBUG)
 				printf("Depth: %d\n", d);
 			
@@ -204,16 +205,6 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 			if( d == 1 || lastNodeType == StatListType){
 
 				printChildren(cur_node);
-
-			}
-			else if( d == 0 ){
-
-				incrementDotCounter();
-
-				printDots();
-				printf("StatList\n");
-
-				decrementDotCounter();
 
 			}
 			else{
@@ -340,9 +331,7 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field2 = f2;
 	new_node->field3 = f3;
 
-	new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
-
-
+	//new_node->numStats = getNodeDepth(f1) + getNodeDepth(f2) + getNodeDepth(f3);
 
 	return new_node;
 }
@@ -355,7 +344,7 @@ node* makeleaf(NodeType t, char* str){
 	leaf->field1 = str;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
-	leaf->numStats = 0;
+	//leaf->numStats = 0;
 
 	return leaf;
 }

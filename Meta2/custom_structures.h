@@ -29,7 +29,7 @@ typedef struct {
     void* field1;
     void* field2;
     void* field3;
-    int numStats;
+    //int numStats;
 } node;
 
 node* root;
