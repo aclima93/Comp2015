@@ -121,7 +121,7 @@ FormalParams: VAR IDList ':' ID 													{$$ = makenode(VarParamsType, $2, m
 
 FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, NULL);} ;
 
-StatPart: CompStat 																	{$$ = makenode(StatListType, $1, NULL, NULL);} ;
+StatPart: CompStat 																	{$$ = $1;} ;
 
 CompStat: BEGIN_token StatList END													{$$ = $2;} ;
 
