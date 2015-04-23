@@ -1,0 +1,8 @@
+program gcd(output);
+var a,b: integer;
+c,d: float;
+function teste(a:integer):float;
+	begin
+	end;
+begin
+end.

@@ -1,0 +1,3 @@
+Line 4, col 2: unterminated string
+Line 7, col 17: illegal character ('}')
+Line 14, col 10: syntax error: program
