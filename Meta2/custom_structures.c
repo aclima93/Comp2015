@@ -313,7 +313,7 @@ int getNodeDepth(node* n){
 	NodeType t = n->type_of_node;
 
 	if( t == StatType || t == StatListType || t == IfElseStatType || t == RepeatStatType 
-		|| t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType ){
+		|| t == WhileStatType || t == ValParamStatType || t == AssignStatType || t == WriteLnStatType || t == CompStatType){
 		
 		return 1;
 	}
