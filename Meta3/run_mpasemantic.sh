@@ -21,4 +21,4 @@ done
 
 rm mpasemantic.zip
 
-zip mpasemantic mpasemantic.l mpasemantic.y custom_structures.h custom_structures.c
+zip mpasemantic mpasemantic.l mpasemantic.y ASTree.h ASTree.c STable.c STable.h

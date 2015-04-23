@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "custom_structures.h"
+#include "ASTree.h"
+#include "STable.h"
 
 void yyerror(char *s);
 
@@ -203,6 +204,7 @@ int main(int argc, char** args){
 
 	errorCounter = 0;
 
+	// read input and create Abstract Syntax Tree
 	yyparse();
 	
 	// terminate program if any errors were found
@@ -234,6 +236,7 @@ int main(int argc, char** args){
 	}
 
     if(printTree){
+    	// print AST recursively, starting from root node
 		printNode(root, ProgType);
     }
 	
@@ -242,8 +245,10 @@ int main(int argc, char** args){
     	printf("\n");
     }
 
+    // create Symbol Table
+
 	if(printSymbolTable){
-		// print the symbol table here
+		// print the Symbol Table
 	}
 
 	freeNode(root);

@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "custom_structures.h"
+#include "ASTree.h"
+#include "STable.h"
 
 #include "y.tab.h"
 

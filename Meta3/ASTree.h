@@ -1,8 +1,8 @@
 
 
 
-#ifndef CUSTOM_STRUCTURES
-#define CUSTOM_STRUCTURES
+#ifndef ASTREE
+#define ASTREE
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,37 +17,6 @@
 #define DEBUG_TYPE 0
 #define DEBUG_STATLIST 0
 #define DEBUG_MAKENODE 0
-
-typedef enum {
-	_boolean_, _integer_, _real_, _function_, _program_, _type_, _true_, _false_
-} PredefType;
-
-typedef enum {
-	_constant_, _return_, _param_, _varparam_
-} PredefFlag;
-
-typedef struct {
-	char* symname;
-	PredefType type;
-	PredefFlag flag;
-	char* sim_value;
-} symbol;
-
-typedef enum {
-	_outer_, _program_, _function_
-} PredefTable;
-
-int comparison_function(char* name, symbol* sym);
-
-typedef struct {
-	PredefTable type;
-	void* next;
-	map <char*, symbol*, comparison_function> functions;
-	map <char*, symbol*, comparison_function> constants;
-	map <char*, symbol*, comparison_function> returns;
-	map <char*, symbol*, comparison_function> params;
-	map <char*, symbol*, comparison_function> varparams;
-} table;
 
 
 typedef enum {

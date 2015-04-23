@@ -1,5 +1,5 @@
 
-#include "custom_structures.h"
+#include "ASTree.h"
 
 void incrementDotCounter() {
 	dotCounter+=2;
