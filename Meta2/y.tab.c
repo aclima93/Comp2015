@@ -2100,9 +2100,6 @@ int main(int argc, char** args){
 		}
 	}
 
-	//remove useless consecutive StatLists 
-	cleanStatLists(root);
-
     if(printTree){
 		printNode(root, ProgType);
     }

@@ -375,66 +375,6 @@ int isLeaf(node* cur_node){
 	return 0;
 }
 
-void cleanStatLists(node* cur_node){
-
-	if( cur_node == NULL || isLeaf(cur_node) )
-		return;
-
-	if( cur_node->type_of_node == StatListType ){
-
-		int statListChildren = 0;
-
-		if (cur_node->field1 != NULL && ((node*)(cur_node->field1))->type_of_node == StatListType)
-		{
-			statListChildren++;
-		}
-		if (cur_node->field2 != NULL && ((node*)(cur_node->field2))->type_of_node == StatListType)
-		{
-			statListChildren++;
-		}
-		if (cur_node->field3 != NULL && ((node*)(cur_node->field3))->type_of_node == StatListType)
-		{
-			statListChildren++;
-		}
-
-		// we can do this if the the parent only has one child and it is of type StatList as well
-		if (statListChildren == 1){
-
-			node* temp_ref = NULL;
-
-			// copy grandchildren, free child afterwards
-
-			if (cur_node->field1 != NULL && ((node*)(cur_node->field1))->type_of_node == StatListType){
-
-				temp_ref = cur_node->field1;
-			}
-			else if (cur_node->field2 != NULL && ((node*)(cur_node->field2))->type_of_node == StatListType){
-
-				temp_ref = cur_node->field2;
-			}
-			else if (cur_node->field3 != NULL && ((node*)(cur_node->field3))->type_of_node == StatListType){
-
-				temp_ref = cur_node->field3;
-			}
-
-			if( temp_ref != NULL){
-				cur_node->field1 = temp_ref->field1;
-				cur_node->field2 = temp_ref->field2;
-				cur_node->field3 = temp_ref->field3;
-			}
-
-			free(temp_ref);
-		}
-
-	}
-
-	cleanStatLists(cur_node->field1);
-	cleanStatLists(cur_node->field2);
-	cleanStatLists(cur_node->field3);
-
-
-}
-
 void freeNode(node* cur_node) {
 
 	if (cur_node == NULL)

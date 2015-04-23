@@ -53,8 +53,6 @@ node* createTree(node* n);
 
 int isLeaf(node* cur_node);
 
-void cleanStatLists(node* cur_node);
-
 void freeNode(node* cur_node);
 
 /*
