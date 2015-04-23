@@ -15,6 +15,8 @@
 
 #define DEBUG 0
 #define DEBUG_TYPE 0
+#define DEBUG_STATLIST 0
+#define DEBUG_MAKENODE 0
 
 typedef enum {
 	ProgType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, 

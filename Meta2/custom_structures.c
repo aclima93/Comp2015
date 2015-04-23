@@ -194,7 +194,7 @@ void printNode(node* cur_node, NodeType lastNodeType) {
 			
 			d = getNodeDepth(cur_node->field1) + getNodeDepth(cur_node->field2) + getNodeDepth(cur_node->field3);
 
-			if(DEBUG){
+			if(DEBUG_STATLIST){
 				printf("Depth: %d\n", d);
 				printf("LastNode: %s\n", getNodeTypeStr(lastNodeType));
 			}
@@ -323,7 +323,7 @@ int getNodeDepth(node* n){
 
 node* makenode(NodeType t, node* f1, node* f2, node* f3){
 
-	if(DEBUG){
+	if(DEBUG_MAKENODE){
 
 		printf("\n\n[DEBUG] type: %s\n", getNodeTypeStr(t));
 
