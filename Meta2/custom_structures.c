@@ -570,7 +570,7 @@ char* getUnaryOPStr(char* str){
 char* getOPStr(char* str){
 
 	if( strcasecmp ( "and", str ) == 0){
-		return "Add";
+		return "And";
 	}
 	else if( strcasecmp ( "or", str ) == 0){
 		return "Or";
