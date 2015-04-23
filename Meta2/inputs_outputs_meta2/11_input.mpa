@@ -2,7 +2,16 @@ program gcd(output);
 var a, b: integer;
 begin
 	begin
+
 		begin
-		end			
+
+			begin
+			end
+
+		end;
+
+		begin 
+		end	
+
 	end
 end.

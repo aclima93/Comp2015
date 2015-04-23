@@ -123,7 +123,7 @@ FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, 
 
 StatPart: CompStat 																	{$$ = $1;} ;
 
-CompStat: BEGIN_token StatList END													{$$ = $2;} ;
+CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
 
 StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
 
