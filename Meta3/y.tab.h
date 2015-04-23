@@ -106,7 +106,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 19 "mpaparser.y"
+#line 19 "mpasemantic.y"
 {
 	char* string;
 	node* node_pointer;

@@ -689,8 +689,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "mpaparser.l"
-#line 2 "mpaparser.l"
+#line 1 "mpasemantic.l"
+#line 2 "mpasemantic.l"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -892,7 +892,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 145 "mpaparser.l"
+#line 145 "mpasemantic.l"
 
 
 
@@ -981,252 +981,252 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 148 "mpaparser.l"
+#line 148 "mpasemantic.l"
 ;	{if(DEBUG) printf("BEGIN COMMENT\n"); BEGIN COMMENT; commentLines=line; commentCols=col+strlen(yytext); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 150 "mpaparser.l"
+#line 150 "mpasemantic.l"
 ;	{if(DEBUG) printf("EXIT COMMENT\n"); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 152 "mpaparser.l"
+#line 152 "mpasemantic.l"
 ;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 154 "mpaparser.l"
+#line 154 "mpasemantic.l"
 ;	{if(DEBUG) printf("TEXT COMMENT\n"); commentCols+=strlen(yytext);}
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 155 "mpaparser.l"
+#line 155 "mpasemantic.l"
 ;	{if(DEBUG) printf("\\n COMMENT\n"); commentLines++; commentCols=1;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 160 "mpaparser.l"
+#line 160 "mpasemantic.l"
 ;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; readString = strdup(yytext); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 162 "mpaparser.l"
+#line 162 "mpasemantic.l"
 ;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 163 "mpaparser.l"
+#line 163 "mpasemantic.l"
 ;	{if(DEBUG) printf("PLICA STRINGLIT\n"); readString = strdup(strcat(readString, yytext)); BEGIN 0; col=col+strlen(readString); yylval.string = strdup(readString); yytext = strdup(readString); return STRING;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 165 "mpaparser.l"
+#line 165 "mpasemantic.l"
 ;	{if(DEBUG) printf("TEXT STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 166 "mpaparser.l"
+#line 166 "mpasemantic.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1; yytext = strdup(readString); }
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
-#line 167 "mpaparser.l"
+#line 167 "mpasemantic.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); yytext = strdup(readString); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 172 "mpaparser.l"
+#line 172 "mpasemantic.l"
 ; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return INTLIT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 173 "mpaparser.l"
+#line 173 "mpasemantic.l"
 ; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return REALLIT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 176 "mpaparser.l"
+#line 176 "mpasemantic.l"
 ;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return RESERVED;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 179 "mpaparser.l"
+#line 179 "mpasemantic.l"
 ; 	{if(DEBUG) printf("ASSIGN\n"); col=col+strlen(yytext); return ASSIGN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 180 "mpaparser.l"
+#line 180 "mpasemantic.l"
 ; 	{if(DEBUG) printf("BEGIN_token\n"); col=col+strlen(yytext); return BEGIN_token;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 181 "mpaparser.l"
+#line 181 "mpasemantic.l"
 ; 	{if(DEBUG) printf("COLON\n"); col=col+strlen(yytext); return ':';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 182 "mpaparser.l"
+#line 182 "mpasemantic.l"
 ; 	{if(DEBUG) printf("COMMA\n"); col=col+strlen(yytext); return ',';}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 183 "mpaparser.l"
+#line 183 "mpasemantic.l"
 ; 	{if(DEBUG) printf("DO\n"); col=col+strlen(yytext); return DO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 184 "mpaparser.l"
+#line 184 "mpasemantic.l"
 ; 	{if(DEBUG) printf("DOT\n"); col=col+strlen(yytext); return '.';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 185 "mpaparser.l"
+#line 185 "mpasemantic.l"
 ; 	{if(DEBUG) printf("ELSE\n"); col=col+strlen(yytext); return ELSE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 186 "mpaparser.l"
+#line 186 "mpasemantic.l"
 ; 	{if(DEBUG) printf("END\n"); col=col+strlen(yytext); return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 187 "mpaparser.l"
+#line 187 "mpasemantic.l"
 ; 	{if(DEBUG) printf("FORWARD\n"); col=col+strlen(yytext); return FORWARD;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 188 "mpaparser.l"
+#line 188 "mpasemantic.l"
 ; 	{if(DEBUG) printf("FUNCTION\n"); col=col+strlen(yytext); return FUNCTION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 189 "mpaparser.l"
+#line 189 "mpasemantic.l"
 ; 	{if(DEBUG) printf("IF\n"); col=col+strlen(yytext); return IF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 190 "mpaparser.l"
+#line 190 "mpasemantic.l"
 ; 	{if(DEBUG) printf("LBRAC\n"); col=col+strlen(yytext); return '(';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 191 "mpaparser.l"
+#line 191 "mpasemantic.l"
 ; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return NOT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 192 "mpaparser.l"
+#line 192 "mpasemantic.l"
 ; 	{if(DEBUG) printf("OUTPUT\n"); col=col+strlen(yytext); return OUTPUT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 193 "mpaparser.l"
+#line 193 "mpasemantic.l"
 ; 	{if(DEBUG) printf("PARAMSTR\n"); col=col+strlen(yytext); return PARAMSTR;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 194 "mpaparser.l"
+#line 194 "mpasemantic.l"
 ; 	{if(DEBUG) printf("PROGRAM\n"); col=col+strlen(yytext); return PROGRAM;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 195 "mpaparser.l"
+#line 195 "mpasemantic.l"
 ; 	{if(DEBUG) printf("RBRAC\n"); col=col+strlen(yytext); return ')';}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 196 "mpaparser.l"
+#line 196 "mpasemantic.l"
 ; 	{if(DEBUG) printf("REPEAT\n"); col=col+strlen(yytext); return REPEAT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 197 "mpaparser.l"
+#line 197 "mpasemantic.l"
 ; 	{if(DEBUG) printf("SEMIC\n"); col=col+strlen(yytext); return ';';}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 198 "mpaparser.l"
+#line 198 "mpasemantic.l"
 ; 	{if(DEBUG) printf("THEN\n"); col=col+strlen(yytext); return THEN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 199 "mpaparser.l"
+#line 199 "mpasemantic.l"
 ; 	{if(DEBUG) printf("UNTIL\n"); col=col+strlen(yytext); return UNTIL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 200 "mpaparser.l"
+#line 200 "mpasemantic.l"
 ; 	{if(DEBUG) printf("VAL\n"); col=col+strlen(yytext); return VAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 201 "mpaparser.l"
+#line 201 "mpasemantic.l"
 ; 	{if(DEBUG) printf("VAR\n"); col=col+strlen(yytext); return VAR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 202 "mpaparser.l"
+#line 202 "mpasemantic.l"
 ; 	{if(DEBUG) printf("WHILE\n"); col=col+strlen(yytext); return WHILE;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 203 "mpaparser.l"
+#line 203 "mpasemantic.l"
 ; 	{if(DEBUG) printf("WRITELN\n"); col=col+strlen(yytext); return WRITELN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 206 "mpaparser.l"
+#line 206 "mpasemantic.l"
 ; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 207 "mpaparser.l"
+#line 207 "mpasemantic.l"
 ;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 208 "mpaparser.l"
+#line 208 "mpasemantic.l"
 ; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP2;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 209 "mpaparser.l"
+#line 209 "mpasemantic.l"
 ; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP3;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 210 "mpaparser.l"
+#line 210 "mpasemantic.l"
 ; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP4;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 213 "mpaparser.l"
+#line 213 "mpasemantic.l"
 ; 	{if(DEBUG) printf("ID\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 216 "mpaparser.l"
+#line 216 "mpasemantic.l"
 ;	{col+=strlen(yytext); }
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 217 "mpaparser.l"
+#line 217 "mpasemantic.l"
 ; 	{line++; col=1; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 219 "mpaparser.l"
+#line 219 "mpasemantic.l"
 ; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+strlen(yytext); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 221 "mpaparser.l"
+#line 221 "mpasemantic.l"
 ;	{return 0;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 223 "mpaparser.l"
+#line 223 "mpasemantic.l"
 ECHO;
 	YY_BREAK
 #line 1233 "lex.yy.c"
@@ -2224,7 +2224,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 223 "mpaparser.l"
+#line 223 "mpasemantic.l"
 
 
 
