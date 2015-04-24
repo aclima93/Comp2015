@@ -1,4 +1,6 @@
 
+
+
 #include "ASTree.h"
 
 void incrementDotCounter() {
@@ -362,8 +364,8 @@ node* makeleaf(NodeType t, char* str){
 
 node* createTree(node* n){
 
-	root = n;
-	return root;
+	ASTroot = n;
+	return ASTroot;
 }
 
 int isLeaf(node* cur_node){
@@ -556,4 +558,8 @@ char* getOPStr(char* str){
 		return NULL;
 	}
 }
+
+
+
+
 

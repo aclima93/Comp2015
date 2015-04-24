@@ -34,7 +34,7 @@ typedef struct {
     void* field3;
 } node;
 
-node* root;
+node* ASTroot;
 
 int dotCounter;
 int errorCounter;
