@@ -1,2 +1,0 @@
-Line 6, col 17: illegal character ('}')
-Line 13, col 10: syntax error: program

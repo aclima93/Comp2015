@@ -1600,7 +1600,7 @@ yyreduce:
 
   case 20:
 #line 108 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, (yyvsp[(2) - (4)].string)), makeleaf(IDType, (yyvsp[(4) - (4)].string)), makenode(FuncParamsListType, NULL, NULL, NULL));}
+    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, (yyvsp[(2) - (4)].string)), makenode(FuncParamsListType, NULL, NULL, NULL), makeleaf(IDType, (yyvsp[(4) - (4)].string)));}
     break;
 
   case 21:
@@ -2073,6 +2073,9 @@ int main(int argc, char** args){
 
 	// read input and create Abstract Syntax Tree
 	yyparse();
+
+    // create Symbol Table
+    errorCounter += createSymbolTable(ASTroot);
 	
 	// terminate program if any errors were found
 	if(errorCounter)
@@ -2104,7 +2107,7 @@ int main(int argc, char** args){
 
     if(printTree){
     	// print AST recursively, starting from root node
-		printNode(root, ProgType);
+		printNode(ASTroot, ProgType);
     }
 	
 	// mandatory, as per request
@@ -2112,13 +2115,12 @@ int main(int argc, char** args){
     	printf("\n");
     }
 
-    // create Symbol Table
-
 	if(printSymbolTable){
 		// print the Symbol Table
 	}
 
-	freeNode(root);
+	// free all nodes in AST
+	freeNode(ASTroot);
 
 	return 0;
 }

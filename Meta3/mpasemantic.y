@@ -105,7 +105,7 @@ FuncDeclaration: FuncHeading ';' FORWARD 											{$$ = makenode(FuncDeclarati
 	;
 
 FuncHeading: FUNCTION ID FormalParamList ':' ID  									{$$ = makenode(FuncHeadingType, makeleaf(IDType, $2), $3, makeleaf(IDType, $5));} 
-	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleaf(IDType, $2), makeleaf(IDType, $4), makenode(FuncParamsListType, NULL, NULL, NULL));} 
+	| FUNCTION ID ':' ID  															{$$ = makenode(FuncHeadingType, makeleaf(IDType, $2), makenode(FuncParamsListType, NULL, NULL, NULL), makeleaf(IDType, $4));} 
 	;
 
 FuncIdent: FUNCTION ID 																{$$ = makenode(FuncIdentType, makeleaf(IDType, $2), NULL, NULL);} ;
