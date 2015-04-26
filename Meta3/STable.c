@@ -185,6 +185,13 @@ char* getPredefFlagStr(PredefFlag f) {
 	return str[f];
 }
 
+char* getPredefTableStr(PredefTable t) {
+	char* str[] = {
+		"Outer", "Program", "Function"
+	};
+	return str[t];
+}
+
  table* makeTable(PredefTable t) {
 
  	table* new_table = malloc(sizeof(table));
@@ -206,7 +213,7 @@ int lookup_compare(const void* l, const void* r){
 
 int insert_compare(const void* l, const void* r){
     // always insert at the end, preserving insertion order
-    return -1;
+    return 1;
 }
 
 void walker(const void *node, const VISIT which, const int depth) {
@@ -241,27 +248,29 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v){
 
 void insertSymbol(symbol* s, table* t){
 
+	/*
 	printf("\n\nSymbol\n");
 	printSymbol(s);
 
 	printf("\nBefore insertion\n");
 	printTable(t);
+	*/
 
-	void* table = t->symbol_variables;
-    tsearch(s, &table, insert_compare); // if it isn't found with tsearch it is inserted
+    tsearch(s, &(t->symbol_variables), insert_compare); // if it isn't found with tsearch it is inserted
 
+    /*
 	printf("\nAfter insertion\n");
 	printTable(t);
+	*/
 }
 
 symbol* lookupSymbol(symbol* s, table* t){
-	void* table = t->symbol_variables;
-	return tfind(s, &table, lookup_compare); //return NULL if element isn't found
+	return tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found
 }
 
 void printSymbol(symbol* s){
 	
-	printf("%s\t%s", s->name, getPredefTypeStr(s->type));
+	printf("%s\t%s", strlwr(s->name), getPredefTypeStr(s->type));
 	if (s->flag != NULLFlag) {
 
 		printf("\t%s", getPredefFlagStr(s->flag));
@@ -274,14 +283,10 @@ void printSymbol(symbol* s){
 }
 
 void printTable( table* t){
-	void* table = t->symbol_variables;
 
-	/*
-	printf("%p\n", t);
-	printf("%p\n\n", table);
-	*/
-
-    twalk(table, walker); // prints all nodes in inorder
+	printf("===== %s Symbol Table =====\n", getPredefTableStr(t->type));
+    twalk(t->symbol_variables, walker); // prints all nodes in inorder
+    printf("\n");
 }
 
 void printSymbolTables( table* root_table ){
@@ -294,7 +299,16 @@ void printSymbolTables( table* root_table ){
 	}
 }
 
+char* strlwr(char* str){
+	int i;
+	int len = strlen(str);
+	char* lowered = malloc( sizeof(char)*len );
 
+	for(i=0; i<len; i++){
+		lowered[i] = tolower((unsigned char) str[i]);
+	}
+	return lowered;
+}
 
 
 

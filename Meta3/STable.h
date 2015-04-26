@@ -11,6 +11,7 @@
 #include <string.h>
 #include <errno.h>
 #include <search.h>
+#include <ctype.h>
 
 //#define DEBUG_WALKNODES 0
 
@@ -63,6 +64,8 @@ char* getPredefTypeStr(PredefType t);
 
 PredefType getPredefTypeFromStr(char* t);
 
+char* getPredefTableStr(PredefTable t);
+
 /*
  * Insertions, printing and deletion functions
  */
@@ -87,6 +90,7 @@ void printTable(table* t);
 
 void printSymbolTables( table* root_table );
 
+char* strlwr(char* str);
 
 #endif
 
