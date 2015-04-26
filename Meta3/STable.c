@@ -26,19 +26,19 @@ int createSymbolTable(node* ASTroot) {
 	f->nextTable = p;
 
 	// start walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
-	walkASTNode(p, ASTroot, NULL);
+	walkASTNode(p, ASTroot, NULL, NULLFlag);
 
 	return semanticErrorCounter;
 }
 
-void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type) {
+void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag) {
 
-	walkASTNode(cur_scope, cur_node->field1, cur_declaration_type);
-	walkASTNode(cur_scope, cur_node->field2, cur_declaration_type);
-	walkASTNode(cur_scope, cur_node->field3, cur_declaration_type);
+	walkASTNode(cur_scope, cur_node->field1, cur_declaration_type, cur_flag);
+	walkASTNode(cur_scope, cur_node->field2, cur_declaration_type, cur_flag);
+	walkASTNode(cur_scope, cur_node->field3, cur_declaration_type, cur_flag);
 }
 
-void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
+void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag) {
 
 
 	if( cur_node == NULL || isLeaf(cur_node) ){
@@ -50,12 +50,18 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 	switch(t) {
 
 		case VarDeclarationType:
-		case VarParamsType:
-		case ParamsType:
-
 			/* passar o novo tipo das variáveis que se vão seguir*/
-			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2);
+			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
+			break;
 
+		case VarParamsType:
+			/* passar o novo tipo das variáveis que se vão seguir*/
+			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, varparamFlag);
+			break;
+
+		case ParamsType:
+			/* passar o novo tipo das variáveis que se vão seguir*/
+			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, paramFlag);
 			break;
 
 		case IDListType:
@@ -72,14 +78,14 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 				if (cur_declaration_type != NULL) {
 					char* type_str = cur_declaration_type->field1;
 
-					symbol* s = makeSymbol(name, getPredefTypeFromStr(type_str), NULLFlag, NULL);
+					symbol* s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL);
 
 					insertSymbol(s, cur_scope);
 				}
 
 			}
 
-			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type);
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
@@ -108,8 +114,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 
 			insertSymbol(sym, new_table);
 
-			walkASTNodeChildren(new_table, cur_node, cur_declaration_type);
+			walkASTNodeChildren(new_table, cur_node, cur_declaration_type, cur_flag);
 
+			break;
+
+		case VarPartType:
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, NULLFlag);
 			break;
 
 
@@ -118,7 +128,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case FuncDeclarationType:
 		case FuncDefinitionType:
 		case FuncDefinition2Type:
-		case VarPartType:
 		case FuncParamsListType:
 		case ProgBlockType:
 		case FuncBlockType:
@@ -150,7 +159,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case OPType:
 		default:
 
-			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type);
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 	}

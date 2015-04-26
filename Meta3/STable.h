@@ -54,9 +54,9 @@ int semanticErrorCounter;
 
 int createSymbolTable(node* ASTroot);
 
-void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type);
+void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag);
 
-void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type);
+void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag);
 
 char* getPredefFlagStr(PredefFlag f);
 
