@@ -12,6 +12,8 @@
 #include <errno.h>
 #include <search.h>
 
+//#define DEBUG_WALKNODES 0
+
 /*
  * Symbols
  */
@@ -51,7 +53,9 @@ int semanticErrorCounter;
 
 int createSymbolTable(node* ASTroot);
 
-void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type);
+void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type);
+
+void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type);
 
 char* getPredefFlagStr(PredefFlag f);
 
@@ -77,8 +81,11 @@ void insertSymbol(symbol* s, table* t);
 
 symbol* lookupSymbol(symbol* s, table* t);
 
+void printSymbol(symbol* s);
+
 void printTable(table* t);
 
+void printSymbolTables( table* root_table );
 
 
 #endif

@@ -249,7 +249,8 @@ int main(int argc, char** args){
     }
 
 	if(printSymbolTable){
-		// print the Symbol Table
+    	// print ST recursively, by declaration order
+		printSymbolTables( STroot );
 	}
 
 	// free all nodes in AST

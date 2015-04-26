@@ -4,6 +4,7 @@
 #include "STable.h"
 
 int createSymbolTable(node* ASTroot) {
+
 	semanticErrorCounter = 0;
 
 	STroot = makeTable(outerTable);
@@ -18,34 +19,33 @@ int createSymbolTable(node* ASTroot) {
 
 	/* f é a tabela da funcao paramcount */
 	table* f = makeTable(functionTable);
-	STroot->nextTable = f;
-
-
 	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL), f);
-	
+	STroot->nextTable = f;	
 
 	table* p = makeTable(programTable);
 	f->nextTable = p;
-	
 
-	walkAST(p, ASTroot, NULL);
-
+	// start walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
+	walkASTNode(p, ASTroot, NULL);
 
 	return semanticErrorCounter;
 }
 
-void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
+void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type) {
+
+	walkASTNode(cur_scope, cur_node->field1, cur_declaration_type);
+	walkASTNode(cur_scope, cur_node->field2, cur_declaration_type);
+	walkASTNode(cur_scope, cur_node->field3, cur_declaration_type);
+}
+
+void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 
 
-	if( cur_node == NULL){
+	if( cur_node == NULL || isLeaf(cur_node) ){
 		return;
 	}
 
 	NodeType t = cur_node->type_of_node;
-
-	int d;
-	char* name;
-	char* type_str;
 
 	switch(t) {
 
@@ -53,10 +53,8 @@ void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case VarParamsType:
 		case ParamsType:
 
-			/* guardar cur_node->field2 numa variavel global que e cur_declaration_type */
-			walkAST(cur_scope, cur_node->field1, cur_node->field2);
-			walkAST(cur_scope, cur_node->field2, cur_node->field2);
-			walkAST(cur_scope, cur_node->field1, cur_node->field2);
+			/* passar o novo tipo das variáveis que se vão seguir*/
+			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2);
 
 			break;
 
@@ -68,11 +66,11 @@ void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 
 				//get name from id node
 				node* variable = cur_node->field1;
-				name = variable->field1;
+				char* name = variable->field1;
 
 				//get type string from current type of declarations
 				if (cur_declaration_type != NULL) {
-					type_str = cur_declaration_type->field1;
+					char* type_str = cur_declaration_type->field1;
 
 					symbol* s = makeSymbol(name, getPredefTypeFromStr(type_str), NULLFlag, NULL);
 
@@ -81,9 +79,7 @@ void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 
 			}
 
-			walkAST(cur_scope, cur_node->field1, cur_declaration_type);
-			walkAST(cur_scope, cur_node->field2, cur_declaration_type);
-			walkAST(cur_scope, cur_node->field3, cur_declaration_type);
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type);
 
 			break;
 
@@ -91,27 +87,27 @@ void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case FuncIdentType:
 
 			/* adicionar funcao ao scope onde estamos */
-			name = cur_node->field1;
-			symbol *s = makeSymbol(name, _function_, NULLFlag, NULL);
-			insertSymbol(s, cur_scope);
+			if( cur_node->field1 != NULL){
+				symbol *s = makeSymbol(cur_node->field1, _function_, NULLFlag, NULL);
+				insertSymbol(s, cur_scope);
+			}
 
 			/* criar tabela de simbolos (scope) para a nova funcao */
 			cur_scope->nextTable = makeTable(functionTable);
 			table* new_table = cur_scope->nextTable;
 
-			symbol* sy;
+			symbol* sym;
 			if (cur_node->field3 != NULL) {
 				char* returnTypeStr = cur_node->field3;
-				sy = makeSymbol(cur_node->field1, getPredefTypeFromStr(returnTypeStr), returnFlag, NULL);
+				sym = makeSymbol(cur_node->field1, getPredefTypeFromStr(returnTypeStr), returnFlag, NULL);
 			}
-			else
-				sy = makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL);	
+			else{
+				sym = makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL);	
+			}
 
-			insertSymbol(sy, new_table);
+			insertSymbol(sym, new_table);
 
-			walkAST(new_table, cur_node->field1, cur_declaration_type);
-			walkAST(new_table, cur_node->field2, cur_declaration_type);
-			walkAST(new_table, cur_node->field3, cur_declaration_type);
+			walkASTNodeChildren(new_table, cur_node, cur_declaration_type);
 
 			break;
 
@@ -153,9 +149,7 @@ void walkAST(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case OPType:
 		default:
 
-			walkAST(cur_scope, cur_node->field1, cur_declaration_type);
-			walkAST(cur_scope, cur_node->field2, cur_declaration_type);
-			walkAST(cur_scope, cur_node->field3, cur_declaration_type);
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type);
 
 			break;
 	}
@@ -179,14 +173,14 @@ PredefType getPredefTypeFromStr(char* t) {
 
 char* getPredefTypeStr(PredefType t) {
 	char* str[] = {
-		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_"
+		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", NULL
 	};
 	return str[t];
 }
 
 char* getPredefFlagStr(PredefFlag f) {
 	char* str[] = {
-		"constant", "return", "param", "varparam"
+		"constant", "return", "param", "varparam", NULL
 	};
 	return str[f];
 }
@@ -216,8 +210,9 @@ int insert_compare(const void* l, const void* r){
 }
 
 void walker(const void *node, const VISIT which, const int depth) {
-  symbol *f;
-  f = *(symbol **)node;
+
+  symbol *s;
+  s = *(symbol **)node;
 
    switch (which) {
 
@@ -227,14 +222,8 @@ void walker(const void *node, const VISIT which, const int depth) {
 	
 		case leaf:
 		case postorder:
-		   printf("%s\t%s", f->name, getPredefTypeStr(f->type));
-		   if (f->flag != NULLFlag) {
-		   		printf("\t%s", getPredefFlagStr(f->flag));
-		   		if (f->value != NULL) {
-		   			printf("\t%s", f->value);
-		   		}
-		   }
-		   break;
+			printSymbol(s);
+			break;
    }
 }
 
@@ -251,8 +240,18 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v){
 }
 
 void insertSymbol(symbol* s, table* t){
+
+	printf("\n\nSymbol\n");
+	printSymbol(s);
+
+	printf("\nBefore insertion\n");
+	printTable(t);
+
 	void* table = t->symbol_variables;
     tsearch(s, &table, insert_compare); // if it isn't found with tsearch it is inserted
+
+	printf("\nAfter insertion\n");
+	printTable(t);
 }
 
 symbol* lookupSymbol(symbol* s, table* t){
@@ -260,11 +259,40 @@ symbol* lookupSymbol(symbol* s, table* t){
 	return tfind(s, &table, lookup_compare); //return NULL if element isn't found
 }
 
+void printSymbol(symbol* s){
+	
+	printf("%s\t%s", s->name, getPredefTypeStr(s->type));
+	if (s->flag != NULLFlag) {
+
+		printf("\t%s", getPredefFlagStr(s->flag));
+		if (s->value != NULL) {
+
+			printf("\t%s", s->value);
+		}
+	}
+	printf("\n");
+}
+
 void printTable( table* t){
 	void* table = t->symbol_variables;
+
+	/*
+	printf("%p\n", t);
+	printf("%p\n\n", table);
+	*/
+
     twalk(table, walker); // prints all nodes in inorder
 }
 
+void printSymbolTables( table* root_table ){
+	
+	table* cur_table = root_table;
+
+	while( cur_table != NULL ){
+		printTable(cur_table);
+		cur_table = cur_table->nextTable;
+	}
+}
 
 
 
