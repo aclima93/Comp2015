@@ -86,11 +86,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 		case FuncHeadingType:
 		case FuncIdentType:
 
-			/* adicionar funcao ao scope onde estamos */
-			if( cur_node->field1 != NULL){
-				symbol *s = makeSymbol(cur_node->field1, _function_, NULLFlag, NULL);
-				insertSymbol(s, cur_scope);
-			}
+			; //very important voodoo magic, because switch case can't start with declaration
+
+			/* adicionar funcao ao scope onde estamos */ 
+			node* IDNode = cur_node->field1;
+			symbol *s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL);
+			insertSymbol(s, cur_scope);
 
 			/* criar tabela de simbolos (scope) para a nova funcao */
 			cur_scope->nextTable = makeTable(functionTable);
@@ -98,11 +99,11 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type) {
 
 			symbol* sym;
 			if (cur_node->field3 != NULL) {
-				char* returnTypeStr = cur_node->field3;
-				sym = makeSymbol(cur_node->field1, getPredefTypeFromStr(returnTypeStr), returnFlag, NULL);
+				node* returnType = cur_node->field3;
+				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL);
 			}
 			else{
-				sym = makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL);	
+				sym = makeSymbol(IDNode->field1, _NULL_, NULLFlag, NULL);	
 			}
 
 			insertSymbol(sym, new_table);
