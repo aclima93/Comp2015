@@ -1,0 +1,25 @@
+===== Outer Symbol Table =====
+boolean	_type_	constant	_boolean_
+integer	_type_	constant	_integer_
+real	_type_	constant	_real_
+false	_boolean_	constant	_false_
+true	_boolean_	constant	_true_
+paramcount	_function_
+program	_program_
+
+===== Function Symbol Table =====
+paramcount	_integer_	return
+
+===== Program Symbol Table =====
+a	_integer_
+b	_integer_
+c	(null)
+d	(null)
+max	_function_
+min	_function_
+result	_integer_
+max	_function_
+result	_integer_
+
+===== Function Symbol Table =====
+max	(null)

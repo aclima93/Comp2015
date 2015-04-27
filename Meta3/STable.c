@@ -296,7 +296,6 @@ void printTable( table* t){
 
 	printf("===== %s Symbol Table =====\n", getPredefTableStr(t->type));
     twalk(t->symbol_variables, walker); // prints all nodes in inorder
-    printf("\n");
 }
 
 void printSymbolTables( table* root_table ){
@@ -306,6 +305,8 @@ void printSymbolTables( table* root_table ){
 	while( cur_table != NULL ){
 		printTable(cur_table);
 		cur_table = cur_table->nextTable;
+        if(cur_table != NULL)
+            printf("\n");
 	}
 }
 
