@@ -14,6 +14,7 @@
 #include <ctype.h>
 
 //#define DEBUG_WALKNODES 0
+#define INSERTION_DEBUG 0
 
 #define DEFINED 1
 #define NOT_DEFINED 0

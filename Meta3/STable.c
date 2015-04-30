@@ -20,15 +20,15 @@ int createSymbolTable(node* ASTroot) {
 	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED), STroot);
 
 	// tabela da funcao paramcount
-	insertChildTable(cur_scope, makeTable(functionTable));
-	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), cur_scope);
+	table* paramcount_scope = insertChildTable(cur_scope, makeTable(functionTable));
+	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), paramcount_scope);
 
 	// tabela do program
-	cur_scope = insertChildTable(cur_scope, makeTable(programTable));
+	table* program_scope = insertChildTable(cur_scope, makeTable(programTable));
 
 	// starting at program table:
 	// walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
-	walkASTNode(cur_scope, ASTroot, NULL, NULLFlag);
+	walkASTNode(program_scope, ASTroot, NULL, NULLFlag);
 
 	return semanticErrorCounter;
 }
@@ -120,7 +120,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
-				returnType = cur_node->field3;
+				returnType = temp->field3;
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
 
@@ -160,7 +160,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
-				returnType = cur_node->field3;
+				returnType = temp->field3;
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
 
@@ -174,7 +174,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
-				returnType = cur_node->field3;
+				returnType = temp->field3;
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
 
@@ -319,17 +319,15 @@ table* insertSiblingTable(table* cur_table, table* new_table){
 
 table* insertChildTable(table* cur_table, table* new_table){
 
-	table* firstChild = cur_table->childrenTableList;
-
 	//just add it if there are no children already declared in the scope
-	if(firstChild == NULL){
-		firstChild = new_table;
+	if(cur_table->childrenTableList == NULL){
+		cur_table->childrenTableList = new_table;
 		new_table->parentTable = cur_table;
 		return new_table;
 	}
 	else{
 		// delegar a tarefa de adicionar os seus irmaos ao filho
-		return insertSiblingTable(firstChild, new_table);
+		return insertSiblingTable(cur_table->childrenTableList, new_table);
 	}
 }
 
@@ -378,20 +376,22 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d){
 
 void insertSymbol(symbol* s, table* t){
 
-	/*
-	printf("\n\nSymbol\n");
-	printSymbol(s);
+	if(INSERTION_DEBUG){
+		printf("\n\n\n\nSymbol\n");
+		printSymbol(s);
 
-	printf("\nBefore insertion\n");
-	printTable(t);
-	*/
+		printf("\nBefore insertion\n");
+		printTable(t);
+	}
+	
 
     tsearch(s, &(t->symbol_variables), insert_compare); // if it isn't found with tsearch it is inserted
 
-    /*
-	printf("\nAfter insertion\n");
-	printTable(t);
-	*/
+    if(INSERTION_DEBUG){
+		printf("\nAfter insertion\n");
+		printTable(t);
+	}
+	
 }
 
 symbol* lookupSymbol(symbol* s, table* t){
@@ -434,6 +434,10 @@ void printSiblings(table* cur_table){
 
 void printAllSymbolTables( table* root_table ){
 	
+    if(INSERTION_DEBUG){
+    	printf("\n\n\n-------------LOLITOS--------------\n\n\n");
+    }
+
 	printTable(root_table);
 
 	// imprime os irmãos (que são inexistentes em milipascal)

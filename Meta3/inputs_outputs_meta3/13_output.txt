@@ -16,11 +16,11 @@ b	_integer_
 c	(null)
 d	(null)
 teste	_function_
-a	_integer_
-b	_integer_
-c	(null)
-d	(null)
 
 ===== Function Symbol Table =====
 teste	(null)	return
 a	_integer_	param
+a	_integer_
+b	_integer_
+c	(null)
+d	(null)

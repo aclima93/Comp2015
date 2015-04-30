@@ -14,16 +14,16 @@ paramcount	_integer_	return
 a	_integer_
 b	_integer_
 max	_function_
-result	_integer_
 min	_function_
-result	_integer_
 
 ===== Function Symbol Table =====
 max	_integer_	return
 num1	_integer_	param
 num2	_integer_	param
+result	_integer_
 
 ===== Function Symbol Table =====
 min	_integer_	return
 num1	_integer_	param
 num2	_integer_	param
+result	_integer_
