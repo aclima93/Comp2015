@@ -49,10 +49,10 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 	NodeType t = cur_node->type_of_node;
 
+	node* temp;
 	node* IDNode;
 	node* returnType;
 	symbol* s;
-	symbol* sym;
 	symbol* lookup_result;
 
 	switch(t) {
@@ -97,17 +97,19 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			break;
 
-		case FuncHeadingType:
+
+		case FuncDefinition2Type:
 			
 			//procura no cur_scope se a função não está declarada
-				// se sim: declara a função & insere as suas variáveis nessa tabela, marcando como definida
+				// se não estiver declarada: declara a função & insere as suas variáveis nessa tabela, marcando como definida
 				// senão: erro, Errroooooo!
 
 			
 			; //very important voodoo magic, because switch case can't start with declaration
 
 			// adicionar funcao ao scope onde estamos
-			IDNode = cur_node->field1;
+			temp = cur_node->field1;
+			IDNode = temp->field1;
 			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, DEFINED);
 			lookup_result = lookupSymbol(s, cur_scope);
 
@@ -119,9 +121,8 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
 				returnType = cur_node->field3;
-				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
 
-				insertSymbol(sym, cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
@@ -132,10 +133,11 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			break;
 			
 
-		case FuncIdentType: // Function Identifier expected
+
+		case FuncDefinitionType: // Function Identifier expected
 
 			//procura no cur_scope se a função está declarada & se não está definida
-				// se sim a ambas: insere as suas variáveis nessa tabela já declarada e marca como definida
+				// se está declarada e não está definida : insere as suas variáveis nessa tabela já declarada e marca como definida
 				// senão: erro, Errroooooo!
 
 			
@@ -143,7 +145,8 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 
 			// adicionar funcao ao scope onde estamos
-			IDNode = cur_node->field1;
+			temp = cur_node->field1;
+			IDNode = temp->field1;
 			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
 			lookup_result = lookupSymbol(s, cur_scope);
 
@@ -158,13 +161,24 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
 				returnType = cur_node->field3;
-				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
 
-				insertSymbol(sym, cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 			else if ( !(lookup_result->isDefined) ) {
+
+				//mudar estado da função _existente_ para definida
+				lookup_result->isDefined = DEFINED;
+
+				// criar tabela de simbolos (scope) para a nova funcao
+				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
+
+				returnType = cur_node->field3;
+
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			}
 			else {
@@ -177,16 +191,30 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case FuncDeclarationType:
 			// declara a função que vem em funcHeading mas marca como não definida
 
+			; //very important voodoo magic, because switch case can't start with declaration
 
+			// adicionar funcao ao scope onde estamos
+			temp = cur_node->field1;
+			IDNode = temp->field1;
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
+			lookup_result = lookupSymbol(s, cur_scope);
+
+			if (lookup_result == NULL) {
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+			}
+			else {
+				//imprimir erro
+			}
 
 			break;
 
 		case VarPartType:
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, NULLFlag);
 			break;
 
-		case FuncDefinitionType:
-		case FuncDefinition2Type:
+		case FuncIdentType:
+		case FuncHeadingType:
 		case ProgType:
 		case FuncPartType:
 		case FuncParamsListType:
@@ -309,7 +337,7 @@ int lookup_compare(const void* l, const void* r){
 	// compare normaly
     const symbol* lm = l;
     const symbol* lr = r;
-    return strcmp(lm->name, lr->name);
+    return strcasecmp(lm->name, lr->name);
 }
 
 int insert_compare(const void* l, const void* r){

@@ -1,2 +1,0 @@
-Line 7, col 16: illegal character ('_')
-Line 7, col 17: syntax error: Program1
