@@ -9,7 +9,6 @@ int createSymbolTable(node* ASTroot) {
 
 	// tabela do outer scope
 	STroot = makeTable(outerTable);
-	table* cur_scope = STroot;
 
 	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED), STroot);
 	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_", DEFINED), STroot);
@@ -20,11 +19,11 @@ int createSymbolTable(node* ASTroot) {
 	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED), STroot);
 
 	// tabela da funcao paramcount
-	table* paramcount_scope = insertChildTable(cur_scope, makeTable(functionTable));
+	table* paramcount_scope = insertChildTable(STroot, makeTable(functionTable));
 	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), paramcount_scope);
 
 	// tabela do program
-	table* program_scope = insertChildTable(cur_scope, makeTable(programTable));
+	table* program_scope = insertChildTable(STroot, makeTable(programTable));
 
 	// starting at program table:
 	// walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
@@ -298,6 +297,7 @@ table* makeTable(PredefTable t) {
 	new_table->type = t;
 	new_table->symbol_variables = NULL;
 	new_table->nextSiblingTable = NULL;
+	new_table->childrenTableList = NULL;
 	new_table->parentTable = NULL;
 
 	return new_table;
