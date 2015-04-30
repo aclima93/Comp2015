@@ -222,6 +222,7 @@ OP2Token: OP2 																		{$$ = makeleaf(OPType, $1, line, col);} ;
 UnaryNOTToken: NOT																	{$$ = makeleaf(UnaryOPType, $1, line, col);} ;
 UnaryOP3Token: OP3 																	{$$ = makeleaf(UnaryOPType, $1, line, col);} ;
 
+
 %%
 
 int main(int argc, char** args){

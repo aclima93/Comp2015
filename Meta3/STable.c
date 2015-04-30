@@ -314,7 +314,6 @@ char* strlwr(char* str){
 	int i;
 	int len = strlen(str);
 	char* lowered = malloc( sizeof(char) * len );
-	//char lowered [len+1];
 
 	for(i=0; i<len; i++){
 		lowered[i] = tolower((unsigned char) str[i]);
