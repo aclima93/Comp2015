@@ -9,24 +9,24 @@ int createSymbolTable(node* ASTroot) {
 
 	STroot = makeTable(outerTable);
 
-	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_"), STroot);
-	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_"), STroot);
-	insertSymbol(makeSymbol("real", _type_, constantFlag, "_real_"), STroot);
-	insertSymbol(makeSymbol("false", _boolean_, constantFlag, "_false_"), STroot);
-	insertSymbol(makeSymbol("true", _boolean_, constantFlag, "_true_"), STroot);
-	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL), STroot);
-	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL), STroot);
+	table* cur_scope = STroot;
+
+	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED), STroot);
+	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_", DEFINED), STroot);
+	insertSymbol(makeSymbol("real", _type_, constantFlag, "_real_", DEFINED), STroot);
+	insertSymbol(makeSymbol("false", _boolean_, constantFlag, "_false_", DEFINED), STroot);
+	insertSymbol(makeSymbol("true", _boolean_, constantFlag, "_true_", DEFINED), STroot);
+	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL, DEFINED), STroot);
+	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED), STroot);
 
 	/* f é a tabela da funcao paramcount */
-	table* f = makeTable(functionTable);
-	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL), f);
-	STroot->nextTable = f;	
+	cur_scope = insertTable(cur_scope, makeTable(functionTable));
+	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), cur_scope);
 
-	table* p = makeTable(programTable);
-	f->nextTable = p;
+	cur_scope = insertTable(cur_scope, makeTable(programTable));
 
 	// start walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
-	walkASTNode(p, ASTroot, NULL, NULLFlag);
+	walkASTNode(cur_scope, ASTroot, NULL, NULLFlag);
 
 	return semanticErrorCounter;
 }
@@ -47,9 +47,15 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 	NodeType t = cur_node->type_of_node;
 
+	node* IDNode;
+	node* returnType;
+	symbol* s;
+	symbol* sym;
+	symbol* lookup_result;
+
 	switch(t) {
 
-		case VarDeclarationType:
+		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
 			break;
@@ -78,7 +84,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				if (cur_declaration_type != NULL) {
 					char* type_str = cur_declaration_type->field1;
 
-					symbol* s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL);
+					s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED);
 
 					insertSymbol(s, cur_scope);
 				}
@@ -90,31 +96,86 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			break;
 
 		case FuncHeadingType:
-		case FuncIdentType:
+			
+			//procura no cur_scope se a função não está declarada
+				// se sim: declara a função & insere as suas variáveis nessa tabela, marcando como definida
+				// senão: erro, Errroooooo!
 
+			
 			; //very important voodoo magic, because switch case can't start with declaration
 
-			/* adicionar funcao ao scope onde estamos */ 
-			node* IDNode = cur_node->field1;
-			symbol *s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL);
-			insertSymbol(s, cur_scope);
+			// adicionar funcao ao scope onde estamos
+			IDNode = cur_node->field1;
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, DEFINED);
+			lookup_result = lookupSymbol(s, cur_scope);
 
-			/* criar tabela de simbolos (scope) para a nova funcao */
-			cur_scope->nextTable = makeTable(functionTable);
-			table* new_table = cur_scope->nextTable;
+			if (lookup_result == NULL) {
 
-			symbol* sym;
-			if (cur_node->field3 != NULL) {
-				node* returnType = cur_node->field3;
-				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL);
+				insertSymbol(s, cur_scope);
+
+				// criar tabela de simbolos (scope) para a nova funcao
+				cur_scope = insertTable(cur_scope, makeTable(functionTable));
+
+				returnType = cur_node->field3;
+				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
+
+				insertSymbol(sym, cur_scope);
+
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
-			else{
-				sym = makeSymbol(IDNode->field1, _NULL_, NULLFlag, NULL);	
+			else {
+				//imprimir erro
 			}
 
-			insertSymbol(sym, new_table);
+			break;
+			
 
-			walkASTNodeChildren(new_table, cur_node, cur_declaration_type, cur_flag);
+		case FuncIdentType: // Function Identifier expected
+
+			//procura no cur_scope se a função está declarada & se não está definida
+				// se sim a ambas: insere as suas variáveis nessa tabela já declarada e marca como definida
+				// senão: erro, Errroooooo!
+
+			
+			; //very important voodoo magic, because switch case can't start with declaration
+
+
+			// adicionar funcao ao scope onde estamos
+			IDNode = cur_node->field1;
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
+			lookup_result = lookupSymbol(s, cur_scope);
+
+			if (lookup_result == NULL) {
+
+				//mudar para definida
+				s->isDefined = DEFINED;
+
+				insertSymbol(s, cur_scope);
+
+				// criar tabela de simbolos (scope) para a nova funcao
+				cur_scope = insertTable(cur_scope, makeTable(functionTable));
+
+				returnType = cur_node->field3;
+				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
+
+				insertSymbol(sym, cur_scope);
+
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+			}
+			else if ( !(lookup_result->isDefined) ) {
+
+			}
+			else {
+				//imprimir erro
+			}
+
+			break;
+
+
+		case FuncDeclarationType:
+			// declara a função que vem em funcHeading mas marca como não definida
+
+
 
 			break;
 
@@ -122,12 +183,10 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, NULLFlag);
 			break;
 
-
-		case ProgType:
-		case FuncPartType:
-		case FuncDeclarationType:
 		case FuncDefinitionType:
 		case FuncDefinition2Type:
+		case ProgType:
+		case FuncPartType:
 		case FuncParamsListType:
 		case ProgBlockType:
 		case FuncBlockType:
@@ -139,13 +198,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case AssignStatType:
 		case WriteLnStatType:
 		case ExprType:
-		case SimpleExprType:
+		case SimpleExprType: //Operator <token> cannot be applied to type <type>
 		case FactorType:
 		case OPTermListType:
 		case StatListType:
 		case FuncParamsListType2:
 		case FuncDeclarationListType:
-		case VarDeclarationListType:
+		case VarDeclarationListType: //Symbol <token> already defined; Symbol <token> not defined
 		case CompStatType:
 		case WritelnPListType:
 		case ParamListType:
@@ -202,17 +261,29 @@ char* getPredefTableStr(PredefTable t) {
 	return str[t];
 }
 
- table* makeTable(PredefTable t) {
+table* makeTable(PredefTable t) {
 
- 	table* new_table = malloc(sizeof(table));
+	table* new_table = malloc(sizeof(table));
 
- 	new_table->type = t;
- 	new_table->symbol_variables = NULL;
- 	new_table->nextTable = NULL;
+	new_table->type = t;
+	new_table->symbol_variables = NULL;
+	new_table->nextTable = NULL;
 
- 	return new_table;
- }
+	return new_table;
+}
 
+table* insertTable(table* cur_table, table* new_table){
+
+	//just add it if there are no other tables already declared in this scope
+	if(cur_table->nextTable == NULL){
+		cur_table->nextTable = new_table;
+		return new_table;
+	}
+	else{
+		// delegar a tarefa ao seguinte para adicionar no fim, mantendo a ordem
+		return insertTable(cur_table->nextTable, new_table);
+	}
+}
 
 int lookup_compare(const void* l, const void* r){
 	// compare normaly
@@ -244,7 +315,7 @@ void walker(const void *node, const VISIT which, const int depth) {
    }
 }
 
-symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v){
+symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d){
 
 	symbol* s = malloc(sizeof(symbol));
 
@@ -252,6 +323,7 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v){
     s->type = t;
     s->flag = f;
     s->value = v;
+    s->isDefined = d;
 
     return s;
 }
@@ -323,6 +395,7 @@ char* strlwr(char* str){
 
 
 void printErrorLineCol(int l, int c) {
+	semanticErrorCounter++;
 	printf("Line %d, col %d: ", l, c);
 } 
 
@@ -370,8 +443,8 @@ void printVariableIdentifierExpectedError() {
 	printf("Variable identifier expected\n");
 }
 
-void printWonrgNumberCallFunctionError(char* tokenStr, char* gotType, char* expectedType) {
-	printf("Wrong number of arguments in call to function %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+void printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs) {
+	printf("Wrong number of arguments in call to function %s (got %d, expected %d)\n", tokenStr, gotNArgs, expectedNArgs);
 }
 
 

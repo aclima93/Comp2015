@@ -15,6 +15,9 @@
 
 //#define DEBUG_WALKNODES 0
 
+#define DEFINED 1
+#define NOT_DEFINED 0
+
 /*
  * Symbols
  */
@@ -32,6 +35,7 @@ typedef struct {
     PredefType type;
     PredefFlag flag;
     char* value;
+    int isDefined;
 } symbol;
 
 /*
@@ -70,7 +74,9 @@ char* getPredefTableStr(PredefTable t);
  * Insertions, printing and deletion functions
  */
 
- table* makeTable(PredefTable t);
+table* makeTable(PredefTable t);
+
+table* insertTable(table* cur_table, table* new_table);
 
 int lookup_compare(const void* l, const void* r);
 
@@ -78,7 +84,7 @@ int insert_compare(const void* l, const void* r);
 
 void walker(const void *node, const VISIT which, const int depth);
 
-symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v);
+symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d);
 
 void insertSymbol(symbol* s, table* t);
 
@@ -120,7 +126,7 @@ void printTypeIdentifierExpectedError();
 
 void printVariableIdentifierExpectedError();
 
-void printWonrgNumberCallFunctionError(char* tokenStr, char* gotType, char* expectedType);
+void printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs);
 
 #endif
 
