@@ -7,8 +7,8 @@ int createSymbolTable(node* ASTroot) {
 
 	semanticErrorCounter = 0;
 
+	// tabela do outer scope
 	STroot = makeTable(outerTable);
-
 	table* cur_scope = STroot;
 
 	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED), STroot);
@@ -19,13 +19,15 @@ int createSymbolTable(node* ASTroot) {
 	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL, DEFINED), STroot);
 	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED), STroot);
 
-	/* f é a tabela da funcao paramcount */
-	cur_scope = insertTable(cur_scope, makeTable(functionTable));
+	// tabela da funcao paramcount
+	insertChildTable(cur_scope, makeTable(functionTable));
 	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), cur_scope);
 
-	cur_scope = insertTable(cur_scope, makeTable(programTable));
+	// tabela do program
+	cur_scope = insertChildTable(cur_scope, makeTable(programTable));
 
-	// start walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
+	// starting at program table:
+	// walk through AST, creating tables, inserting symbols and verifying scope visibility and type integrity
 	walkASTNode(cur_scope, ASTroot, NULL, NULLFlag);
 
 	return semanticErrorCounter;
@@ -114,7 +116,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				insertSymbol(s, cur_scope);
 
 				// criar tabela de simbolos (scope) para a nova funcao
-				cur_scope = insertTable(cur_scope, makeTable(functionTable));
+				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
 				returnType = cur_node->field3;
 				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
@@ -147,13 +149,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			if (lookup_result == NULL) {
 
-				//mudar para definida
+				//mudar estado da função para definida
 				s->isDefined = DEFINED;
 
 				insertSymbol(s, cur_scope);
 
 				// criar tabela de simbolos (scope) para a nova funcao
-				cur_scope = insertTable(cur_scope, makeTable(functionTable));
+				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
 				returnType = cur_node->field3;
 				sym = makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED);
@@ -267,21 +269,39 @@ table* makeTable(PredefTable t) {
 
 	new_table->type = t;
 	new_table->symbol_variables = NULL;
-	new_table->nextTable = NULL;
+	new_table->nextSiblingTable = NULL;
+	new_table->parentTable = NULL;
 
 	return new_table;
 }
 
-table* insertTable(table* cur_table, table* new_table){
+table* insertSiblingTable(table* cur_table, table* new_table){
 
 	//just add it if there are no other tables already declared in this scope
-	if(cur_table->nextTable == NULL){
-		cur_table->nextTable = new_table;
+	if(cur_table->nextSiblingTable == NULL){
+		cur_table->nextSiblingTable = new_table;
+		new_table->parentTable = cur_table->parentTable;
 		return new_table;
 	}
 	else{
 		// delegar a tarefa ao seguinte para adicionar no fim, mantendo a ordem
-		return insertTable(cur_table->nextTable, new_table);
+		return insertSiblingTable(cur_table->nextSiblingTable, new_table);
+	}
+}
+
+table* insertChildTable(table* cur_table, table* new_table){
+
+	table* firstChild = cur_table->childrenTableList;
+
+	//just add it if there are no children already declared in the scope
+	if(firstChild == NULL){
+		firstChild = new_table;
+		new_table->parentTable = cur_table;
+		return new_table;
+	}
+	else{
+		// delegar a tarefa de adicionar os seus irmaos ao filho
+		return insertSiblingTable(firstChild, new_table);
 	}
 }
 
@@ -370,16 +390,29 @@ void printTable( table* t){
     twalk(t->symbol_variables, walker); // prints all nodes in inorder
 }
 
-void printSymbolTables( table* root_table ){
-	
-	table* cur_table = root_table;
+void printSiblings(table* cur_table){
 
 	while( cur_table != NULL ){
+
+		// se o irmão existe separa-o do anterior por um "\n", assim só a última tabela não é seguida de um \n
+		printf("\n");
+
 		printTable(cur_table);
-		cur_table = cur_table->nextTable;
-        if(cur_table != NULL)
-            printf("\n");
+		printSiblings(cur_table->childrenTableList);
+
+		cur_table = cur_table->nextSiblingTable;
 	}
+}
+
+void printAllSymbolTables( table* root_table ){
+	
+	printTable(root_table);
+
+	// imprime os irmãos (que são inexistentes em milipascal)
+	printSiblings(root_table->nextSiblingTable);
+
+	// imprime os filhos da outer table
+	printSiblings(root_table->childrenTableList);
 }
 
 char* strlwr(char* str){

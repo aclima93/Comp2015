@@ -10,6 +10,11 @@ function myFunc2;
 begin
 end;
 
+function myFunc;
+var troblesome: integer;
+begin
+end;
+
 function myFunction: integer;
 begin
 end;

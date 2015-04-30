@@ -49,7 +49,9 @@ typedef enum {
 typedef struct {
     PredefTable type;
     void* symbol_variables;
-    void* nextTable;
+    void* childrenTableList;
+    void* nextSiblingTable;
+    void* parentTable;
 } table;
 
 table* STroot;
@@ -76,7 +78,9 @@ char* getPredefTableStr(PredefTable t);
 
 table* makeTable(PredefTable t);
 
-table* insertTable(table* cur_table, table* new_table);
+table* insertSiblingTable(table* cur_table, table* new_table);
+
+table* insertChildTable(table* cur_table, table* new_table);
 
 int lookup_compare(const void* l, const void* r);
 
@@ -94,7 +98,9 @@ void printSymbol(symbol* s);
 
 void printTable(table* t);
 
-void printSymbolTables( table* root_table );
+void printSiblings(table* cur_table);
+
+void printAllSymbolTables( table* root_table );
 
 char* strlwr(char* str);
 
