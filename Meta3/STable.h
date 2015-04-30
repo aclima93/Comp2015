@@ -92,6 +92,36 @@ void printSymbolTables( table* root_table );
 
 char* strlwr(char* str);
 
+/*
+ * Error printing functions
+ */
+
+ void printErrorLineCol(int l, int c);
+
+void printTypeError(char* type);
+
+void printFunctionIDError();
+
+void printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType);
+
+void printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType);
+
+void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType);
+
+void printOperatorTypeError(char* tokenStr, char* type);
+
+void printOperatorTypesError(char* leftTokenStr, char* righttTokenStr, char* type);
+
+void printSymbolAlreadyDefinedError(char* tokenStr);
+
+void printSymbolNotDefinedError(char* tokenStr);
+
+void printTypeIdentifierExpectedError();
+
+void printVariableIdentifierExpectedError();
+
+void printWonrgNumberCallFunctionError(char* tokenStr, char* gotType, char* expectedType);
+
 #endif
 
 

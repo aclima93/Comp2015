@@ -322,6 +322,58 @@ char* strlwr(char* str){
 }
 
 
+void printErrorLineCol(int l, int c) {
+	printf("Line %d, col %d: ", l, c);
+} 
+
+void printTypeError(char* type) {
+	printf("Cannot write values of type %s\n", type);
+}
+
+void printFunctionIDError() {
+	printf("Function identifier expected.\n");
+}
+
+void printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType) {
+	printf("Incompatible type for argument %d in call to function %s (got %s, expected %s)\n", num, functionStr, gotType, expectedType);
+}
+
+void printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType) {
+	printf("Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+}
+
+void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType) {
+	printf("Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
+}
+
+void printOperatorTypeError(char* tokenStr, char* type) {
+	printf("Operator %s cannot be applied to type %s\n", tokenStr, type)
+}
+
+void printOperatorTypesError(char* leftTokenStr, char* righttTokenStr, char* type) {
+	printf("Operator %s cannot be applied to types %s, %s\n", leftTokenStr, righttTokenStr, type)
+}
+
+void printSymbolAlreadyDefinedError(char* tokenStr) {
+	printf("Symbol %s already defined\n", tokenStr);
+}
+
+void printSymbolNotDefinedError(char* tokenStr) {
+	printf("Symbol %s not defined\n", tokenStr);
+}
+
+void printTypeIdentifierExpectedError() {
+	printf("Type identifier expected\n");
+}
+
+void printVariableIdentifierExpectedError() {
+	printf("Variable identifier expected\n");
+}
+
+void printWonrgNumberCallFunctionError(char* tokenStr, char* gotType, char* expectedType) {
+	printf("Wrong number of arguments in call to function %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+}
+
 
 
 
