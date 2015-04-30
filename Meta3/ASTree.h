@@ -29,6 +29,8 @@ typedef enum {
 
 typedef struct {
     NodeType type_of_node;
+    int line;
+    int col;
     void* field1;
     void* field2;
     void* field3;
@@ -48,9 +50,9 @@ int printSymbolTable;
 
 int getNodeDepth(node* n);
 
-node* makenode(NodeType t, node* f1, node* f2, node* f3);
+node* makenode(NodeType t, node* f1, node* f2, node* f3, int l, int c);
 
-node* makeleaf(NodeType t, char* str);
+node* makeleaf(NodeType t, char* str, int l, int c);
 
 node* createTree(node* n);
 

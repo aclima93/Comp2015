@@ -323,7 +323,7 @@ int getNodeDepth(node* n){
 	return 0;
 }
 
-node* makenode(NodeType t, node* f1, node* f2, node* f3){
+node* makenode(NodeType t, node* f1, node* f2, node* f3, int l, int c){
 
 	if(DEBUG_MAKENODE){
 
@@ -346,11 +346,13 @@ node* makenode(NodeType t, node* f1, node* f2, node* f3){
 	new_node->field1 = f1;
 	new_node->field2 = f2;
 	new_node->field3 = f3;
+	new_node->line = l;
+	new_node->col = c;
 
 	return new_node;
 }
 
-node* makeleaf(NodeType t, char* str){
+node* makeleaf(NodeType t, char* str, int l, int c){
 
 	node* leaf = (node*) malloc(sizeof(node));	
 
@@ -358,6 +360,8 @@ node* makeleaf(NodeType t, char* str){
 	leaf->field1 = str;
 	leaf->field2 = NULL;
 	leaf->field3 = NULL;
+	leaf->line = l;
+	leaf->col = c;
 
 	return leaf;
 }

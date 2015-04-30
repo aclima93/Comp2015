@@ -313,7 +313,8 @@ void printSymbolTables( table* root_table ){
 char* strlwr(char* str){
 	int i;
 	int len = strlen(str);
-	char* lowered = malloc( sizeof(char)*len );
+	char* lowered = malloc( sizeof(char) * len );
+	//char lowered [len+1];
 
 	for(i=0; i<len; i++){
 		lowered[i] = tolower((unsigned char) str[i]);
@@ -347,11 +348,11 @@ void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char
 }
 
 void printOperatorTypeError(char* tokenStr, char* type) {
-	printf("Operator %s cannot be applied to type %s\n", tokenStr, type)
+	printf("Operator %s cannot be applied to type %s\n", tokenStr, type);
 }
 
 void printOperatorTypesError(char* leftTokenStr, char* righttTokenStr, char* type) {
-	printf("Operator %s cannot be applied to types %s, %s\n", leftTokenStr, righttTokenStr, type)
+	printf("Operator %s cannot be applied to types %s, %s\n", leftTokenStr, righttTokenStr, type);
 }
 
 void printSymbolAlreadyDefinedError(char* tokenStr) {
