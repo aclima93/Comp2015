@@ -146,78 +146,83 @@ INTLIT				{number}
 %%
 
 
-"(*"|"{"				;	{if(DEBUG) printf("BEGIN COMMENT\n"); BEGIN COMMENT; commentLines=line; commentCols=col+strlen(yytext); }
+"(*"|"{"				;	{BEGIN COMMENT; commentLines = line; commentCols = col + strlen(yytext); }
 
-<COMMENT>"*)"|"}"		;	{if(DEBUG) printf("EXIT COMMENT\n"); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols; }
+<COMMENT>"*)"|"}"		;	{BEGIN 0; commentCols += strlen(yytext); line = commentLines; col = commentCols; }
 
-<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols+=strlen(yytext); line=commentLines; col=commentCols;}
+<COMMENT><<EOF>>		;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols += strlen(yytext); line = commentLines; col = commentCols;}
 
-<COMMENT>.				;	{if(DEBUG) printf("TEXT COMMENT\n"); commentCols+=strlen(yytext);}
-<COMMENT>"\n"			;	{if(DEBUG) printf("\\n COMMENT\n"); commentLines++; commentCols=1;}
-
-
-
-
-"'"						;	{if(DEBUG) printf("BEGIN STRINGLIT\n"); BEGIN STRINGLIT; readString = strdup(yytext); }
-
-<STRINGLIT>"''"			;	{if(DEBUG) printf("ASPAS STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
-<STRINGLIT>"'"			;	{if(DEBUG) printf("PLICA STRINGLIT\n"); readString = strdup(strcat(readString, yytext)); BEGIN 0; col=col+strlen(readString); yylval.string = strdup(readString); yytext = strdup(readString); return STRING;}
-
-<STRINGLIT>.			;	{if(DEBUG) printf("TEXT STRINGLIT\n"); readString = strdup(strcat(readString, yytext));}
-<STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col=1; yytext = strdup(readString); }
-<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col=col+strlen(readString); yytext = strdup(readString); }
+<COMMENT>.				;	{commentCols += strlen(yytext);}
+<COMMENT>"\n"			;	{commentLines++; commentCols = 1;}
 
 
 
 
-{INTLIT}				; 	{if(DEBUG) printf("INTLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return INTLIT;}
-{REALLIT}				; 	{if(DEBUG) printf("REALLIT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return REALLIT;}
+"'"						;	{BEGIN STRINGLIT; readString = strdup(yytext); }
+
+<STRINGLIT>"''"			;	{readString = strdup(strcat(readString, yytext));}
+<STRINGLIT>"'"			;	{readString = strdup(strcat(readString, yytext)); BEGIN 0; 
+								col += strlen(readString); yylval.info = makeTokenInfo(readString, line, col); 
+								yytext = strdup(readString); return STRING;}
+
+<STRINGLIT>.			;	{readString = strdup(strcat(readString, yytext));}
+<STRINGLIT>"\n"			;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col = 1; yytext = strdup(readString); }
+<STRINGLIT><<EOF>>		;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col += strlen(readString); yytext = strdup(readString); }
 
 
-{RESERVED}				;	{if(DEBUG) printf("RESERVED\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return RESERVED;}
 
 
-{ASSIGN}				; 	{if(DEBUG) printf("ASSIGN\n"); col=col+strlen(yytext); return ASSIGN;}
-{BEGIN_token}			; 	{if(DEBUG) printf("BEGIN_token\n"); col=col+strlen(yytext); return BEGIN_token;}
-{COLON}					; 	{if(DEBUG) printf("COLON\n"); col=col+strlen(yytext); return ':';}
-{COMMA}					; 	{if(DEBUG) printf("COMMA\n"); col=col+strlen(yytext); return ',';}
-{DO}					; 	{if(DEBUG) printf("DO\n"); col=col+strlen(yytext); return DO;}
-{DOT}					; 	{if(DEBUG) printf("DOT\n"); col=col+strlen(yytext); return '.';}
-{ELSE}					; 	{if(DEBUG) printf("ELSE\n"); col=col+strlen(yytext); return ELSE;}
-{END}					; 	{if(DEBUG) printf("END\n"); col=col+strlen(yytext); return END;}
-{FORWARD}				; 	{if(DEBUG) printf("FORWARD\n"); col=col+strlen(yytext); return FORWARD;}
-{FUNCTION}				; 	{if(DEBUG) printf("FUNCTION\n"); col=col+strlen(yytext); return FUNCTION;}
-{IF}					; 	{if(DEBUG) printf("IF\n"); col=col+strlen(yytext); return IF;}
-{LBRAC}					; 	{if(DEBUG) printf("LBRAC\n"); col=col+strlen(yytext); return '(';}
-{NOT}					; 	{if(DEBUG) printf("NOT\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return NOT;}
-{OUTPUT}				; 	{if(DEBUG) printf("OUTPUT\n"); col=col+strlen(yytext); return OUTPUT;}
-{PARAMSTR}				; 	{if(DEBUG) printf("PARAMSTR\n"); col=col+strlen(yytext); return PARAMSTR;}
-{PROGRAM}				; 	{if(DEBUG) printf("PROGRAM\n"); col=col+strlen(yytext); return PROGRAM;}
-{RBRAC}					; 	{if(DEBUG) printf("RBRAC\n"); col=col+strlen(yytext); return ')';}
-{REPEAT}				; 	{if(DEBUG) printf("REPEAT\n"); col=col+strlen(yytext); return REPEAT;}
-{SEMIC}					; 	{if(DEBUG) printf("SEMIC\n"); col=col+strlen(yytext); return ';';}
-{THEN}					; 	{if(DEBUG) printf("THEN\n"); col=col+strlen(yytext); return THEN;}
-{UNTIL}					; 	{if(DEBUG) printf("UNTIL\n"); col=col+strlen(yytext); return UNTIL;}
-{VAL}					; 	{if(DEBUG) printf("VAL\n"); col=col+strlen(yytext); return VAL;}
-{VAR}					; 	{if(DEBUG) printf("VAR\n"); col=col+strlen(yytext); return VAR;}
-{WHILE}					; 	{if(DEBUG) printf("WHILE\n"); col=col+strlen(yytext); return WHILE;}
-{WRITELN}				; 	{if(DEBUG) printf("WRITELN\n"); col=col+strlen(yytext); return WRITELN;}
+{INTLIT}				; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return INTLIT;}
+
+{REALLIT}				; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return REALLIT;}
 
 
-{AND}					; 	{if(DEBUG) printf("AND\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return AND;}
-{OR}					;	{if(DEBUG) printf("OR\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OR;}
-{OP2}					; 	{if(DEBUG) printf("OP2\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP2;}
-{OP3}					; 	{if(DEBUG) printf("OP3\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP3;}
-{OP4}					; 	{if(DEBUG) printf("OP4\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return OP4;}
+{RESERVED}				;	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return RESERVED;}
 
 
-{ID}					; 	{if(DEBUG) printf("ID\n"); col=col+strlen(yytext); yylval.string = strdup(yytext); return ID;}
+{ASSIGN}				; 	{col += strlen(yytext); return ASSIGN;}
+{BEGIN_token}			; 	{col += strlen(yytext); return BEGIN_token;}
+{COLON}					; 	{col += strlen(yytext); return ':';}
+{COMMA}					; 	{col += strlen(yytext); return ',';}
+{DO}					; 	{col += strlen(yytext); return DO;}
+{DOT}					; 	{col += strlen(yytext); return '.';}
+{ELSE}					; 	{col += strlen(yytext); return ELSE;}
+{END}					; 	{col += strlen(yytext); return END;}
+{FORWARD}				; 	{col += strlen(yytext); return FORWARD;}
+{FUNCTION}				; 	{col += strlen(yytext); return FUNCTION;}
+{IF}					; 	{col += strlen(yytext); return IF;}
+{LBRAC}					; 	{col += strlen(yytext); return '(';}
+
+{NOT}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return NOT;}
+
+{OUTPUT}				; 	{col += strlen(yytext); return OUTPUT;}
+{PARAMSTR}				; 	{col += strlen(yytext); return PARAMSTR;}
+{PROGRAM}				; 	{col += strlen(yytext); return PROGRAM;}
+{RBRAC}					; 	{col += strlen(yytext); return ')';}
+{REPEAT}				; 	{col += strlen(yytext); return REPEAT;}
+{SEMIC}					; 	{col += strlen(yytext); return ';';}
+{THEN}					; 	{col += strlen(yytext); return THEN;}
+{UNTIL}					; 	{col += strlen(yytext); return UNTIL;}
+{VAL}					; 	{col += strlen(yytext); return VAL;}
+{VAR}					; 	{col += strlen(yytext); return VAR;}
+{WHILE}					; 	{col += strlen(yytext); return WHILE;}
+{WRITELN}				; 	{col += strlen(yytext); return WRITELN;}
 
 
-{WHITESPACE}			;	{col+=strlen(yytext); }
-{NEWLINE}				; 	{line++; col=1; }
+{AND}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return AND;}
+{OR}					;	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OR;}
+{OP2}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP2;}
+{OP3}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP3;}
+{OP4}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP4;}
 
-.						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col=col+strlen(yytext); }
+
+{ID}					; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return ID;}
+
+
+{WHITESPACE}			;	{col += strlen(yytext); }
+{NEWLINE}				; 	{line++; col = 1; }
+
+.						; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col += strlen(yytext); }
 
 <<EOF>>					;	{return 0;}
 

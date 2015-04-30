@@ -108,7 +108,7 @@
 typedef union YYSTYPE
 #line 20 "mpasemantic.y"
 {
-	char* string;
+	tokenInfo* info;
 	node* node_pointer;
 }
 /* Line 1529 of yacc.c.  */

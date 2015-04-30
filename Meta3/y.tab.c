@@ -174,7 +174,7 @@ extern int col;
 typedef union YYSTYPE
 #line 20 "mpasemantic.y"
 {
-	char* string;
+	tokenInfo* info;
 	node* node_pointer;
 }
 /* Line 193 of yacc.c.  */
@@ -404,18 +404,18 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  6
+#define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   156
+#define YYLAST   143
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  45
+#define YYNNTS  33
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  79
+#define YYNRULES  67
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  160
+#define YYNSTATES  147
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -469,52 +469,48 @@ static const yytype_uint8 yyprhs[] =
      102,   105,   109,   110,   112,   119,   124,   129,   134,   144,
      146,   149,   153,   154,   156,   157,   162,   167,   171,   175,
      176,   178,   182,   186,   190,   193,   195,   199,   203,   205,
-     208,   212,   214,   216,   219,   221,   226,   230,   231,   233,
-     235,   237,   239,   241,   243,   245,   247,   249,   251,   253
+     208,   212,   214,   216,   219,   221,   226,   230
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      39,     0,    -1,    40,    34,    41,    35,    -1,    13,    71,
+      39,     0,    -1,    40,    34,    41,    35,    -1,    13,    22,
       32,    11,    33,    -1,    42,    47,    56,    -1,    18,    44,
       34,    43,    -1,    -1,    44,    34,    43,    -1,    -1,    45,
-      36,    71,    -1,    71,    46,    -1,    37,    71,    46,    -1,
+      36,    22,    -1,    22,    46,    -1,    37,    22,    46,    -1,
       -1,    48,    -1,    49,    34,    48,    -1,    -1,    50,    34,
        8,    -1,    51,    34,    55,    -1,    50,    34,    55,    -1,
-       9,    71,    52,    36,    71,    -1,     9,    71,    36,    71,
-      -1,     9,    71,    -1,    32,    54,    53,    33,    -1,    34,
-      54,    53,    -1,    -1,    18,    45,    36,    71,    -1,    45,
-      36,    71,    -1,    42,    56,    -1,    57,    -1,     4,    58,
+       9,    22,    52,    36,    22,    -1,     9,    22,    36,    22,
+      -1,     9,    22,    -1,    32,    54,    53,    33,    -1,    34,
+      54,    53,    -1,    -1,    18,    45,    36,    22,    -1,    45,
+      36,    22,    -1,    42,    56,    -1,    57,    -1,     4,    58,
        7,    -1,    60,    59,    -1,    34,    60,    59,    -1,    -1,
       57,    -1,    10,    65,    15,    60,     6,    60,    -1,    10,
       65,    15,    60,    -1,    19,    65,     5,    60,    -1,    14,
       58,    16,    65,    -1,    17,    32,    12,    32,    65,    33,
-      37,    71,    33,    -1,    61,    -1,    20,    62,    -1,    71,
+      37,    22,    33,    -1,    61,    -1,    20,    62,    -1,    22,
        3,    65,    -1,    -1,    63,    -1,    -1,    32,    65,    64,
-      33,    -1,    32,    72,    64,    33,    -1,    37,    65,    64,
-      -1,    37,    72,    64,    -1,    -1,    66,    -1,    66,    80,
-      66,    -1,    66,    79,    67,    -1,    66,    78,    67,    -1,
-      82,    67,    -1,    67,    -1,    67,    77,    67,    -1,    67,
-      76,    67,    -1,    68,    -1,    81,    68,    -1,    32,    65,
-      33,    -1,    74,    -1,    73,    -1,    75,    69,    -1,    71,
+      33,    -1,    32,    23,    64,    33,    -1,    37,    65,    64,
+      -1,    37,    23,    64,    -1,    -1,    66,    -1,    66,    26,
+      66,    -1,    66,    28,    67,    -1,    66,    27,    67,    -1,
+      28,    67,    -1,    67,    -1,    67,    30,    67,    -1,    67,
+      29,    67,    -1,    68,    -1,    31,    68,    -1,    32,    65,
+      33,    -1,    25,    -1,    24,    -1,    22,    69,    -1,    22,
       -1,    32,    65,    70,    33,    -1,    37,    65,    70,    -1,
-      -1,    22,    -1,    23,    -1,    24,    -1,    25,    -1,    22,
-      -1,    29,    -1,    30,    -1,    27,    -1,    28,    -1,    26,
-      -1,    31,    -1,    28,    -1
+      -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    81,    81,    83,    85,    87,    88,    91,    92,    95,
-      97,    99,   100,   103,   105,   106,   109,   110,   111,   114,
-     115,   118,   120,   122,   123,   126,   127,   130,   132,   134,
-     136,   138,   144,   147,   148,   149,   150,   156,   157,   158,
-     159,   162,   163,   166,   167,   170,   171,   174,   175,   176,
-     179,   180,   183,   184,   185,   186,   189,   190,   191,   194,
-     195,   196,   197,   198,   199,   202,   204,   205,   209,   210,
-     211,   212,   214,   216,   217,   218,   219,   220,   222,   223
+       0,    74,    74,    76,    78,    80,    81,    84,    85,    88,
+      90,    92,    93,    96,    98,    99,   102,   103,   104,   107,
+     108,   111,   113,   115,   116,   119,   120,   123,   125,   127,
+     129,   131,   137,   140,   141,   142,   143,   149,   150,   151,
+     152,   155,   156,   159,   160,   163,   164,   167,   168,   169,
+     172,   173,   176,   177,   178,   179,   182,   183,   184,   187,
+     188,   189,   190,   191,   192,   195,   197,   198
 };
 #endif
 
@@ -535,9 +531,7 @@ static const char *const yytname[] =
   "FuncBlock", "StatPart", "CompStat", "StatList", "SemicStat_Repeat",
   "Stat", "IDAssignExpr_Optional", "WritelnPList_Optional", "WritelnPList",
   "CommaExprString_Repeat", "Expr", "SimpleExpr", "Term", "Factor",
-  "ParamList", "CommaExpr_Repeat", "IDToken", "StringToken",
-  "RealLitToken", "IntLitToken", "IDCallToken", "ANDToken", "OP4Token",
-  "ORToken", "OP3Token", "OP2Token", "UnaryNOTToken", "UnaryOP3Token", 0
+  "ParamList", "CommaExpr_Repeat", 0
 };
 #endif
 
@@ -562,8 +556,7 @@ static const yytype_uint8 yyr1[] =
       58,    59,    59,    60,    60,    60,    60,    60,    60,    60,
       60,    61,    61,    62,    62,    63,    63,    64,    64,    64,
       65,    65,    66,    66,    66,    66,    67,    67,    67,    68,
-      68,    68,    68,    68,    68,    69,    70,    70,    71,    72,
-      73,    74,    75,    76,    77,    78,    79,    80,    81,    82
+      68,    68,    68,    68,    68,    69,    70,    70
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -575,8 +568,7 @@ static const yytype_uint8 yyr2[] =
        2,     3,     0,     1,     6,     4,     4,     4,     9,     1,
        2,     3,     0,     1,     0,     4,     4,     3,     3,     0,
        1,     3,     3,     3,     2,     1,     3,     3,     1,     2,
-       3,     1,     1,     2,     1,     4,     3,     0,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     1
+       3,     1,     1,     2,     1,     4,     3,     0
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -584,132 +576,125 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,    68,     0,     1,     6,     0,     0,
-       0,    15,     0,     0,     0,    12,     2,     0,     0,    13,
-       0,     0,     0,     3,     8,     0,     0,    10,    21,    42,
-       4,    28,    15,     6,     6,     5,     0,     9,    12,     0,
-       0,     0,     0,    42,     0,     0,    44,    33,     0,    32,
-      39,     0,    14,    16,     0,    18,    17,     8,    11,     0,
-       0,    24,    20,     0,    68,    70,    71,    79,    78,     0,
-       0,    50,    55,    58,    64,    62,    61,     0,     0,     0,
-       0,     0,     0,     0,    40,    43,    29,    42,    30,     0,
-      27,     7,     0,     0,     0,     0,    19,     0,    42,    77,
-      75,    76,     0,     0,     0,    73,    74,     0,     0,     0,
-      63,    59,    54,     0,     0,    42,    69,    49,    49,    32,
-      41,     0,    26,    24,    22,    60,    35,    53,    52,    51,
-      57,    56,    67,    37,     0,    36,     0,     0,     0,    31,
-      25,    23,    42,     0,     0,     0,    49,    49,    45,    46,
-      34,    67,    65,     0,    47,    48,    66,     0,     0,    38
+       0,     0,     0,     0,     0,     1,     6,     0,     0,     0,
+      15,     0,    12,     0,     0,     2,     0,     0,    13,     0,
+       0,     0,     3,     0,    10,     8,     0,    21,    42,     4,
+      28,    15,     6,     6,    12,     5,     0,     9,     0,     0,
+       0,     0,    42,     0,     0,    44,     0,    33,     0,    32,
+      39,    14,    16,     0,    18,    17,    11,     8,     0,     0,
+      24,    20,     0,    64,    62,    61,     0,     0,     0,     0,
+      50,    55,    58,     0,     0,     0,     0,    40,    43,     0,
+      29,    42,    30,    27,     7,     0,     0,     0,     0,    19,
+       0,    63,    54,    59,     0,    42,     0,     0,     0,     0,
+       0,     0,     0,    42,    49,    49,    41,    32,     0,    26,
+      24,    22,    67,    60,    35,    51,    53,    52,    57,    56,
+      37,     0,    36,     0,     0,     0,    31,    25,    23,     0,
+       0,    42,     0,    49,    49,    46,    45,    67,    65,    34,
+       0,    48,    47,    66,     0,     0,    38
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     2,     3,    10,    54,    35,    36,    14,    27,    18,
-      19,    20,    21,    22,    41,    95,    61,    55,    30,    47,
-      48,    88,    49,    50,    84,    85,   137,    70,    71,    72,
-      73,   110,   144,    74,   118,    75,    76,    77,   107,   108,
-     102,   103,   104,    78,    79
+      -1,     2,     3,     9,    53,    35,    36,    14,    24,    17,
+      18,    19,    20,    21,    40,    88,    60,    54,    29,    47,
+      48,    82,    49,    50,    77,    78,   124,    69,    70,    71,
+      72,    91,   130
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -116
+#define YYPACT_NINF -90
 static const yytype_int8 yypact[] =
 {
-      -6,   -13,    15,   -16,  -116,    -5,  -116,    45,    53,   -13,
-      31,    61,    39,    42,    41,    52,  -116,   -13,    75,  -116,
-      48,    64,    65,  -116,   -13,   -13,   -13,  -116,    16,     0,
-    -116,  -116,    61,     3,    45,  -116,    66,  -116,    52,    33,
-     -13,    54,    43,     0,    59,    43,    63,  -116,    94,    68,
-    -116,   101,  -116,  -116,    75,  -116,  -116,   -13,  -116,   -13,
-      69,    72,  -116,   -13,    76,  -116,  -116,  -116,  -116,    43,
-      92,    57,     4,  -116,  -116,  -116,  -116,    77,    56,    56,
-      95,    98,   107,    22,  -116,  -116,  -116,     0,  -116,    43,
-    -116,  -116,    79,   -13,    33,    80,  -116,    83,     0,  -116,
-    -116,  -116,    56,    56,    43,  -116,  -116,    56,    56,    43,
-    -116,  -116,     4,    43,    85,     0,  -116,    81,    81,    68,
-    -116,   -13,  -116,    72,  -116,  -116,   113,     4,     4,    32,
-       4,     4,    84,  -116,    43,  -116,    22,    89,    90,  -116,
-    -116,  -116,     0,    43,    91,    93,    81,    81,  -116,  -116,
-    -116,    84,  -116,    88,  -116,  -116,  -116,   -13,    96,  -116
+      -7,   -13,    12,   -16,   -11,   -90,     8,    20,    40,    -1,
+      61,    38,    37,    42,    39,   -90,    60,    79,   -90,    50,
+      52,    55,   -90,    68,   -90,    40,    69,   -25,     0,   -90,
+     -90,    61,    -5,     8,    37,   -90,    58,   -90,    25,    71,
+      59,    41,     0,    62,    41,    64,    94,   -90,    91,    65,
+     -90,   -90,   -90,    79,   -90,   -90,   -90,    40,    40,    66,
+      67,   -90,    78,    72,   -90,   -90,    56,    56,    41,    88,
+      22,    23,   -90,    89,    95,   101,     5,   -90,   -90,    41,
+     -90,     0,   -90,   -90,   -90,    73,    86,    25,    77,   -90,
+      41,   -90,    23,   -90,    80,     0,    41,    56,    56,    56,
+      56,    41,    82,     0,    74,    74,   -90,    65,    90,   -90,
+      67,   -90,    81,   -90,   109,    28,    23,    23,   -90,   -90,
+     -90,    41,   -90,    36,    83,    84,   -90,   -90,   -90,    41,
+      87,     0,    92,    74,    74,   -90,   -90,    81,   -90,   -90,
+      85,   -90,   -90,   -90,    97,    93,   -90
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-    -116,  -116,  -116,  -116,   120,    71,   121,   -33,    97,  -116,
-      99,  -116,  -116,  -116,  -116,     9,    40,   102,    86,   -17,
-     100,    14,   -85,  -116,  -116,  -116,  -115,   -40,    34,   -67,
-      67,  -116,   -14,    -1,     6,  -116,  -116,  -116,  -116,  -116,
-    -116,  -116,  -116,  -116,  -116
+     -90,   -90,   -90,   -90,   115,    70,   116,   -33,    96,   -90,
+      98,   -90,   -90,   -90,   -90,    13,    44,    99,    75,   -15,
+     100,    26,   -80,   -90,   -90,   -90,   -89,   -44,    43,   -58,
+      76,   -90,    -3
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -73
-static const yytype_int16 yytable[] =
+#define YYTABLE_NINF -1
+static const yytype_uint8 yytable[] =
 {
-       5,    31,   119,   138,    29,    82,    60,     1,    15,     4,
-      42,    53,   112,   126,    43,     6,    28,    44,     7,    45,
-      46,     9,     4,    15,    37,    38,    92,     8,    51,    97,
-     135,   154,   155,   105,   106,   127,   128,    31,    15,    62,
-     130,   131,    51,   117,    64,   116,    65,    66,    39,   120,
-      67,    59,    40,    68,    69,     4,    15,   150,    15,   100,
-     101,    60,    96,     9,    12,    64,    16,    65,    66,   132,
-      17,    67,    23,   133,    68,    69,    24,    25,    64,    29,
-      65,    66,    32,    99,   100,   101,    51,    68,    69,    26,
-      63,    81,   122,    15,   145,    83,   146,    51,    33,    34,
-      57,    86,    87,   151,    89,    93,    94,    98,   -72,   109,
-     114,   113,   115,   124,    51,   121,   125,   134,   136,   142,
-     140,   143,   148,   149,   152,   157,   153,    11,    91,   159,
-      13,    52,   141,   139,   123,    58,    56,   156,   129,     0,
-      90,    51,   147,    80,     0,   111,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,   158
+      75,   107,    30,    52,    28,    59,     1,    38,    92,     4,
+      41,    39,     5,     8,    42,   114,   125,    43,     6,    44,
+      45,     7,    46,   122,    94,    85,     8,    63,   104,    64,
+      65,    11,   105,    66,    15,   106,    67,    68,    30,   116,
+     117,   118,   119,    58,   141,   142,   112,    12,    96,    97,
+      98,   139,    99,   100,    59,    97,    98,   120,    63,   133,
+      64,    65,    12,    63,    66,    64,    65,    67,    68,    66,
+      16,    22,    67,    68,    23,    26,    25,   132,    63,   134,
+      64,    65,    27,    28,    31,   137,    32,    67,    68,    33,
+      34,    37,    57,    61,    74,    62,    76,    79,    80,    81,
+      89,    87,    86,    95,    90,   101,   103,   102,   109,   108,
+     111,   123,   127,   113,   121,   131,   135,   136,   129,   145,
+     138,    10,   144,   128,    13,   140,   146,    84,    83,    51,
+      56,   110,    55,   126,   143,     0,     0,     0,     0,   115,
+       0,     0,    73,    93
 };
 
 static const yytype_int16 yycheck[] =
 {
-       1,    18,    87,   118,     4,    45,    39,    13,     9,    22,
-      10,     8,    79,    98,    14,     0,    17,    17,    34,    19,
-      20,    18,    22,    24,    25,    26,    59,    32,    29,    69,
-     115,   146,   147,    29,    30,   102,   103,    54,    39,    40,
-     107,   108,    43,    83,    22,    23,    24,    25,    32,    89,
-      28,    18,    36,    31,    32,    22,    57,   142,    59,    27,
-      28,    94,    63,    18,    11,    22,    35,    24,    25,   109,
-       9,    28,    33,   113,    31,    32,    34,    36,    22,     4,
-      24,    25,    34,    26,    27,    28,    87,    31,    32,    37,
-      36,    32,    93,    94,   134,    32,   136,    98,    34,    34,
-      34,     7,    34,   143,     3,    36,    34,    15,    32,    32,
-      12,    16,     5,    33,   115,    36,    33,    32,    37,     6,
-     121,    37,    33,    33,    33,    37,    33,     7,    57,    33,
-       9,    32,   123,   119,    94,    38,    34,   151,   104,    -1,
-      54,   142,   136,    43,    -1,    78,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,   157
+      44,    81,    17,     8,     4,    38,    13,    32,    66,    22,
+      10,    36,     0,    18,    14,    95,   105,    17,    34,    19,
+      20,    32,    22,   103,    68,    58,    18,    22,    23,    24,
+      25,    11,    76,    28,    35,    79,    31,    32,    53,    97,
+      98,    99,   100,    18,   133,   134,    90,    22,    26,    27,
+      28,   131,    29,    30,    87,    27,    28,   101,    22,    23,
+      24,    25,    22,    22,    28,    24,    25,    31,    32,    28,
+       9,    33,    31,    32,    37,    36,    34,   121,    22,   123,
+      24,    25,    22,     4,    34,   129,    34,    31,    32,    34,
+      22,    22,    34,    22,    32,    36,    32,     3,     7,    34,
+      22,    34,    36,    15,    32,    16,     5,    12,    22,    36,
+      33,    37,    22,    33,    32,     6,    33,    33,    37,    22,
+      33,     6,    37,   110,     8,    33,    33,    57,    53,    31,
+      34,    87,    33,   107,   137,    -1,    -1,    -1,    -1,    96,
+      -1,    -1,    42,    67
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    13,    39,    40,    22,    71,     0,    34,    32,    18,
-      41,    42,    11,    44,    45,    71,    35,     9,    47,    48,
-      49,    50,    51,    33,    34,    36,    37,    46,    71,     4,
-      56,    57,    34,    34,    34,    43,    44,    71,    71,    32,
-      36,    52,    10,    14,    17,    19,    20,    57,    58,    60,
-      61,    71,    48,     8,    42,    55,    55,    34,    46,    18,
-      45,    54,    71,    36,    22,    24,    25,    28,    31,    32,
-      65,    66,    67,    68,    71,    73,    74,    75,    81,    82,
-      58,    32,    65,    32,    62,    63,     7,    34,    59,     3,
-      56,    43,    45,    36,    34,    53,    71,    65,    15,    26,
-      27,    28,    78,    79,    80,    29,    30,    76,    77,    32,
-      69,    68,    67,    16,    12,     5,    23,    65,    72,    60,
-      65,    36,    71,    54,    33,    33,    60,    67,    67,    66,
-      67,    67,    65,    65,    32,    60,    37,    64,    64,    59,
-      71,    53,     6,    37,    70,    65,    65,    72,    33,    33,
-      60,    65,    33,    33,    64,    64,    70,    37,    71,    33
+       0,    13,    39,    40,    22,     0,    34,    32,    18,    41,
+      42,    11,    22,    44,    45,    35,     9,    47,    48,    49,
+      50,    51,    33,    37,    46,    34,    36,    22,     4,    56,
+      57,    34,    34,    34,    22,    43,    44,    22,    32,    36,
+      52,    10,    14,    17,    19,    20,    22,    57,    58,    60,
+      61,    48,     8,    42,    55,    55,    46,    34,    18,    45,
+      54,    22,    36,    22,    24,    25,    28,    31,    32,    65,
+      66,    67,    68,    58,    32,    65,    32,    62,    63,     3,
+       7,    34,    59,    56,    43,    45,    36,    34,    53,    22,
+      32,    69,    67,    68,    65,    15,    26,    27,    28,    29,
+      30,    16,    12,     5,    23,    65,    65,    60,    36,    22,
+      54,    33,    65,    33,    60,    66,    67,    67,    67,    67,
+      65,    32,    60,    37,    64,    64,    59,    22,    53,    37,
+      70,     6,    65,    23,    65,    33,    33,    65,    33,    60,
+      33,    64,    64,    70,    37,    22,    33
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1524,152 +1509,152 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 81 "mpasemantic.y"
+#line 74 "mpasemantic.y"
     {(yyval.node_pointer) = createTree(makenode(ProgType, (yyvsp[(1) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col));}
     break;
 
   case 3:
-#line 83 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(2) - (5)].node_pointer);}
+#line 76 "mpasemantic.y"
+    {(yyval.node_pointer) = makeleaf(IDType, ((yyvsp[(2) - (5)].info))->string, ((yyvsp[(2) - (5)].info))->line, ((yyvsp[(2) - (5)].info))->col);}
     break;
 
   case 4:
-#line 85 "mpasemantic.y"
+#line 78 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ProgBlockType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 5:
-#line 87 "mpasemantic.y"
+#line 80 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(VarPartType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 6:
-#line 88 "mpasemantic.y"
+#line 81 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(VarPartType, NULL, NULL, NULL, line, col);}
     break;
 
   case 7:
-#line 91 "mpasemantic.y"
+#line 84 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(VarDeclarationListType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 8:
-#line 92 "mpasemantic.y"
+#line 85 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 9:
-#line 95 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(VarDeclarationType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
+#line 88 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(VarDeclarationType, (yyvsp[(1) - (3)].node_pointer), makeleaf(IDType, ((yyvsp[(3) - (3)].info))->string, ((yyvsp[(3) - (3)].info))->line, ((yyvsp[(3) - (3)].info))->col), NULL, line, col);}
     break;
 
   case 10:
-#line 97 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(IDListType, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), NULL, line, col);}
+#line 90 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(IDListType, makeleaf(IDType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), NULL, line, col);}
     break;
 
   case 11:
-#line 99 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(CommaIDListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
+#line 92 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(CommaIDListType, makeleaf(IDType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 12:
-#line 100 "mpasemantic.y"
+#line 93 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 13:
-#line 103 "mpasemantic.y"
+#line 96 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncPartType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL, line, col);}
     break;
 
   case 14:
-#line 105 "mpasemantic.y"
+#line 98 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncDeclarationListType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 15:
-#line 106 "mpasemantic.y"
+#line 99 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 16:
-#line 109 "mpasemantic.y"
+#line 102 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncDeclarationType, (yyvsp[(1) - (3)].node_pointer), NULL, NULL, line, col);}
     break;
 
   case 17:
-#line 110 "mpasemantic.y"
+#line 103 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncDefinition2Type, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 18:
-#line 111 "mpasemantic.y"
+#line 104 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncDefinitionType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 19:
-#line 114 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FuncHeadingType, (yyvsp[(2) - (5)].node_pointer), (yyvsp[(3) - (5)].node_pointer), (yyvsp[(5) - (5)].node_pointer), line, col);}
+#line 107 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, ((yyvsp[(2) - (5)].info))->string, ((yyvsp[(2) - (5)].info))->line, ((yyvsp[(2) - (5)].info))->col), (yyvsp[(3) - (5)].node_pointer), makeleaf(IDType, ((yyvsp[(5) - (5)].info))->string, ((yyvsp[(5) - (5)].info))->line, ((yyvsp[(5) - (5)].info))->col), line, col);}
     break;
 
   case 20:
-#line 115 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FuncHeadingType, (yyvsp[(2) - (4)].node_pointer), makenode(FuncParamsListType, NULL, NULL, NULL, line, col), (yyvsp[(4) - (4)].node_pointer), line, col);}
+#line 108 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(FuncHeadingType, makeleaf(IDType, ((yyvsp[(2) - (4)].info))->string, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col), makenode(FuncParamsListType, NULL, NULL, NULL, line, col), makeleaf(IDType, ((yyvsp[(4) - (4)].info))->string, ((yyvsp[(4) - (4)].info))->line, ((yyvsp[(4) - (4)].info))->col), line, col);}
     break;
 
   case 21:
-#line 118 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FuncIdentType, (yyvsp[(2) - (2)].node_pointer), NULL, NULL, line, col);}
+#line 111 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(FuncIdentType, makeleaf(IDType, ((yyvsp[(2) - (2)].info))->string, ((yyvsp[(2) - (2)].info))->line, ((yyvsp[(2) - (2)].info))->col), NULL, NULL, line, col);}
     break;
 
   case 22:
-#line 120 "mpasemantic.y"
+#line 113 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncParamsListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 23:
-#line 122 "mpasemantic.y"
+#line 115 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncParamsListType2, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 24:
-#line 123 "mpasemantic.y"
+#line 116 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 25:
-#line 126 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(VarParamsType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL, line, col);}
+#line 119 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(VarParamsType, (yyvsp[(2) - (4)].node_pointer), makeleaf(IDType, ((yyvsp[(4) - (4)].info))->string, ((yyvsp[(4) - (4)].info))->line, ((yyvsp[(4) - (4)].info))->col), NULL, line, col);}
     break;
 
   case 26:
-#line 127 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(ParamsType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
+#line 120 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(ParamsType, (yyvsp[(1) - (3)].node_pointer), makeleaf(IDType, ((yyvsp[(3) - (3)].info))->string, ((yyvsp[(3) - (3)].info))->line, ((yyvsp[(3) - (3)].info))->col), NULL, line, col);}
     break;
 
   case 27:
-#line 130 "mpasemantic.y"
+#line 123 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FuncBlockType, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), NULL, line, col);}
     break;
 
   case 28:
-#line 132 "mpasemantic.y"
+#line 125 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 29:
-#line 134 "mpasemantic.y"
+#line 127 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(CompStatType, (yyvsp[(2) - (3)].node_pointer), NULL, NULL, line, col);}
     break;
 
   case 30:
-#line 136 "mpasemantic.y"
+#line 129 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(StatListType, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), NULL, line, col);}
     break;
 
   case 31:
-#line 138 "mpasemantic.y"
+#line 131 "mpasemantic.y"
     {
 																						if((yyvsp[(3) - (3)].node_pointer) != NULL)
 																							(yyval.node_pointer) = makenode(StatType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);
@@ -1679,27 +1664,27 @@ yyreduce:
     break;
 
   case 32:
-#line 144 "mpasemantic.y"
+#line 137 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 33:
-#line 147 "mpasemantic.y"
+#line 140 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 34:
-#line 148 "mpasemantic.y"
+#line 141 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(IfElseStatType, (yyvsp[(2) - (6)].node_pointer), (yyvsp[(4) - (6)].node_pointer), (yyvsp[(6) - (6)].node_pointer), line, col);}
     break;
 
   case 35:
-#line 149 "mpasemantic.y"
+#line 142 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(IfElseStatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), makenode(StatListType, NULL, NULL, NULL, line, col), line, col);}
     break;
 
   case 36:
-#line 150 "mpasemantic.y"
+#line 143 "mpasemantic.y"
     {
 																						if((yyvsp[(4) - (4)].node_pointer) == NULL){
 																							(yyvsp[(4) - (4)].node_pointer) = makenode(StatListType, NULL, NULL, NULL, line, col);
@@ -1709,223 +1694,163 @@ yyreduce:
     break;
 
   case 37:
-#line 156 "mpasemantic.y"
+#line 149 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(RepeatStatType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(4) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 38:
-#line 157 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(ValParamStatType, (yyvsp[(5) - (9)].node_pointer), (yyvsp[(8) - (9)].node_pointer), NULL, line, col);}
+#line 150 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(ValParamStatType, (yyvsp[(5) - (9)].node_pointer), makeleaf(IDType, ((yyvsp[(8) - (9)].info))->string, ((yyvsp[(8) - (9)].info))->line, ((yyvsp[(8) - (9)].info))->col), NULL, line, col);}
     break;
 
   case 39:
-#line 158 "mpasemantic.y"
+#line 151 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 40:
-#line 159 "mpasemantic.y"
+#line 152 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);}
     break;
 
   case 41:
-#line 162 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(AssignStatType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
+#line 155 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(AssignStatType, makeleaf(IDType, ((yyvsp[(1) - (3)].info))->string, ((yyvsp[(1) - (3)].info))->line, ((yyvsp[(1) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 42:
-#line 163 "mpasemantic.y"
+#line 156 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 43:
-#line 166 "mpasemantic.y"
+#line 159 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WriteLnStatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL, line, col);}
     break;
 
   case 44:
-#line 167 "mpasemantic.y"
+#line 160 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 45:
-#line 170 "mpasemantic.y"
+#line 163 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 46:
-#line 171 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
+#line 164 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (4)].info))->string, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 47:
-#line 174 "mpasemantic.y"
+#line 167 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 48:
-#line 175 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
+#line 168 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 49:
-#line 176 "mpasemantic.y"
+#line 169 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 50:
-#line 179 "mpasemantic.y"
+#line 172 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ExprType, NULL, (yyvsp[(1) - (1)].node_pointer), NULL, line, col);}
     break;
 
   case 51:
-#line 180 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
+#line 173 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 52:
-#line 183 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
+#line 176 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 53:
-#line 184 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
+#line 177 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 54:
-#line 185 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, NULL, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), line, col);}
+#line 178 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), line, col);}
     break;
 
   case 55:
-#line 186 "mpasemantic.y"
+#line 179 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 56:
-#line 189 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
+#line 182 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 57:
-#line 190 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), line, col);}
+#line 183 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), line, col);}
     break;
 
   case 58:
-#line 191 "mpasemantic.y"
+#line 184 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
   case 59:
-#line 194 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FactorType, NULL, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), line, col);}
+#line 187 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), line, col);}
     break;
 
   case 60:
-#line 195 "mpasemantic.y"
+#line 188 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(2) - (3)].node_pointer);}
     break;
 
   case 61:
-#line 196 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
+#line 189 "mpasemantic.y"
+    {(yyval.node_pointer) = makeleaf(IntType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 62:
-#line 197 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
+#line 190 "mpasemantic.y"
+    {(yyval.node_pointer) = makeleaf(DoubleType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 63:
-#line 198 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(FactorType, NULL, (yyvsp[(1) - (2)].node_pointer), (yyvsp[(2) - (2)].node_pointer), line, col);}
+#line 191 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(CallType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), line, col);}
     break;
 
   case 64:
-#line 199 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
+#line 192 "mpasemantic.y"
+    {(yyval.node_pointer) = makeleaf(IDType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 65:
-#line 202 "mpasemantic.y"
+#line 195 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ParamListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 66:
-#line 204 "mpasemantic.y"
+#line 197 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ExprListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 67:
-#line 205 "mpasemantic.y"
+#line 198 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
-    break;
-
-  case 68:
-#line 209 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(IDType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 69:
-#line 210 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(StringType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 70:
-#line 211 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(DoubleType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 71:
-#line 212 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(IntType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 72:
-#line 214 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(CallType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 73:
-#line 216 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(OPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 74:
-#line 217 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(OPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 75:
-#line 218 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(OPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 76:
-#line 219 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(OPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 77:
-#line 220 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(OPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 78:
-#line 222 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(UnaryOPType, (yyvsp[(1) - (1)].string), line, col);}
-    break;
-
-  case 79:
-#line 223 "mpasemantic.y"
-    {(yyval.node_pointer) = makeleaf(UnaryOPType, (yyvsp[(1) - (1)].string), line, col);}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1929 "y.tab.c"
+#line 1854 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2139,7 +2064,7 @@ yyreturn:
 }
 
 
-#line 226 "mpasemantic.y"
+#line 201 "mpasemantic.y"
 
 
 int main(int argc, char** args){

@@ -563,6 +563,18 @@ char* getOPStr(char* str){
 	}
 }
 
+// function used to crceate and store the string, line and col of a token
+tokenInfo* makeTokenInfo(char* str, int l, int c){
+
+	tokenInfo* t = (tokenInfo*) malloc(sizeof(tokenInfo));
+	
+	t->string = strdup(str);
+	t->line = l;
+	t->col = c;
+
+	return t;
+}
+
 
 
 

@@ -19,6 +19,11 @@ min	_function_
 result	_integer_
 
 ===== Function Symbol Table =====
+max	_integer_	return
+num1	_integer_	param
+num2	_integer_	param
+
+===== Function Symbol Table =====
 min	_integer_	return
 num1	_integer_	param
 num2	_integer_	param

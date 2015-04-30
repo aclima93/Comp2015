@@ -3,17 +3,13 @@ Terminals which are not used
    RESERVED
 
 
-State 130 conflicts: 2 shift/reduce
-State 131 conflicts: 2 shift/reduce
-
-
 Grammar
 
     0 $accept: Prog $end
 
     1 Prog: ProgHeading ';' ProgBlock '.'
 
-    2 ProgHeading: PROGRAM IDToken '(' OUTPUT ')'
+    2 ProgHeading: PROGRAM ID '(' OUTPUT ')'
 
     3 ProgBlock: VarPart FuncPart StatPart
 
@@ -23,11 +19,11 @@ Grammar
     6 VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat
     7                           | /* empty */
 
-    8 VarDeclaration: IDList ':' IDToken
+    8 VarDeclaration: IDList ':' ID
 
-    9 IDList: IDToken CommaID_Repeat
+    9 IDList: ID CommaID_Repeat
 
-   10 CommaID_Repeat: ',' IDToken CommaID_Repeat
+   10 CommaID_Repeat: ',' ID CommaID_Repeat
    11               | /* empty */
 
    12 FuncPart: FuncDeclaration_Repeat
@@ -39,18 +35,18 @@ Grammar
    16                | FuncIdent ';' FuncBlock
    17                | FuncHeading ';' FuncBlock
 
-   18 FuncHeading: FUNCTION IDToken FormalParamList ':' IDToken
-   19            | FUNCTION IDToken ':' IDToken
+   18 FuncHeading: FUNCTION ID FormalParamList ':' ID
+   19            | FUNCTION ID ':' ID
 
-   20 FuncIdent: FUNCTION IDToken
+   20 FuncIdent: FUNCTION ID
 
    21 FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')'
 
    22 SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat
    23                         | /* empty */
 
-   24 FormalParams: VAR IDList ':' IDToken
-   25             | IDList ':' IDToken
+   24 FormalParams: VAR IDList ':' ID
+   25             | IDList ':' ID
 
    26 FuncBlock: VarPart StatPart
 
@@ -68,70 +64,46 @@ Grammar
    34     | IF Expr THEN Stat
    35     | WHILE Expr DO Stat
    36     | REPEAT StatList UNTIL Expr
-   37     | VAL '(' PARAMSTR '(' Expr ')' ',' IDToken ')'
+   37     | VAL '(' PARAMSTR '(' Expr ')' ',' ID ')'
    38     | IDAssignExpr_Optional
    39     | WRITELN WritelnPList_Optional
 
-   40 IDAssignExpr_Optional: IDToken ASSIGN Expr
+   40 IDAssignExpr_Optional: ID ASSIGN Expr
    41                      | /* empty */
 
    42 WritelnPList_Optional: WritelnPList
    43                      | /* empty */
 
    44 WritelnPList: '(' Expr CommaExprString_Repeat ')'
-   45             | '(' StringToken CommaExprString_Repeat ')'
+   45             | '(' STRING CommaExprString_Repeat ')'
 
    46 CommaExprString_Repeat: ',' Expr CommaExprString_Repeat
-   47                       | ',' StringToken CommaExprString_Repeat
+   47                       | ',' STRING CommaExprString_Repeat
    48                       | /* empty */
 
    49 Expr: SimpleExpr
-   50     | SimpleExpr OP2Token SimpleExpr
+   50     | SimpleExpr OP2 SimpleExpr
 
-   51 SimpleExpr: SimpleExpr OP3Token Term
-   52           | SimpleExpr ORToken Term
-   53           | UnaryOP3Token Term
+   51 SimpleExpr: SimpleExpr OP3 Term
+   52           | SimpleExpr OR Term
+   53           | OP3 Term
    54           | Term
 
-   55 Term: Term OP4Token Term
-   56     | Term ANDToken Term
+   55 Term: Term OP4 Term
+   56     | Term AND Term
    57     | Factor
 
-   58 Factor: UnaryNOTToken Factor
+   58 Factor: NOT Factor
    59       | '(' Expr ')'
-   60       | IntLitToken
-   61       | RealLitToken
-   62       | IDCallToken ParamList
-   63       | IDToken
+   60       | INTLIT
+   61       | REALLIT
+   62       | ID ParamList
+   63       | ID
 
    64 ParamList: '(' Expr CommaExpr_Repeat ')'
 
    65 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat
    66                 | /* empty */
-
-   67 IDToken: ID
-
-   68 StringToken: STRING
-
-   69 RealLitToken: REALLIT
-
-   70 IntLitToken: INTLIT
-
-   71 IDCallToken: ID
-
-   72 ANDToken: AND
-
-   73 OP4Token: OP4
-
-   74 ORToken: OR
-
-   75 OP3Token: OP3
-
-   76 OP2Token: OP2
-
-   77 UnaryNOTToken: NOT
-
-   78 UnaryOP3Token: OP3
 
 
 Terminals, with rules where they appear
@@ -163,16 +135,16 @@ VAR (273) 4 24
 WHILE (274) 35
 WRITELN (275) 39
 RESERVED (276)
-ID (277) 67 71
-STRING (278) 68
-REALLIT (279) 69
-INTLIT (280) 70
-OP2 (281) 76
-OR (282) 74
-OP3 (283) 75 78
-AND (284) 72
-OP4 (285) 73
-NOT (286) 77
+ID (277) 2 8 9 10 18 19 20 24 25 37 40 62 63
+STRING (278) 45 47
+REALLIT (279) 61
+INTLIT (280) 60
+OP2 (281) 50
+OR (282) 52
+OP3 (283) 51 53
+AND (284) 56
+OP4 (285) 55
+NOT (286) 58
 
 
 Nonterminals, with rules where they appear
@@ -243,30 +215,6 @@ ParamList (69)
     on left: 64, on right: 62
 CommaExpr_Repeat (70)
     on left: 65 66, on right: 64 65
-IDToken (71)
-    on left: 67, on right: 2 8 9 10 18 19 20 24 25 37 40 63
-StringToken (72)
-    on left: 68, on right: 45 47
-RealLitToken (73)
-    on left: 69, on right: 61
-IntLitToken (74)
-    on left: 70, on right: 60
-IDCallToken (75)
-    on left: 71, on right: 62
-ANDToken (76)
-    on left: 72, on right: 56
-OP4Token (77)
-    on left: 73, on right: 55
-ORToken (78)
-    on left: 74, on right: 52
-OP3Token (79)
-    on left: 75, on right: 51
-OP2Token (80)
-    on left: 76, on right: 50
-UnaryNOTToken (81)
-    on left: 77, on right: 58
-UnaryOP3Token (82)
-    on left: 78, on right: 53
 
 
 state 0
@@ -281,260 +229,243 @@ state 0
 
 state 1
 
-    2 ProgHeading: PROGRAM . IDToken '(' OUTPUT ')'
+    2 ProgHeading: PROGRAM . ID '(' OUTPUT ')'
 
     ID  shift, and go to state 4
-
-    IDToken  go to state 5
 
 
 state 2
 
     0 $accept: Prog . $end
 
-    $end  shift, and go to state 6
+    $end  shift, and go to state 5
 
 
 state 3
 
     1 Prog: ProgHeading . ';' ProgBlock '.'
 
-    ';'  shift, and go to state 7
+    ';'  shift, and go to state 6
 
 
 state 4
 
-   67 IDToken: ID .
+    2 ProgHeading: PROGRAM ID . '(' OUTPUT ')'
 
-    $default  reduce using rule 67 (IDToken)
+    '('  shift, and go to state 7
 
 
 state 5
-
-    2 ProgHeading: PROGRAM IDToken . '(' OUTPUT ')'
-
-    '('  shift, and go to state 8
-
-
-state 6
 
     0 $accept: Prog $end .
 
     $default  accept
 
 
-state 7
+state 6
 
     1 Prog: ProgHeading ';' . ProgBlock '.'
 
-    VAR  shift, and go to state 9
+    VAR  shift, and go to state 8
 
     $default  reduce using rule 5 (VarPart)
 
-    ProgBlock  go to state 10
-    VarPart    go to state 11
+    ProgBlock  go to state 9
+    VarPart    go to state 10
+
+
+state 7
+
+    2 ProgHeading: PROGRAM ID '(' . OUTPUT ')'
+
+    OUTPUT  shift, and go to state 11
 
 
 state 8
 
-    2 ProgHeading: PROGRAM IDToken '(' . OUTPUT ')'
+    4 VarPart: VAR . VarDeclaration ';' VarDeclarationSemic_Repeat
 
-    OUTPUT  shift, and go to state 12
+    ID  shift, and go to state 12
+
+    VarDeclaration  go to state 13
+    IDList          go to state 14
 
 
 state 9
 
-    4 VarPart: VAR . VarDeclaration ';' VarDeclarationSemic_Repeat
+    1 Prog: ProgHeading ';' ProgBlock . '.'
 
-    ID  shift, and go to state 4
-
-    VarDeclaration  go to state 13
-    IDList          go to state 14
-    IDToken         go to state 15
+    '.'  shift, and go to state 15
 
 
 state 10
 
-    1 Prog: ProgHeading ';' ProgBlock . '.'
+    3 ProgBlock: VarPart . FuncPart StatPart
 
-    '.'  shift, and go to state 16
+    FUNCTION  shift, and go to state 16
+
+    $default  reduce using rule 14 (FuncDeclaration_Repeat)
+
+    FuncPart                go to state 17
+    FuncDeclaration_Repeat  go to state 18
+    FuncDeclaration         go to state 19
+    FuncHeading             go to state 20
+    FuncIdent               go to state 21
 
 
 state 11
 
-    3 ProgBlock: VarPart . FuncPart StatPart
+    2 ProgHeading: PROGRAM ID '(' OUTPUT . ')'
 
-    FUNCTION  shift, and go to state 17
-
-    $default  reduce using rule 14 (FuncDeclaration_Repeat)
-
-    FuncPart                go to state 18
-    FuncDeclaration_Repeat  go to state 19
-    FuncDeclaration         go to state 20
-    FuncHeading             go to state 21
-    FuncIdent               go to state 22
+    ')'  shift, and go to state 22
 
 
 state 12
 
-    2 ProgHeading: PROGRAM IDToken '(' OUTPUT . ')'
+    9 IDList: ID . CommaID_Repeat
 
-    ')'  shift, and go to state 23
+    ','  shift, and go to state 23
+
+    $default  reduce using rule 11 (CommaID_Repeat)
+
+    CommaID_Repeat  go to state 24
 
 
 state 13
 
     4 VarPart: VAR VarDeclaration . ';' VarDeclarationSemic_Repeat
 
-    ';'  shift, and go to state 24
+    ';'  shift, and go to state 25
 
 
 state 14
 
-    8 VarDeclaration: IDList . ':' IDToken
+    8 VarDeclaration: IDList . ':' ID
 
-    ':'  shift, and go to state 25
+    ':'  shift, and go to state 26
 
 
 state 15
-
-    9 IDList: IDToken . CommaID_Repeat
-
-    ','  shift, and go to state 26
-
-    $default  reduce using rule 11 (CommaID_Repeat)
-
-    CommaID_Repeat  go to state 27
-
-
-state 16
 
     1 Prog: ProgHeading ';' ProgBlock '.' .
 
     $default  reduce using rule 1 (Prog)
 
 
+state 16
+
+   18 FuncHeading: FUNCTION . ID FormalParamList ':' ID
+   19            | FUNCTION . ID ':' ID
+   20 FuncIdent: FUNCTION . ID
+
+    ID  shift, and go to state 27
+
+
 state 17
-
-   18 FuncHeading: FUNCTION . IDToken FormalParamList ':' IDToken
-   19            | FUNCTION . IDToken ':' IDToken
-   20 FuncIdent: FUNCTION . IDToken
-
-    ID  shift, and go to state 4
-
-    IDToken  go to state 28
-
-
-state 18
 
     3 ProgBlock: VarPart FuncPart . StatPart
 
-    BEGIN_token  shift, and go to state 29
+    BEGIN_token  shift, and go to state 28
 
-    StatPart  go to state 30
-    CompStat  go to state 31
+    StatPart  go to state 29
+    CompStat  go to state 30
 
 
-state 19
+state 18
 
    12 FuncPart: FuncDeclaration_Repeat .
 
     $default  reduce using rule 12 (FuncPart)
 
 
-state 20
+state 19
 
    13 FuncDeclaration_Repeat: FuncDeclaration . ';' FuncDeclaration_Repeat
+
+    ';'  shift, and go to state 31
+
+
+state 20
+
+   15 FuncDeclaration: FuncHeading . ';' FORWARD
+   17                | FuncHeading . ';' FuncBlock
 
     ';'  shift, and go to state 32
 
 
 state 21
 
-   15 FuncDeclaration: FuncHeading . ';' FORWARD
-   17                | FuncHeading . ';' FuncBlock
+   16 FuncDeclaration: FuncIdent . ';' FuncBlock
 
     ';'  shift, and go to state 33
 
 
 state 22
 
-   16 FuncDeclaration: FuncIdent . ';' FuncBlock
-
-    ';'  shift, and go to state 34
-
-
-state 23
-
-    2 ProgHeading: PROGRAM IDToken '(' OUTPUT ')' .
+    2 ProgHeading: PROGRAM ID '(' OUTPUT ')' .
 
     $default  reduce using rule 2 (ProgHeading)
 
 
+state 23
+
+   10 CommaID_Repeat: ',' . ID CommaID_Repeat
+
+    ID  shift, and go to state 34
+
+
 state 24
+
+    9 IDList: ID CommaID_Repeat .
+
+    $default  reduce using rule 9 (IDList)
+
+
+state 25
 
     4 VarPart: VAR VarDeclaration ';' . VarDeclarationSemic_Repeat
 
-    ID  shift, and go to state 4
+    ID  shift, and go to state 12
 
     $default  reduce using rule 7 (VarDeclarationSemic_Repeat)
 
     VarDeclarationSemic_Repeat  go to state 35
     VarDeclaration              go to state 36
     IDList                      go to state 14
-    IDToken                     go to state 15
-
-
-state 25
-
-    8 VarDeclaration: IDList ':' . IDToken
-
-    ID  shift, and go to state 4
-
-    IDToken  go to state 37
 
 
 state 26
 
-   10 CommaID_Repeat: ',' . IDToken CommaID_Repeat
+    8 VarDeclaration: IDList ':' . ID
 
-    ID  shift, and go to state 4
-
-    IDToken  go to state 38
+    ID  shift, and go to state 37
 
 
 state 27
 
-    9 IDList: IDToken CommaID_Repeat .
+   18 FuncHeading: FUNCTION ID . FormalParamList ':' ID
+   19            | FUNCTION ID . ':' ID
+   20 FuncIdent: FUNCTION ID .
 
-    $default  reduce using rule 9 (IDList)
+    '('  shift, and go to state 38
+    ':'  shift, and go to state 39
+
+    $default  reduce using rule 20 (FuncIdent)
+
+    FormalParamList  go to state 40
 
 
 state 28
 
-   18 FuncHeading: FUNCTION IDToken . FormalParamList ':' IDToken
-   19            | FUNCTION IDToken . ':' IDToken
-   20 FuncIdent: FUNCTION IDToken .
-
-    '('  shift, and go to state 39
-    ':'  shift, and go to state 40
-
-    $default  reduce using rule 20 (FuncIdent)
-
-    FormalParamList  go to state 41
-
-
-state 29
-
    28 CompStat: BEGIN_token . StatList END
 
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
 
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
@@ -542,61 +473,71 @@ state 29
     StatList               go to state 48
     Stat                   go to state 49
     IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
 
 
-state 30
+state 29
 
     3 ProgBlock: VarPart FuncPart StatPart .
 
     $default  reduce using rule 3 (ProgBlock)
 
 
-state 31
+state 30
 
    27 StatPart: CompStat .
 
     $default  reduce using rule 27 (StatPart)
 
 
-state 32
+state 31
 
    13 FuncDeclaration_Repeat: FuncDeclaration ';' . FuncDeclaration_Repeat
 
-    FUNCTION  shift, and go to state 17
+    FUNCTION  shift, and go to state 16
 
     $default  reduce using rule 14 (FuncDeclaration_Repeat)
 
-    FuncDeclaration_Repeat  go to state 52
-    FuncDeclaration         go to state 20
-    FuncHeading             go to state 21
-    FuncIdent               go to state 22
+    FuncDeclaration_Repeat  go to state 51
+    FuncDeclaration         go to state 19
+    FuncHeading             go to state 20
+    FuncIdent               go to state 21
 
 
-state 33
+state 32
 
    15 FuncDeclaration: FuncHeading ';' . FORWARD
    17                | FuncHeading ';' . FuncBlock
 
-    FORWARD  shift, and go to state 53
-    VAR      shift, and go to state 9
+    FORWARD  shift, and go to state 52
+    VAR      shift, and go to state 8
 
     $default  reduce using rule 5 (VarPart)
 
-    VarPart    go to state 54
+    VarPart    go to state 53
+    FuncBlock  go to state 54
+
+
+state 33
+
+   16 FuncDeclaration: FuncIdent ';' . FuncBlock
+
+    VAR  shift, and go to state 8
+
+    $default  reduce using rule 5 (VarPart)
+
+    VarPart    go to state 53
     FuncBlock  go to state 55
 
 
 state 34
 
-   16 FuncDeclaration: FuncIdent ';' . FuncBlock
+   10 CommaID_Repeat: ',' ID . CommaID_Repeat
 
-    VAR  shift, and go to state 9
+    ','  shift, and go to state 23
 
-    $default  reduce using rule 5 (VarPart)
+    $default  reduce using rule 11 (CommaID_Repeat)
 
-    VarPart    go to state 54
-    FuncBlock  go to state 56
+    CommaID_Repeat  go to state 56
 
 
 state 35
@@ -615,135 +556,115 @@ state 36
 
 state 37
 
-    8 VarDeclaration: IDList ':' IDToken .
+    8 VarDeclaration: IDList ':' ID .
 
     $default  reduce using rule 8 (VarDeclaration)
 
 
 state 38
 
-   10 CommaID_Repeat: ',' IDToken . CommaID_Repeat
+   21 FormalParamList: '(' . FormalParams SemicFormalParams_Repeat ')'
 
-    ','  shift, and go to state 26
+    VAR  shift, and go to state 58
+    ID   shift, and go to state 12
 
-    $default  reduce using rule 11 (CommaID_Repeat)
-
-    CommaID_Repeat  go to state 58
+    IDList        go to state 59
+    FormalParams  go to state 60
 
 
 state 39
 
-   21 FormalParamList: '(' . FormalParams SemicFormalParams_Repeat ')'
+   19 FuncHeading: FUNCTION ID ':' . ID
 
-    VAR  shift, and go to state 59
-    ID   shift, and go to state 4
-
-    IDList        go to state 60
-    FormalParams  go to state 61
-    IDToken       go to state 15
+    ID  shift, and go to state 61
 
 
 state 40
 
-   19 FuncHeading: FUNCTION IDToken ':' . IDToken
+   18 FuncHeading: FUNCTION ID FormalParamList . ':' ID
 
-    ID  shift, and go to state 4
-
-    IDToken  go to state 62
+    ':'  shift, and go to state 62
 
 
 state 41
 
-   18 FuncHeading: FUNCTION IDToken FormalParamList . ':' IDToken
+   33 Stat: IF . Expr THEN Stat ELSE Stat
+   34     | IF . Expr THEN Stat
 
-    ':'  shift, and go to state 63
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 69
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
 state 42
 
-   33 Stat: IF . Expr THEN Stat ELSE Stat
-   34     | IF . Expr THEN Stat
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 70
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
-
-
-state 43
-
    36 Stat: REPEAT . StatList UNTIL Expr
 
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
 
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    StatList               go to state 80
+    StatList               go to state 73
     Stat                   go to state 49
     IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
+
+
+state 43
+
+   37 Stat: VAL . '(' PARAMSTR '(' Expr ')' ',' ID ')'
+
+    '('  shift, and go to state 74
 
 
 state 44
 
-   37 Stat: VAL . '(' PARAMSTR '(' Expr ')' ',' IDToken ')'
+   35 Stat: WHILE . Expr DO Stat
 
-    '('  shift, and go to state 81
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 75
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
 state 45
 
-   35 Stat: WHILE . Expr DO Stat
+   39 Stat: WRITELN . WritelnPList_Optional
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
+    '('  shift, and go to state 76
 
-    Expr           go to state 82
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    $default  reduce using rule 43 (WritelnPList_Optional)
+
+    WritelnPList_Optional  go to state 77
+    WritelnPList           go to state 78
 
 
 state 46
 
-   39 Stat: WRITELN . WritelnPList_Optional
+   40 IDAssignExpr_Optional: ID . ASSIGN Expr
 
-    '('  shift, and go to state 83
-
-    $default  reduce using rule 43 (WritelnPList_Optional)
-
-    WritelnPList_Optional  go to state 84
-    WritelnPList           go to state 85
+    ASSIGN  shift, and go to state 79
 
 
 state 47
@@ -757,18 +678,18 @@ state 48
 
    28 CompStat: BEGIN_token StatList . END
 
-    END  shift, and go to state 86
+    END  shift, and go to state 80
 
 
 state 49
 
    29 StatList: Stat . SemicStat_Repeat
 
-    ';'  shift, and go to state 87
+    ';'  shift, and go to state 81
 
     $default  reduce using rule 31 (SemicStat_Repeat)
 
-    SemicStat_Repeat  go to state 88
+    SemicStat_Repeat  go to state 82
 
 
 state 50
@@ -780,1176 +701,950 @@ state 50
 
 state 51
 
-   40 IDAssignExpr_Optional: IDToken . ASSIGN Expr
-
-    ASSIGN  shift, and go to state 89
-
-
-state 52
-
    13 FuncDeclaration_Repeat: FuncDeclaration ';' FuncDeclaration_Repeat .
 
     $default  reduce using rule 13 (FuncDeclaration_Repeat)
 
 
-state 53
+state 52
 
    15 FuncDeclaration: FuncHeading ';' FORWARD .
 
     $default  reduce using rule 15 (FuncDeclaration)
 
 
-state 54
+state 53
 
    26 FuncBlock: VarPart . StatPart
 
-    BEGIN_token  shift, and go to state 29
+    BEGIN_token  shift, and go to state 28
 
-    StatPart  go to state 90
-    CompStat  go to state 31
+    StatPart  go to state 83
+    CompStat  go to state 30
 
 
-state 55
+state 54
 
    17 FuncDeclaration: FuncHeading ';' FuncBlock .
 
     $default  reduce using rule 17 (FuncDeclaration)
 
 
-state 56
+state 55
 
    16 FuncDeclaration: FuncIdent ';' FuncBlock .
 
     $default  reduce using rule 16 (FuncDeclaration)
 
 
-state 57
+state 56
 
-    6 VarDeclarationSemic_Repeat: VarDeclaration ';' . VarDeclarationSemic_Repeat
-
-    ID  shift, and go to state 4
-
-    $default  reduce using rule 7 (VarDeclarationSemic_Repeat)
-
-    VarDeclarationSemic_Repeat  go to state 91
-    VarDeclaration              go to state 36
-    IDList                      go to state 14
-    IDToken                     go to state 15
-
-
-state 58
-
-   10 CommaID_Repeat: ',' IDToken CommaID_Repeat .
+   10 CommaID_Repeat: ',' ID CommaID_Repeat .
 
     $default  reduce using rule 10 (CommaID_Repeat)
 
 
+state 57
+
+    6 VarDeclarationSemic_Repeat: VarDeclaration ';' . VarDeclarationSemic_Repeat
+
+    ID  shift, and go to state 12
+
+    $default  reduce using rule 7 (VarDeclarationSemic_Repeat)
+
+    VarDeclarationSemic_Repeat  go to state 84
+    VarDeclaration              go to state 36
+    IDList                      go to state 14
+
+
+state 58
+
+   24 FormalParams: VAR . IDList ':' ID
+
+    ID  shift, and go to state 12
+
+    IDList  go to state 85
+
+
 state 59
 
-   24 FormalParams: VAR . IDList ':' IDToken
+   25 FormalParams: IDList . ':' ID
 
-    ID  shift, and go to state 4
-
-    IDList   go to state 92
-    IDToken  go to state 15
+    ':'  shift, and go to state 86
 
 
 state 60
 
-   25 FormalParams: IDList . ':' IDToken
+   21 FormalParamList: '(' FormalParams . SemicFormalParams_Repeat ')'
 
-    ':'  shift, and go to state 93
+    ';'  shift, and go to state 87
+
+    $default  reduce using rule 23 (SemicFormalParams_Repeat)
+
+    SemicFormalParams_Repeat  go to state 88
 
 
 state 61
 
-   21 FormalParamList: '(' FormalParams . SemicFormalParams_Repeat ')'
-
-    ';'  shift, and go to state 94
-
-    $default  reduce using rule 23 (SemicFormalParams_Repeat)
-
-    SemicFormalParams_Repeat  go to state 95
-
-
-state 62
-
-   19 FuncHeading: FUNCTION IDToken ':' IDToken .
+   19 FuncHeading: FUNCTION ID ':' ID .
 
     $default  reduce using rule 19 (FuncHeading)
 
 
+state 62
+
+   18 FuncHeading: FUNCTION ID FormalParamList ':' . ID
+
+    ID  shift, and go to state 89
+
+
 state 63
 
-   18 FuncHeading: FUNCTION IDToken FormalParamList ':' . IDToken
+   62 Factor: ID . ParamList
+   63       | ID .
 
-    ID  shift, and go to state 4
+    '('  shift, and go to state 90
 
-    IDToken  go to state 96
+    $default  reduce using rule 63 (Factor)
+
+    ParamList  go to state 91
 
 
 state 64
 
-   67 IDToken: ID .
-   71 IDCallToken: ID .
+   61 Factor: REALLIT .
 
-    '('       reduce using rule 71 (IDCallToken)
-    $default  reduce using rule 67 (IDToken)
+    $default  reduce using rule 61 (Factor)
 
 
 state 65
 
-   69 RealLitToken: REALLIT .
+   60 Factor: INTLIT .
 
-    $default  reduce using rule 69 (RealLitToken)
+    $default  reduce using rule 60 (Factor)
 
 
 state 66
 
-   70 IntLitToken: INTLIT .
+   53 SimpleExpr: OP3 . Term
 
-    $default  reduce using rule 70 (IntLitToken)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Term    go to state 92
+    Factor  go to state 72
 
 
 state 67
 
-   78 UnaryOP3Token: OP3 .
+   58 Factor: NOT . Factor
 
-    $default  reduce using rule 78 (UnaryOP3Token)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Factor  go to state 93
 
 
 state 68
 
-   77 UnaryNOTToken: NOT .
+   59 Factor: '(' . Expr ')'
 
-    $default  reduce using rule 77 (UnaryNOTToken)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 94
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
 state 69
 
-   59 Factor: '(' . Expr ')'
+   33 Stat: IF Expr . THEN Stat ELSE Stat
+   34     | IF Expr . THEN Stat
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 97
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    THEN  shift, and go to state 95
 
 
 state 70
 
-   33 Stat: IF Expr . THEN Stat ELSE Stat
-   34     | IF Expr . THEN Stat
+   49 Expr: SimpleExpr .
+   50     | SimpleExpr . OP2 SimpleExpr
+   51 SimpleExpr: SimpleExpr . OP3 Term
+   52           | SimpleExpr . OR Term
 
-    THEN  shift, and go to state 98
+    OP2  shift, and go to state 96
+    OR   shift, and go to state 97
+    OP3  shift, and go to state 98
+
+    $default  reduce using rule 49 (Expr)
 
 
 state 71
 
-   49 Expr: SimpleExpr .
-   50     | SimpleExpr . OP2Token SimpleExpr
-   51 SimpleExpr: SimpleExpr . OP3Token Term
-   52           | SimpleExpr . ORToken Term
-
-    OP2  shift, and go to state 99
-    OR   shift, and go to state 100
-    OP3  shift, and go to state 101
-
-    $default  reduce using rule 49 (Expr)
-
-    ORToken   go to state 102
-    OP3Token  go to state 103
-    OP2Token  go to state 104
-
-
-state 72
-
    54 SimpleExpr: Term .
-   55 Term: Term . OP4Token Term
-   56     | Term . ANDToken Term
+   55 Term: Term . OP4 Term
+   56     | Term . AND Term
 
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
+    AND  shift, and go to state 99
+    OP4  shift, and go to state 100
 
     $default  reduce using rule 54 (SimpleExpr)
 
-    ANDToken  go to state 107
-    OP4Token  go to state 108
 
-
-state 73
+state 72
 
    57 Term: Factor .
 
     $default  reduce using rule 57 (Term)
 
 
+state 73
+
+   36 Stat: REPEAT StatList . UNTIL Expr
+
+    UNTIL  shift, and go to state 101
+
+
 state 74
 
-   63 Factor: IDToken .
+   37 Stat: VAL '(' . PARAMSTR '(' Expr ')' ',' ID ')'
 
-    $default  reduce using rule 63 (Factor)
+    PARAMSTR  shift, and go to state 102
 
 
 state 75
 
-   61 Factor: RealLitToken .
+   35 Stat: WHILE Expr . DO Stat
 
-    $default  reduce using rule 61 (Factor)
+    DO  shift, and go to state 103
 
 
 state 76
 
-   60 Factor: IntLitToken .
+   44 WritelnPList: '(' . Expr CommaExprString_Repeat ')'
+   45             | '(' . STRING CommaExprString_Repeat ')'
 
-    $default  reduce using rule 60 (Factor)
+    ID       shift, and go to state 63
+    STRING   shift, and go to state 104
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 105
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
 state 77
-
-   62 Factor: IDCallToken . ParamList
-
-    '('  shift, and go to state 109
-
-    ParamList  go to state 110
-
-
-state 78
-
-   58 Factor: UnaryNOTToken . Factor
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Factor         go to state 111
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 79
-
-   53 SimpleExpr: UnaryOP3Token . Term
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Term           go to state 112
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 80
-
-   36 Stat: REPEAT StatList . UNTIL Expr
-
-    UNTIL  shift, and go to state 113
-
-
-state 81
-
-   37 Stat: VAL '(' . PARAMSTR '(' Expr ')' ',' IDToken ')'
-
-    PARAMSTR  shift, and go to state 114
-
-
-state 82
-
-   35 Stat: WHILE Expr . DO Stat
-
-    DO  shift, and go to state 115
-
-
-state 83
-
-   44 WritelnPList: '(' . Expr CommaExprString_Repeat ')'
-   45             | '(' . StringToken CommaExprString_Repeat ')'
-
-    ID       shift, and go to state 64
-    STRING   shift, and go to state 116
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 117
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    StringToken    go to state 118
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
-
-
-state 84
 
    39 Stat: WRITELN WritelnPList_Optional .
 
     $default  reduce using rule 39 (Stat)
 
 
-state 85
+state 78
 
    42 WritelnPList_Optional: WritelnPList .
 
     $default  reduce using rule 42 (WritelnPList_Optional)
 
 
-state 86
+state 79
+
+   40 IDAssignExpr_Optional: ID ASSIGN . Expr
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 106
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
+
+
+state 80
 
    28 CompStat: BEGIN_token StatList END .
 
     $default  reduce using rule 28 (CompStat)
 
 
-state 87
+state 81
 
    30 SemicStat_Repeat: ';' . Stat SemicStat_Repeat
 
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
 
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    Stat                   go to state 119
+    Stat                   go to state 107
     IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
 
 
-state 88
+state 82
 
    29 StatList: Stat SemicStat_Repeat .
 
     $default  reduce using rule 29 (StatList)
 
 
-state 89
-
-   40 IDAssignExpr_Optional: IDToken ASSIGN . Expr
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 120
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
-
-
-state 90
+state 83
 
    26 FuncBlock: VarPart StatPart .
 
     $default  reduce using rule 26 (FuncBlock)
 
 
-state 91
+state 84
 
     6 VarDeclarationSemic_Repeat: VarDeclaration ';' VarDeclarationSemic_Repeat .
 
     $default  reduce using rule 6 (VarDeclarationSemic_Repeat)
 
 
-state 92
+state 85
 
-   24 FormalParams: VAR IDList . ':' IDToken
+   24 FormalParams: VAR IDList . ':' ID
 
-    ':'  shift, and go to state 121
-
-
-state 93
-
-   25 FormalParams: IDList ':' . IDToken
-
-    ID  shift, and go to state 4
-
-    IDToken  go to state 122
+    ':'  shift, and go to state 108
 
 
-state 94
+state 86
+
+   25 FormalParams: IDList ':' . ID
+
+    ID  shift, and go to state 109
+
+
+state 87
 
    22 SemicFormalParams_Repeat: ';' . FormalParams SemicFormalParams_Repeat
 
-    VAR  shift, and go to state 59
-    ID   shift, and go to state 4
+    VAR  shift, and go to state 58
+    ID   shift, and go to state 12
 
-    IDList        go to state 60
-    FormalParams  go to state 123
-    IDToken       go to state 15
+    IDList        go to state 59
+    FormalParams  go to state 110
 
 
-state 95
+state 88
 
    21 FormalParamList: '(' FormalParams SemicFormalParams_Repeat . ')'
 
-    ')'  shift, and go to state 124
+    ')'  shift, and go to state 111
 
 
-state 96
+state 89
 
-   18 FuncHeading: FUNCTION IDToken FormalParamList ':' IDToken .
+   18 FuncHeading: FUNCTION ID FormalParamList ':' ID .
 
     $default  reduce using rule 18 (FuncHeading)
 
 
-state 97
-
-   59 Factor: '(' Expr . ')'
-
-    ')'  shift, and go to state 125
-
-
-state 98
-
-   33 Stat: IF Expr THEN . Stat ELSE Stat
-   34     | IF Expr THEN . Stat
-
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
-
-    $default  reduce using rule 41 (IDAssignExpr_Optional)
-
-    CompStat               go to state 47
-    Stat                   go to state 126
-    IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
-
-
-state 99
-
-   76 OP2Token: OP2 .
-
-    $default  reduce using rule 76 (OP2Token)
-
-
-state 100
-
-   74 ORToken: OR .
-
-    $default  reduce using rule 74 (ORToken)
-
-
-state 101
-
-   75 OP3Token: OP3 .
-
-    $default  reduce using rule 75 (OP3Token)
-
-
-state 102
-
-   52 SimpleExpr: SimpleExpr ORToken . Term
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Term           go to state 127
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 103
-
-   51 SimpleExpr: SimpleExpr OP3Token . Term
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Term           go to state 128
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 104
-
-   50 Expr: SimpleExpr OP2Token . SimpleExpr
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    SimpleExpr     go to state 129
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
-
-
-state 105
-
-   72 ANDToken: AND .
-
-    $default  reduce using rule 72 (ANDToken)
-
-
-state 106
-
-   73 OP4Token: OP4 .
-
-    $default  reduce using rule 73 (OP4Token)
-
-
-state 107
-
-   56 Term: Term ANDToken . Term
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Term           go to state 130
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 108
-
-   55 Term: Term OP4Token . Term
-
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Term           go to state 131
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-
-
-state 109
+state 90
 
    64 ParamList: '(' . Expr CommaExpr_Repeat ')'
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
 
-    Expr           go to state 132
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    Expr        go to state 112
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
-state 110
+state 91
 
-   62 Factor: IDCallToken ParamList .
+   62 Factor: ID ParamList .
 
     $default  reduce using rule 62 (Factor)
 
 
-state 111
+state 92
 
-   58 Factor: UnaryNOTToken Factor .
+   53 SimpleExpr: OP3 Term .
+   55 Term: Term . OP4 Term
+   56     | Term . AND Term
+
+    AND  shift, and go to state 99
+    OP4  shift, and go to state 100
+
+    $default  reduce using rule 53 (SimpleExpr)
+
+
+state 93
+
+   58 Factor: NOT Factor .
 
     $default  reduce using rule 58 (Factor)
 
 
-state 112
+state 94
 
-   53 SimpleExpr: UnaryOP3Token Term .
-   55 Term: Term . OP4Token Term
-   56     | Term . ANDToken Term
+   59 Factor: '(' Expr . ')'
 
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
-
-    $default  reduce using rule 53 (SimpleExpr)
-
-    ANDToken  go to state 107
-    OP4Token  go to state 108
+    ')'  shift, and go to state 113
 
 
-state 113
+state 95
 
-   36 Stat: REPEAT StatList UNTIL . Expr
+   33 Stat: IF Expr THEN . Stat ELSE Stat
+   34     | IF Expr THEN . Stat
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 133
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
-
-
-state 114
-
-   37 Stat: VAL '(' PARAMSTR . '(' Expr ')' ',' IDToken ')'
-
-    '('  shift, and go to state 134
-
-
-state 115
-
-   35 Stat: WHILE Expr DO . Stat
-
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
 
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    Stat                   go to state 135
+    Stat                   go to state 114
     IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
 
 
-state 116
+state 96
 
-   68 StringToken: STRING .
+   50 Expr: SimpleExpr OP2 . SimpleExpr
 
-    $default  reduce using rule 68 (StringToken)
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    SimpleExpr  go to state 115
+    Term        go to state 71
+    Factor      go to state 72
 
 
-state 117
+state 97
+
+   52 SimpleExpr: SimpleExpr OR . Term
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Term    go to state 116
+    Factor  go to state 72
+
+
+state 98
+
+   51 SimpleExpr: SimpleExpr OP3 . Term
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Term    go to state 117
+    Factor  go to state 72
+
+
+state 99
+
+   56 Term: Term AND . Term
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Term    go to state 118
+    Factor  go to state 72
+
+
+state 100
+
+   55 Term: Term OP4 . Term
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Term    go to state 119
+    Factor  go to state 72
+
+
+state 101
+
+   36 Stat: REPEAT StatList UNTIL . Expr
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 120
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
+
+
+state 102
+
+   37 Stat: VAL '(' PARAMSTR . '(' Expr ')' ',' ID ')'
+
+    '('  shift, and go to state 121
+
+
+state 103
+
+   35 Stat: WHILE Expr DO . Stat
+
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
+
+    $default  reduce using rule 41 (IDAssignExpr_Optional)
+
+    CompStat               go to state 47
+    Stat                   go to state 122
+    IDAssignExpr_Optional  go to state 50
+
+
+state 104
+
+   45 WritelnPList: '(' STRING . CommaExprString_Repeat ')'
+
+    ','  shift, and go to state 123
+
+    $default  reduce using rule 48 (CommaExprString_Repeat)
+
+    CommaExprString_Repeat  go to state 124
+
+
+state 105
 
    44 WritelnPList: '(' Expr . CommaExprString_Repeat ')'
 
-    ','  shift, and go to state 136
+    ','  shift, and go to state 123
 
     $default  reduce using rule 48 (CommaExprString_Repeat)
 
-    CommaExprString_Repeat  go to state 137
+    CommaExprString_Repeat  go to state 125
 
 
-state 118
+state 106
 
-   45 WritelnPList: '(' StringToken . CommaExprString_Repeat ')'
-
-    ','  shift, and go to state 136
-
-    $default  reduce using rule 48 (CommaExprString_Repeat)
-
-    CommaExprString_Repeat  go to state 138
-
-
-state 119
-
-   30 SemicStat_Repeat: ';' Stat . SemicStat_Repeat
-
-    ';'  shift, and go to state 87
-
-    $default  reduce using rule 31 (SemicStat_Repeat)
-
-    SemicStat_Repeat  go to state 139
-
-
-state 120
-
-   40 IDAssignExpr_Optional: IDToken ASSIGN Expr .
+   40 IDAssignExpr_Optional: ID ASSIGN Expr .
 
     $default  reduce using rule 40 (IDAssignExpr_Optional)
 
 
-state 121
+state 107
 
-   24 FormalParams: VAR IDList ':' . IDToken
+   30 SemicStat_Repeat: ';' Stat . SemicStat_Repeat
 
-    ID  shift, and go to state 4
+    ';'  shift, and go to state 81
 
-    IDToken  go to state 140
+    $default  reduce using rule 31 (SemicStat_Repeat)
+
+    SemicStat_Repeat  go to state 126
 
 
-state 122
+state 108
 
-   25 FormalParams: IDList ':' IDToken .
+   24 FormalParams: VAR IDList ':' . ID
+
+    ID  shift, and go to state 127
+
+
+state 109
+
+   25 FormalParams: IDList ':' ID .
 
     $default  reduce using rule 25 (FormalParams)
 
 
-state 123
+state 110
 
    22 SemicFormalParams_Repeat: ';' FormalParams . SemicFormalParams_Repeat
 
-    ';'  shift, and go to state 94
+    ';'  shift, and go to state 87
 
     $default  reduce using rule 23 (SemicFormalParams_Repeat)
 
-    SemicFormalParams_Repeat  go to state 141
+    SemicFormalParams_Repeat  go to state 128
 
 
-state 124
+state 111
 
    21 FormalParamList: '(' FormalParams SemicFormalParams_Repeat ')' .
 
     $default  reduce using rule 21 (FormalParamList)
 
 
-state 125
+state 112
+
+   64 ParamList: '(' Expr . CommaExpr_Repeat ')'
+
+    ','  shift, and go to state 129
+
+    $default  reduce using rule 66 (CommaExpr_Repeat)
+
+    CommaExpr_Repeat  go to state 130
+
+
+state 113
 
    59 Factor: '(' Expr ')' .
 
     $default  reduce using rule 59 (Factor)
 
 
-state 126
+state 114
 
    33 Stat: IF Expr THEN Stat . ELSE Stat
    34     | IF Expr THEN Stat .
 
-    ELSE  shift, and go to state 142
+    ELSE  shift, and go to state 131
 
     $default  reduce using rule 34 (Stat)
 
 
-state 127
+state 115
 
-   52 SimpleExpr: SimpleExpr ORToken Term .
-   55 Term: Term . OP4Token Term
-   56     | Term . ANDToken Term
+   50 Expr: SimpleExpr OP2 SimpleExpr .
+   51 SimpleExpr: SimpleExpr . OP3 Term
+   52           | SimpleExpr . OR Term
 
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
-
-    $default  reduce using rule 52 (SimpleExpr)
-
-    ANDToken  go to state 107
-    OP4Token  go to state 108
-
-
-state 128
-
-   51 SimpleExpr: SimpleExpr OP3Token Term .
-   55 Term: Term . OP4Token Term
-   56     | Term . ANDToken Term
-
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
-
-    $default  reduce using rule 51 (SimpleExpr)
-
-    ANDToken  go to state 107
-    OP4Token  go to state 108
-
-
-state 129
-
-   50 Expr: SimpleExpr OP2Token SimpleExpr .
-   51 SimpleExpr: SimpleExpr . OP3Token Term
-   52           | SimpleExpr . ORToken Term
-
-    OR   shift, and go to state 100
-    OP3  shift, and go to state 101
+    OR   shift, and go to state 97
+    OP3  shift, and go to state 98
 
     $default  reduce using rule 50 (Expr)
 
-    ORToken   go to state 102
-    OP3Token  go to state 103
+
+state 116
+
+   52 SimpleExpr: SimpleExpr OR Term .
+   55 Term: Term . OP4 Term
+   56     | Term . AND Term
+
+    AND  shift, and go to state 99
+    OP4  shift, and go to state 100
+
+    $default  reduce using rule 52 (SimpleExpr)
 
 
-state 130
+state 117
 
-   55 Term: Term . OP4Token Term
-   56     | Term . ANDToken Term
-   56     | Term ANDToken Term .
+   51 SimpleExpr: SimpleExpr OP3 Term .
+   55 Term: Term . OP4 Term
+   56     | Term . AND Term
 
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
+    AND  shift, and go to state 99
+    OP4  shift, and go to state 100
 
-    AND       [reduce using rule 56 (Term)]
-    OP4       [reduce using rule 56 (Term)]
+    $default  reduce using rule 51 (SimpleExpr)
+
+
+state 118
+
+   55 Term: Term . OP4 Term
+   56     | Term . AND Term
+   56     | Term AND Term .
+
     $default  reduce using rule 56 (Term)
 
-    ANDToken  go to state 107
-    OP4Token  go to state 108
 
+state 119
 
-state 131
+   55 Term: Term . OP4 Term
+   55     | Term OP4 Term .
+   56     | Term . AND Term
 
-   55 Term: Term . OP4Token Term
-   55     | Term OP4Token Term .
-   56     | Term . ANDToken Term
-
-    AND  shift, and go to state 105
-    OP4  shift, and go to state 106
-
-    AND       [reduce using rule 55 (Term)]
-    OP4       [reduce using rule 55 (Term)]
     $default  reduce using rule 55 (Term)
 
-    ANDToken  go to state 107
-    OP4Token  go to state 108
 
-
-state 132
-
-   64 ParamList: '(' Expr . CommaExpr_Repeat ')'
-
-    ','  shift, and go to state 143
-
-    $default  reduce using rule 66 (CommaExpr_Repeat)
-
-    CommaExpr_Repeat  go to state 144
-
-
-state 133
+state 120
 
    36 Stat: REPEAT StatList UNTIL Expr .
 
     $default  reduce using rule 36 (Stat)
 
 
-state 134
+state 121
 
-   37 Stat: VAL '(' PARAMSTR '(' . Expr ')' ',' IDToken ')'
+   37 Stat: VAL '(' PARAMSTR '(' . Expr ')' ',' ID ')'
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
 
-    Expr           go to state 145
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    Expr        go to state 132
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
-state 135
+state 122
 
    35 Stat: WHILE Expr DO Stat .
 
     $default  reduce using rule 35 (Stat)
 
 
-state 136
+state 123
 
    46 CommaExprString_Repeat: ',' . Expr CommaExprString_Repeat
-   47                       | ',' . StringToken CommaExprString_Repeat
+   47                       | ',' . STRING CommaExprString_Repeat
 
-    ID       shift, and go to state 64
-    STRING   shift, and go to state 116
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
+    ID       shift, and go to state 63
+    STRING   shift, and go to state 133
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
 
-    Expr           go to state 146
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    StringToken    go to state 147
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    Expr        go to state 134
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
 
 
-state 137
+state 124
+
+   45 WritelnPList: '(' STRING CommaExprString_Repeat . ')'
+
+    ')'  shift, and go to state 135
+
+
+state 125
 
    44 WritelnPList: '(' Expr CommaExprString_Repeat . ')'
 
-    ')'  shift, and go to state 148
+    ')'  shift, and go to state 136
 
 
-state 138
-
-   45 WritelnPList: '(' StringToken CommaExprString_Repeat . ')'
-
-    ')'  shift, and go to state 149
-
-
-state 139
+state 126
 
    30 SemicStat_Repeat: ';' Stat SemicStat_Repeat .
 
     $default  reduce using rule 30 (SemicStat_Repeat)
 
 
-state 140
+state 127
 
-   24 FormalParams: VAR IDList ':' IDToken .
+   24 FormalParams: VAR IDList ':' ID .
 
     $default  reduce using rule 24 (FormalParams)
 
 
-state 141
+state 128
 
    22 SemicFormalParams_Repeat: ';' FormalParams SemicFormalParams_Repeat .
 
     $default  reduce using rule 22 (SemicFormalParams_Repeat)
 
 
-state 142
+state 129
+
+   65 CommaExpr_Repeat: ',' . Expr CommaExpr_Repeat
+
+    ID       shift, and go to state 63
+    REALLIT  shift, and go to state 64
+    INTLIT   shift, and go to state 65
+    OP3      shift, and go to state 66
+    NOT      shift, and go to state 67
+    '('      shift, and go to state 68
+
+    Expr        go to state 137
+    SimpleExpr  go to state 70
+    Term        go to state 71
+    Factor      go to state 72
+
+
+state 130
+
+   64 ParamList: '(' Expr CommaExpr_Repeat . ')'
+
+    ')'  shift, and go to state 138
+
+
+state 131
 
    33 Stat: IF Expr THEN Stat ELSE . Stat
 
-    BEGIN_token  shift, and go to state 29
-    IF           shift, and go to state 42
-    REPEAT       shift, and go to state 43
-    VAL          shift, and go to state 44
-    WHILE        shift, and go to state 45
-    WRITELN      shift, and go to state 46
-    ID           shift, and go to state 4
+    BEGIN_token  shift, and go to state 28
+    IF           shift, and go to state 41
+    REPEAT       shift, and go to state 42
+    VAL          shift, and go to state 43
+    WHILE        shift, and go to state 44
+    WRITELN      shift, and go to state 45
+    ID           shift, and go to state 46
 
     $default  reduce using rule 41 (IDAssignExpr_Optional)
 
     CompStat               go to state 47
-    Stat                   go to state 150
+    Stat                   go to state 139
     IDAssignExpr_Optional  go to state 50
-    IDToken                go to state 51
 
 
-state 143
+state 132
 
-   65 CommaExpr_Repeat: ',' . Expr CommaExpr_Repeat
+   37 Stat: VAL '(' PARAMSTR '(' Expr . ')' ',' ID ')'
 
-    ID       shift, and go to state 64
-    REALLIT  shift, and go to state 65
-    INTLIT   shift, and go to state 66
-    OP3      shift, and go to state 67
-    NOT      shift, and go to state 68
-    '('      shift, and go to state 69
-
-    Expr           go to state 151
-    SimpleExpr     go to state 71
-    Term           go to state 72
-    Factor         go to state 73
-    IDToken        go to state 74
-    RealLitToken   go to state 75
-    IntLitToken    go to state 76
-    IDCallToken    go to state 77
-    UnaryNOTToken  go to state 78
-    UnaryOP3Token  go to state 79
+    ')'  shift, and go to state 140
 
 
-state 144
+state 133
 
-   64 ParamList: '(' Expr CommaExpr_Repeat . ')'
+   47 CommaExprString_Repeat: ',' STRING . CommaExprString_Repeat
 
-    ')'  shift, and go to state 152
+    ','  shift, and go to state 123
 
+    $default  reduce using rule 48 (CommaExprString_Repeat)
 
-state 145
-
-   37 Stat: VAL '(' PARAMSTR '(' Expr . ')' ',' IDToken ')'
-
-    ')'  shift, and go to state 153
+    CommaExprString_Repeat  go to state 141
 
 
-state 146
+state 134
 
    46 CommaExprString_Repeat: ',' Expr . CommaExprString_Repeat
 
-    ','  shift, and go to state 136
+    ','  shift, and go to state 123
 
     $default  reduce using rule 48 (CommaExprString_Repeat)
 
-    CommaExprString_Repeat  go to state 154
+    CommaExprString_Repeat  go to state 142
 
 
-state 147
+state 135
 
-   47 CommaExprString_Repeat: ',' StringToken . CommaExprString_Repeat
+   45 WritelnPList: '(' STRING CommaExprString_Repeat ')' .
 
-    ','  shift, and go to state 136
-
-    $default  reduce using rule 48 (CommaExprString_Repeat)
-
-    CommaExprString_Repeat  go to state 155
+    $default  reduce using rule 45 (WritelnPList)
 
 
-state 148
+state 136
 
    44 WritelnPList: '(' Expr CommaExprString_Repeat ')' .
 
     $default  reduce using rule 44 (WritelnPList)
 
 
-state 149
-
-   45 WritelnPList: '(' StringToken CommaExprString_Repeat ')' .
-
-    $default  reduce using rule 45 (WritelnPList)
-
-
-state 150
-
-   33 Stat: IF Expr THEN Stat ELSE Stat .
-
-    $default  reduce using rule 33 (Stat)
-
-
-state 151
+state 137
 
    65 CommaExpr_Repeat: ',' Expr . CommaExpr_Repeat
 
-    ','  shift, and go to state 143
+    ','  shift, and go to state 129
 
     $default  reduce using rule 66 (CommaExpr_Repeat)
 
-    CommaExpr_Repeat  go to state 156
+    CommaExpr_Repeat  go to state 143
 
 
-state 152
+state 138
 
    64 ParamList: '(' Expr CommaExpr_Repeat ')' .
 
     $default  reduce using rule 64 (ParamList)
 
 
-state 153
+state 139
 
-   37 Stat: VAL '(' PARAMSTR '(' Expr ')' . ',' IDToken ')'
+   33 Stat: IF Expr THEN Stat ELSE Stat .
 
-    ','  shift, and go to state 157
+    $default  reduce using rule 33 (Stat)
 
 
-state 154
+state 140
+
+   37 Stat: VAL '(' PARAMSTR '(' Expr ')' . ',' ID ')'
+
+    ','  shift, and go to state 144
+
+
+state 141
+
+   47 CommaExprString_Repeat: ',' STRING CommaExprString_Repeat .
+
+    $default  reduce using rule 47 (CommaExprString_Repeat)
+
+
+state 142
 
    46 CommaExprString_Repeat: ',' Expr CommaExprString_Repeat .
 
     $default  reduce using rule 46 (CommaExprString_Repeat)
 
 
-state 155
-
-   47 CommaExprString_Repeat: ',' StringToken CommaExprString_Repeat .
-
-    $default  reduce using rule 47 (CommaExprString_Repeat)
-
-
-state 156
+state 143
 
    65 CommaExpr_Repeat: ',' Expr CommaExpr_Repeat .
 
     $default  reduce using rule 65 (CommaExpr_Repeat)
 
 
-state 157
+state 144
 
-   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' . IDToken ')'
+   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' . ID ')'
 
-    ID  shift, and go to state 4
-
-    IDToken  go to state 158
+    ID  shift, and go to state 145
 
 
-state 158
+state 145
 
-   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' IDToken . ')'
+   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' ID . ')'
 
-    ')'  shift, and go to state 159
+    ')'  shift, and go to state 146
 
 
-state 159
+state 146
 
-   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' IDToken ')' .
+   37 Stat: VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' .
 
     $default  reduce using rule 37 (Stat)

@@ -18,6 +18,11 @@
 #define DEBUG_STATLIST 0
 #define DEBUG_MAKENODE 0
 
+typedef struct {
+	char* string;
+	int line;
+	int col;
+} tokenInfo;
 
 typedef enum {
 	ProgType, ProgBlockType, VarPartType, VarDeclarationListType, VarDeclarationType, IDListType, CommaIDListType, FuncPartType, 
@@ -43,6 +48,8 @@ int errorCounter;
 int printTree;
 int printSymbolTable;
 
+// function used to crceate and store the string, line and col of a token
+tokenInfo* makeTokenInfo(char* str, int l, int c);
 
 /*
  * AST creation and deletion functions
