@@ -89,6 +89,8 @@ char* getUnaryOPStr(char* str);
 
 char* getOPStr(char* str);
 
+void removeCascadingEmptyStalists(node* cur_node);
+
 #endif
 
 

@@ -123,9 +123,48 @@ FuncBlock: VarPart StatPart															{$$ = makenode(FuncBlockType, $1, $2, 
 
 StatPart: CompStat 																	{$$ = $1;} ;
 
-CompStat: BEGIN_token StatList END													{$$ = makenode(CompStatType, $2, NULL, NULL);} ;
+CompStat: BEGIN_token StatList END													{
+																						$$ = makenode(CompStatType, $2, NULL, NULL);
 
-StatList: Stat SemicStat_Repeat 													{$$ = makenode(StatListType, $1, $2, NULL);} ;
+																						/*
+																						// failed attempt
+																						if($2 != NULL && ($2)->field1 != NULL && ($2)->field2 != NULL )
+																							$$ = $2;
+
+																						else if($2 != NULL && ($2)->field1 != NULL && ($2)->field2 == NULL)
+																							$$ = $2;
+
+																						else if($2 != NULL && ($2)->field1 == NULL && ($2)->field2 != NULL)
+																							$$ = $2;
+																						
+																						//implicit
+																						//else if($2 != NULL && ($2)->field1 == NULL && ($2)->field2 == NULL)
+																						//	$$ = makenode(CompStatType, NULL, NULL, NULL);
+																						
+																						else
+																							$$ = NULL;
+																						*/
+																						
+																					} ;
+StatList: Stat SemicStat_Repeat 													{
+																						$$ = makenode(StatListType, $1, $2, NULL);
+
+																						/*
+																						// failed attempt
+																						if( $1 != NULL && $2 != NULL )
+																							$$ = makenode(StatListType, $1, $2, NULL);
+
+																						else if( $1 != NULL && $2 == NULL )
+																							$$ = $1;
+
+																						else if( $1 == NULL && $2 != NULL )
+																							$$ = $2;
+																						
+																						else
+																							$$ = NULL;
+																						*/
+
+																					} ;
 
 SemicStat_Repeat: ';' Stat SemicStat_Repeat 										{
 																						if($3 != NULL)
@@ -205,6 +244,8 @@ int main(int argc, char** args){
 
 	yyparse();
 	
+	removeCascadingEmptyStalists(root);
+
 	// terminate program if any errors were found
 	if(errorCounter)
 		return 0;

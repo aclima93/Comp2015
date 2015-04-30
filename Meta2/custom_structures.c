@@ -557,3 +557,50 @@ char* getOPStr(char* str){
 	}
 }
 
+void removeCascadingEmptyStalists(node* cur_node){
+
+	if( cur_node == NULL || isLeaf(cur_node) )
+		return ;
+
+	if (cur_node->type_of_node == StatListType){
+
+		node* child1 = cur_node->field1;
+		node* child2 = cur_node->field2;
+		node* child3 = cur_node->field3;
+		
+		if( getNodeDepth(child1) && child1->field1 == NULL && child1->field2 == NULL && child1->field3 == NULL ){
+
+			//printf("Limpei 1\n");
+
+			freeNode(cur_node->field1); 
+			cur_node->field1 = NULL;
+		}
+		else{
+			removeCascadingEmptyStalists(cur_node->field1);
+		}
+
+		if( getNodeDepth(child2) && child2->field1 == NULL && child2->field2 == NULL && child2->field3 == NULL ){
+
+			//printf("Limpei 2\n");
+
+			freeNode(cur_node->field2); 
+			cur_node->field2 = NULL;
+		}
+		else{
+			removeCascadingEmptyStalists(cur_node->field2);
+		}
+
+		if( getNodeDepth(child3) && child3->field1 == NULL && child3->field2 == NULL && child3->field3 == NULL ){
+
+			//printf("Limpei 3\n");
+
+			freeNode(cur_node->field3); 
+			cur_node->field3 = NULL;
+		}
+		else{
+			removeCascadingEmptyStalists(cur_node->field3);
+		}
+
+	}
+}
+
