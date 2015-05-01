@@ -1,10 +1,10 @@
 program gcd(output);
 var a,b: integer;
-c,d: float;
-function teste:float; forward;
+c,d: real;
+function teste:real; forward;
 function teste;
-var a,b:integer;
-c,d:float;
+var a, b:integer;
+c, d: real;
 	begin
 		while b > 0  do
 				if a > b then

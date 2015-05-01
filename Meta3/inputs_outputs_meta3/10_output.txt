@@ -1,26 +1,3 @@
-===== Outer Symbol Table =====
-boolean	_type_	constant	_boolean_
-integer	_type_	constant	_integer_
-real	_type_	constant	_real_
-false	_boolean_	constant	_false_
-true	_boolean_	constant	_true_
-paramcount	_function_
-program	_program_
-
-===== Function Symbol Table =====
-paramcount	_integer_	return
-
-===== Program Symbol Table =====
-a	_integer_
-b	_integer_
-a	_integer_
-b	_integer_
-c	_integer_
-d	_integer_
-e	_integer_
-x	
-y	
-z	
-s	_real_
-f	_real_
-g	_real_
+Line 4, col 4: Symbol a already defined
+Line 4, col 7: Symbol b already defined
+Line 5, col 13: Symbol string not defined

@@ -15,7 +15,10 @@
 
 //#define DEBUG_WALKNODES 0
 #define INSERTION_DEBUG 0
+#define LOOKUP_DEBUG 0
 
+
+// don't change these
 #define DEFINED 1
 #define NOT_DEFINED 0
 
@@ -110,7 +113,9 @@ char* strlwr(char* str);
  * Error printing functions
  */
 
- void printErrorLineCol(int l, int c);
+void checkErrorType(node* cur_node);
+
+void printErrorLineCol(int l, int c);
 
 void printTypeError(char* type);
 

@@ -58,6 +58,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
+
+			checkErrorType(cur_node->field2);
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
 			break;
 
@@ -86,8 +89,16 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 					char* type_str = cur_declaration_type->field1;
 
 					s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope);
+					lookup_result = lookupSymbol(s, cur_scope);
 
-					insertSymbol(s, cur_scope);
+					if (lookup_result == NULL) {
+						insertSymbol(s, cur_scope);
+					}
+					else {
+						printErrorLineCol(variable->line, variable->col);
+						printSymbolAlreadyDefinedError(name);
+					}
+
 				}
 
 			}
@@ -150,14 +161,10 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			else {
 
 				lookup_result->isDefined = DEFINED;
-				//insertSymbol(s, cur_scope);
 
-				// criar tabela de simbolos (scope) para a nova funcao
-				//cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
-
-				//insertSymbol(makeSymbol(IDNode->field1, _NULL_, returnFlag, NULL, DEFINED), cur_scope);
-				printf("\nEstou aqui");
-				printSymbol(lookup_result);
+				// nao e preciso criar o simbolo que representa a tabela, nem a tabela, porque assumimos que ja foram declarados, apenas falta definir
+			
+				//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 				walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 			}
 
@@ -223,6 +230,18 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, NULLFlag);
 			break;
 
+		case IDType:
+
+			s = makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, cur_scope);
+			lookup_result = lookupSymbol(s, cur_scope);
+
+			if (lookup_result == NULL) {
+				printErrorLineCol(cur_node->line, cur_node->col);
+				printSymbolNotDefinedError(cur_node->field1);
+			}
+
+			break;
+
 		case FuncIdentType:
 		case FuncHeadingType:
 		case ProgType:
@@ -251,7 +270,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case ExprListType:
 		case DoubleType:
 		case IntType:
-		case IDType:
 		case StringType:
 		case CallType:
 		case UnaryOPType:
@@ -419,17 +437,18 @@ void printSymbolDebug(symbol* node) {
 
 symbol* lookupSymbol(symbol* s, table* t){
 
-	symbol* node = tfind(&s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found
+	void* node = tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found 
 	if (node == NULL)
 		return NULL;
 	else{
 
-		printf("Searching\n");
-		printSymbolDebug(s);
-		printf("Got\n");
-		printSymbolDebug(node);
-
-		return node;
+		if(LOOKUP_DEBUG){
+			printf("Searching\n");
+			printSymbolDebug(s);
+			printf("Got\n");
+			printSymbolDebug(node);
+		}
+		return (*(symbol**)node);
 	}
 }
 
@@ -493,6 +512,19 @@ char* strlwr(char* str){
 	return lowered;
 }
 
+/*
+ * Error functions
+ */
+
+void checkErrorType(node* cur_node) {
+
+	symbol* lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, STroot), STroot);
+
+	if (lookup_result == NULL) {
+		printErrorLineCol(cur_node->line, cur_node->col);
+		printSymbolNotDefinedError(cur_node->field1);
+	}
+}
 
 void printErrorLineCol(int l, int c) {
 	semanticErrorCounter++;

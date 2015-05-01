@@ -570,7 +570,7 @@ tokenInfo* makeTokenInfo(char* str, int l, int c){
 	
 	t->string = strdup(str);
 	t->line = l;
-	t->col = c;
+	t->col = (int)(c-strlen(str));
 
 	return t;
 }
