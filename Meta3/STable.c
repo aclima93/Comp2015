@@ -10,17 +10,17 @@ int createSymbolTable(node* ASTroot) {
 	// tabela do outer scope
 	STroot = makeTable(outerTable);
 
-	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED), STroot);
-	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_", DEFINED), STroot);
-	insertSymbol(makeSymbol("real", _type_, constantFlag, "_real_", DEFINED), STroot);
-	insertSymbol(makeSymbol("false", _boolean_, constantFlag, "_false_", DEFINED), STroot);
-	insertSymbol(makeSymbol("true", _boolean_, constantFlag, "_true_", DEFINED), STroot);
-	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL, DEFINED), STroot);
-	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED), STroot);
+	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_", DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("real", _type_, constantFlag, "_real_", DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("false", _boolean_, constantFlag, "_false_", DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("true", _boolean_, constantFlag, "_true_", DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL, DEFINED, STroot), STroot);
+	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED, STroot), STroot);
 
 	// tabela da funcao paramcount
 	table* paramcount_scope = insertChildTable(STroot, makeTable(functionTable));
-	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED), paramcount_scope);
+	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED, paramcount_scope), paramcount_scope);
 
 	// tabela do program
 	table* program_scope = insertChildTable(STroot, makeTable(programTable));
@@ -85,7 +85,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				if (cur_declaration_type != NULL) {
 					char* type_str = cur_declaration_type->field1;
 
-					s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED);
+					s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope);
 
 					insertSymbol(s, cur_scope);
 				}
@@ -105,7 +105,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
 			lookup_result = lookupSymbol(s, cur_scope);
 
 			if (lookup_result == NULL) {
@@ -118,7 +118,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				returnType = temp->field3;
 
-				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
@@ -140,22 +140,25 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, DEFINED);
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
 			lookup_result = lookupSymbol(s, cur_scope);
 
 			if (lookup_result == NULL) {
 
-				insertSymbol(s, cur_scope);
-
-				// criar tabela de simbolos (scope) para a nova funcao
-				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
-
-				insertSymbol(makeSymbol(IDNode->field1, _NULL_, returnFlag, NULL, DEFINED), cur_scope);
-
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+				//imprimir erro
 			}
 			else {
-				//imprimir erro
+
+				lookup_result->isDefined = DEFINED;
+				//insertSymbol(s, cur_scope);
+
+				// criar tabela de simbolos (scope) para a nova funcao
+				//cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
+
+				//insertSymbol(makeSymbol(IDNode->field1, _NULL_, returnFlag, NULL, DEFINED), cur_scope);
+				printf("\nEstou aqui");
+				printSymbol(lookup_result);
+				walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 			}
 
 			break;
@@ -175,7 +178,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
 			lookup_result = lookupSymbol(s, cur_scope);
 
 			if (lookup_result == NULL) {
@@ -190,7 +193,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				returnType = temp->field3;
 
-				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
@@ -204,7 +207,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				returnType = temp->field3;
 
-				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
@@ -279,7 +282,7 @@ PredefType getPredefTypeFromStr(char* t) {
 
 char* getPredefTypeStr(PredefType t) {
 	char* str[] = {
-		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", ""
+		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "This cannot show!"
 	};
 	return str[t];
 }
@@ -369,7 +372,7 @@ void walker(const void *node, const VISIT which, const int depth) {
    }
 }
 
-symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d){
+symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* scope){
 
 	symbol* s = malloc(sizeof(symbol));
 
@@ -378,6 +381,7 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d){
     s->flag = f;
     s->value = v;
     s->isDefined = d;
+	s->declarationScope = scope;
 
     return s;
 }
@@ -402,8 +406,31 @@ void insertSymbol(symbol* s, table* t){
 	
 }
 
+void printSymbolDebug(symbol* node) {
+	printf("No %p\n", node);
+
+	printf("%s\n", node->name);
+	printf("%s\n", getPredefTypeStr(node->type));
+	printf("%s\n", getPredefFlagStr(node->flag));
+	printf("%s\n", node->value);
+	printf("%d\n", node->isDefined);
+	printf("%p\n", node->declarationScope);
+}
+
 symbol* lookupSymbol(symbol* s, table* t){
-	return tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found
+
+	symbol* node = tfind(&s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found
+	if (node == NULL)
+		return NULL;
+	else{
+
+		printf("Searching\n");
+		printSymbolDebug(s);
+		printf("Got\n");
+		printSymbolDebug(node);
+
+		return node;
+	}
 }
 
 void printSymbol(symbol* s){

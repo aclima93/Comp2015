@@ -20,6 +20,24 @@
 #define NOT_DEFINED 0
 
 /*
+ * Tables
+ */
+
+typedef enum {
+    outerTable, programTable, functionTable
+} PredefTable;
+
+typedef struct {
+    PredefTable type;
+    void* symbol_variables;
+    void* childrenTableList;
+    void* nextSiblingTable;
+    void* parentTable;
+} table;
+
+table* STroot;
+
+/*
  * Symbols
  */
 
@@ -37,25 +55,8 @@ typedef struct {
     PredefFlag flag;
     char* value;
     int isDefined;
+    table* declarationScope;
 } symbol;
-
-/*
- * Tables
- */
-
-typedef enum {
-    outerTable, programTable, functionTable
-} PredefTable;
-
-typedef struct {
-    PredefTable type;
-    void* symbol_variables;
-    void* childrenTableList;
-    void* nextSiblingTable;
-    void* parentTable;
-} table;
-
-table* STroot;
 
 int semanticErrorCounter;
 
@@ -89,7 +90,7 @@ int insert_compare(const void* l, const void* r);
 
 void walker(const void *node, const VISIT which, const int depth);
 
-symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d);
+symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* scope);
 
 void insertSymbol(symbol* s, table* t);
 
