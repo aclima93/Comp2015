@@ -127,9 +127,9 @@ void printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* e
 
 void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType);
 
-void printOperatorTypeError(char* tokenStr, char* type);
+void printOperatorTypeError(char* op, char* type);
 
-void printOperatorTypesError(char* leftTokenStr, char* righttTokenStr, char* type);
+void printOperatorTypesError(char* op, char* leftType, char* rightType)
 
 void printSymbolAlreadyDefinedError(char* tokenStr);
 

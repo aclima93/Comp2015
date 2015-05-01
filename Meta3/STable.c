@@ -242,6 +242,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			break;
 
+
+		case ExprType:
+		case SimpleExprType: //Operator <token> cannot be applied to type <type>
+		case FactorType:
+		case OPTermListType:
+
+
 		case FuncIdentType:
 		case FuncHeadingType:
 		case ProgType:
@@ -256,10 +263,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case ValParamStatType:
 		case AssignStatType:
 		case WriteLnStatType:
-		case ExprType:
-		case SimpleExprType: //Operator <token> cannot be applied to type <type>
-		case FactorType:
-		case OPTermListType:
 		case StatListType:
 		case FuncParamsListType2:
 		case FuncDeclarationListType:
@@ -443,7 +446,7 @@ symbol* lookupSymbol(symbol* s, table* t){
 	else{
 
 		if(LOOKUP_DEBUG){
-			printf("Searching\n");
+			printf("\n--------\nSearching\n");
 			printSymbolDebug(s);
 			printf("Got\n");
 			printSymbolDebug(node);
@@ -516,6 +519,141 @@ char* strlwr(char* str){
  * Error functions
  */
 
+PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType) {
+ 	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
+ 		// integer/real with integer/real
+		if ( (leftType == _integer_ && leftType == _integer_)
+			return _integer_;
+		else
+			return _real_;
+ 	}
+ 	else if (strcasecmp(op, "/") == 0)
+ 		return _real_;
+
+ 	else if (strcasecmp(op, "div") == 0 || strcasecmp(op, "mod") == 0) {
+ 		return _integer_;
+ 	}
+ 	// "<>"|"<="|">="|"<"|">"|"="
+ 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
+ 		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0  
+ 		  || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
+ 			return _boolean_;
+ 	}
+
+ 	return NULL;
+}
+
+ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
+
+ 	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0 || strcasecmp(op, "/") == 0) {
+ 		// integer/real with integer/real
+ 		if ( (leftType == _integer_ || leftType == _real_) && (rightType == _integer_ || rightType == _real_) ) {
+ 			return 1;
+ 		}
+ 	}
+ 	else if (strcasecmp(op, "div") == 0 || strcasecmp(op, "mod") == 0) {
+ 		if ( (leftType == _integer_ ) && (rightType == _integer_) {
+ 			return 1;
+ 		}
+ 	}
+ 	// "<>"|"<="|">="|"<"|">"|"="
+ 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
+ 		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
+ 		if ((leftType == _integer_  && rightType == _integer_) || leftType == _real_  && rightType == _real_) {
+ 			return 1;
+ 		}
+ 	}
+ 	else if ((strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0) ) {
+ 		if (leftType ==  rightType) {
+ 			return 1;
+ 		}
+ 	}
+
+ 	return 0;
+ }
+
+PredefType getPredefTypeOfExpr(node* cur_node){
+
+	if( cur_node->field1 != NULL && cur_node ->field3 != NULL ){
+		
+		PredefType leftType = getPredefTypeOfSimpleExpr(cur_node->field1);
+		PredefType rightType = getPredefTypeOfSimpleExpr(cur_node->field3);
+
+		node* op = cur_node->field2;
+
+		if( !(isValidOperation(op->field1, leftType, rightType))){
+
+			//imprimir erro
+			printErrorLineCol(op->line, op->col);
+			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+		}
+
+
+		return outcomeOfOperation(op->field1, leftType, rightType); // or rightType, because they are equal
+
+	}
+	else{
+		// retorna o tipo da SimpleExpr que tem
+		return getPredefTypeOfSimpleExpr(cur_node->field2);
+	}
+}
+
+PredefType getPredefTypeOfSimpleExpr(node* cur_node){
+
+	node* op = cur_node->field2;
+	PredefType leftType;
+	PredefType rightType;
+	
+	if( cur_node->field1 != NULL ){
+		
+		leftType = getPredefTypeOfSimpleExpr(cur_node->field1);
+		rightType = getPredefTypeOfSimpleExpr(cur_node->field3);
+
+		if( leftType != rightType ){
+
+			//imprimir erro
+			printErrorLineCol(op->line, op->col);
+			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+			return NULL;
+		}
+
+		if()
+		return leftType; // or rightType, because they are equal
+
+	}
+	else{
+		//só tem um operando à direita, é uma operação unária
+
+		// retorna o tipo da Term que tem
+		rightType = getPredefTypeOfTerm(cur_node->field3);
+
+		if( !( (strcmp(op->field1, "+") == 0 || strcmp(op->field1, "-") == 0) && (rightType == _integer_ || rightType == _real_) ) ){
+
+			//imprime erro porque o tipo do term não é real ou integer e o op não é um + ou um -
+			printErrorLineCol(op->line, op->col);
+			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
+			return NULL;
+		}
+		else if( !( strcmp(op->field1, "!") == 0 && rightType == _boolean_ ) ){
+
+			//imprime erro porque ! só pode ser aplicado a booleanos
+			printErrorLineCol(op->line, op->col);
+			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
+			return NULL;
+		}
+
+		return rightType;
+	}
+}
+
+PredefType getPredefTypeOfTerm(node* cur_node){
+	
+}
+
+PredefType getPredefTypeOfFactor(node* cur_node){
+	
+}
+
 void checkErrorType(node* cur_node) {
 
 	symbol* lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, STroot), STroot);
@@ -551,12 +689,12 @@ void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char
 	printf("Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
 }
 
-void printOperatorTypeError(char* tokenStr, char* type) {
-	printf("Operator %s cannot be applied to type %s\n", tokenStr, type);
+void printOperatorTypeError(char* op, char* type) {
+	printf("Operator %s cannot be applied to type %s\n", op, type);
 }
 
-void printOperatorTypesError(char* leftTokenStr, char* righttTokenStr, char* type) {
-	printf("Operator %s cannot be applied to types %s, %s\n", leftTokenStr, righttTokenStr, type);
+void printOperatorTypesError(char* op, char* leftType, char* rightType) {
+	printf("Operator %s cannot be applied to types %s, %s\n", type, leftType, rightType);
 }
 
 void printSymbolAlreadyDefinedError(char* tokenStr) {

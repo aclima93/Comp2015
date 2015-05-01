@@ -6,15 +6,6 @@ var a1, b1, c1 :integer;
 
 function myFunc: integer; forward;
 
-function myFunc2;
-begin
-end;
-
-function myFunc;
-var troblesome: integer;
-begin
-end;
-
 function myFunction: integer;
 begin
 end;
@@ -25,6 +16,16 @@ end;
 
 function myFunction2(num1, num2: integer): integer;
 begin
+end;
+
+function myFunc;
+var troblesome: integer;
+begin
+end;
+
+function myFunc2;
+begin
+	(* esta função não vai dar erro pois não é declarada previamente *)
 end;
 
 begin
