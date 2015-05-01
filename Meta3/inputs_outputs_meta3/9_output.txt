@@ -13,13 +13,18 @@ paramcount	_integer_	return
 ===== Program Symbol Table =====
 a	_integer_
 b	_integer_
-c	(null)
-d	(null)
+c	
+d	
 max	_function_
 min	_function_
-result	_integer_
-max	_function_
-result	_integer_
 
 ===== Function Symbol Table =====
-max	(null)
+max	_integer_	return
+num1	_integer_	param
+num2	_integer_	param
+
+===== Function Symbol Table =====
+min	_integer_	return
+num3	_integer_	param
+num4	_integer_	param
+result	_integer_

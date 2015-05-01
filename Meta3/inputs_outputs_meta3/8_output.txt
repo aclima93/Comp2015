@@ -21,6 +21,19 @@ myfunction1	_function_
 myfunction2	_function_
 
 ===== Function Symbol Table =====
+myfunc	_integer_	return
+
+===== Function Symbol Table =====
+myfunc2		return
+
+===== Function Symbol Table =====
+myfunction	_integer_	return
+
+===== Function Symbol Table =====
+myfunction1	_integer_	return
+num1	_integer_	param
+
+===== Function Symbol Table =====
 myfunction2	_integer_	return
 num1	_integer_	param
 num2	_integer_	param

@@ -18,9 +18,9 @@ b	_integer_
 c	_integer_
 d	_integer_
 e	_integer_
-x	(null)
-y	(null)
-z	(null)
+x	
+y	
+z	
 s	_real_
 f	_real_
 g	_real_

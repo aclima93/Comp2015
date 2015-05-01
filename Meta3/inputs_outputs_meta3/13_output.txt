@@ -13,14 +13,14 @@ paramcount	_integer_	return
 ===== Program Symbol Table =====
 a	_integer_
 b	_integer_
-c	(null)
-d	(null)
+c	
+d	
 teste	_function_
 
 ===== Function Symbol Table =====
-teste	(null)	return
+teste		return
 a	_integer_	param
 a	_integer_
 b	_integer_
-c	(null)
-d	(null)
+c	
+d	

@@ -3,15 +3,15 @@ var a, b: integer;
 c: string;
 d: double;
 function max(num1, num2: integer): integer; forward;
-function min(num1, num2: integer): integer;
+function min(num3, num4: integer): integer;
 var
 	result: integer;
 begin
-	if num1 < num2
+	if num3 < num4
 	then
-		result := num1
+		result := num4
 	else
-		result := num2;
+		result := num3;
 	min := result;
 end;
 function max;

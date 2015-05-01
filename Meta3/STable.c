@@ -97,6 +97,37 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			break;
 
 
+		case FuncDeclarationType:
+			// declara a função que vem em funcHeading mas marca como não definida
+
+			; //very important voodoo magic, because switch case can't start with declaration
+
+			// adicionar funcao ao scope onde estamos
+			temp = cur_node->field1;
+			IDNode = temp->field1;
+			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
+			lookup_result = lookupSymbol(s, cur_scope);
+
+			if (lookup_result == NULL) {
+
+				// insere o símbolo que representa a tabela mas marcado como não definida
+				insertSymbol(s, cur_scope);
+
+				// criar tabela de simbolos (scope) para a nova funcao
+				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
+
+				returnType = temp->field3;
+
+				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+			}
+			else {
+				//imprimir erro
+			}
+
+			break;
+
 		case FuncDefinition2Type:
 			
 			//procura no cur_scope se a função não está declarada
@@ -119,9 +150,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
 
-				returnType = temp->field3;
-
-				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED), cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, _NULL_, returnFlag, NULL, DEFINED), cur_scope);
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
@@ -179,27 +208,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
-			}
-			else {
-				//imprimir erro
-			}
-
-			break;
-
-
-		case FuncDeclarationType:
-			// declara a função que vem em funcHeading mas marca como não definida
-
-			; //very important voodoo magic, because switch case can't start with declaration
-
-			// adicionar funcao ao scope onde estamos
-			temp = cur_node->field1;
-			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED);
-			lookup_result = lookupSymbol(s, cur_scope);
-
-			if (lookup_result == NULL) {
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 			else {
 				//imprimir erro
@@ -271,7 +279,7 @@ PredefType getPredefTypeFromStr(char* t) {
 
 char* getPredefTypeStr(PredefType t) {
 	char* str[] = {
-		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", NULL
+		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", ""
 	};
 	return str[t];
 }
