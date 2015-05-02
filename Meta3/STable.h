@@ -113,7 +113,25 @@ char* strlwr(char* str);
  * Error printing functions
  */
 
-void checkErrorType(node* cur_node);
+PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType);
+
+int isValidOperation(char* op, PredefType leftType, PredefType rightType);
+
+PredefType outcomeOfUnaryOperation(char* op, PredefType rightType);
+
+int isValidUnaryOperation(char* op, PredefType rightType);
+
+PredefType getPredefTypeOfExpr(node* cur_node, table* cur_scope);
+
+PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope);
+
+PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope);
+
+PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope);
+
+PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope);
+
+void checkErrorType(node* cur_node, table* cur_scope);
 
 void printErrorLineCol(int l, int c);
 
@@ -129,7 +147,7 @@ void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char
 
 void printOperatorTypeError(char* op, char* type);
 
-void printOperatorTypesError(char* op, char* leftType, char* rightType)
+void printOperatorTypesError(char* op, char* leftType, char* rightType);
 
 void printSymbolAlreadyDefinedError(char* tokenStr);
 

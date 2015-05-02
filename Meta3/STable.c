@@ -59,7 +59,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
 
-			checkErrorType(cur_node->field2);
+			checkErrorType(cur_node->field2, cur_scope);
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
 			break;
@@ -492,7 +492,7 @@ void printSiblings(table* cur_table){
 void printAllSymbolTables( table* root_table ){
 	
     if(INSERTION_DEBUG){
-    	printf("\n\n\n-------------LOLITOS--------------\n\n\n");
+    	printf("\n\n\n-------------LOLITOS DEBUGZITO--------------\n\n\n");
     }
 
 	printTable(root_table);
@@ -521,8 +521,9 @@ char* strlwr(char* str){
 
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType) {
  	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
+ 		
  		// integer/real with integer/real
-		if ( (leftType == _integer_ && leftType == _integer_)
+		if ( leftType == _integer_ && leftType == _integer_)
 			return _integer_;
 		else if ( (leftType == _integer_ || leftType == _real_) && (rightType == _integer_ || rightType == _real_) )
 			return _real_;
@@ -539,7 +540,7 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  			return _boolean_;
  	}
 
- 	return NULL;
+ 	return _NULL_;
 }
 
 int isValidOperation(char* op, PredefType leftType, PredefType rightType){
@@ -551,13 +552,12 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if (strcasecmp(op, "div") == 0 || strcasecmp(op, "mod") == 0) {
- 		if ( (leftType == _integer_ ) && (rightType == _integer_) {
+ 		if ( (leftType == _integer_ ) && (rightType == _integer_) ) {
  			return 1;
  		}
  	}
- 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
- 		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
- 		if ((leftType == _integer_  && rightType == _integer_) || leftType == _real_  && rightType == _real_) {
+ 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
+ 		if ((leftType == _integer_  && rightType == _integer_) || (leftType == _real_  && rightType == _real_) ) {
  			return 1;
  		}
  	}
@@ -592,12 +592,12 @@ int isValidUnaryOperation(char* op, PredefType rightType){
 	return 0;
 }
 
-PredefType getPredefTypeOfExpr(node* cur_node){
+PredefType getPredefTypeOfExpr(node* cur_node, table* cur_scope){
 
 	if( cur_node->field1 != NULL && cur_node ->field3 != NULL ){
 		
-		PredefType leftType = getPredefTypeOfNode(cur_node->field1);
-		PredefType rightType = getPredefTypeOfNode(cur_node->field3);
+		PredefType leftType = getPredefTypeOfNode(cur_node->field1, cur_scope);
+		PredefType rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
 		node* op = cur_node->field2;
 
@@ -613,11 +613,11 @@ PredefType getPredefTypeOfExpr(node* cur_node){
 	}
 	else{
 		// retorna o tipo da SimpleExpr que tem
-		return getPredefTypeOfNode(cur_node->field2);
+		return getPredefTypeOfNode(cur_node->field2, cur_scope);
 	}
 }
 
-PredefType getPredefTypeOfSimpleExpr(node* cur_node){
+PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope){
 
 	node* op = cur_node->field2;
 	PredefType leftType;
@@ -625,8 +625,8 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 	
 	if( cur_node->field1 != NULL ){
 		
-		leftType = getPredefTypeOfNode(cur_node->field1);
-		rightType = getPredefTypeOfNode(cur_node->field3);
+		leftType = getPredefTypeOfNode(cur_node->field1, cur_scope);
+		rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
 		if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
@@ -642,7 +642,7 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 		//só tem um operando à direita, é uma operação unária
 
 		// retorna o tipo da Term que tem
-		rightType = getPredefTypeOfNode(cur_node->field3);
+		rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
@@ -654,11 +654,11 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 	}
 }
 
-PredefType getPredefTypeOfTerm(node* cur_node){
+PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope){
 
 	node* op = cur_node->field2;		
-	PredefType leftType = getPredefTypeOfNode(cur_node->field1);
-	PredefType rightType = getPredefTypeOfNode(cur_node->field3);
+	PredefType leftType = getPredefTypeOfNode(cur_node->field1, cur_scope);
+	PredefType rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
 	if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
@@ -670,7 +670,7 @@ PredefType getPredefTypeOfTerm(node* cur_node){
 	return outcomeOfOperation(op->field1, leftType, rightType);
 }
 
-PredefType getPredefTypeOfFactor(node* cur_node){
+PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 	node* op = cur_node->field2;
 	PredefType leftType;
@@ -685,10 +685,15 @@ PredefType getPredefTypeOfFactor(node* cur_node){
 		// TODO 2
 		// check number of arguments and Types in ArgumentList
 
+
+		// placeholder return 
+		// return type of func
+		return _NULL_;
+
 	}
 	else{ // UnaryOPType
 
-		rightType = getPredefTypeOfNode(cur_node->field3);
+		rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
@@ -698,30 +703,46 @@ PredefType getPredefTypeOfFactor(node* cur_node){
 
 		return outcomeOfUnaryOperation(op->field1, rightType);
 	}
+
 }
 
-PredefType getPredefTypeOfNode(node* cur_node){
+PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 
 	// cur_node can be a terminal (ID, INTLIT, REALLIT, STRING ), Expr, SimpleExpr, Term, Factor
 	// resolve the underlying type and return it
 
 	if( cur_node->type_of_node == ExprType ){
-		return getPredefTypeOfExpr(cur_node);
+		return getPredefTypeOfExpr(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == SimpleExprType ){
-		return getPredefTypeOfSimpleExpr(cur_node);
+		return getPredefTypeOfSimpleExpr(cur_node, cur_scope);
 	}
 	else if ( cur_node->type_of_node == OPTermListType ){
-		return getPredefTypeOfTerm(cur_node);
+		return getPredefTypeOfTerm(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == FactorType ){
-		return getPredefTypeOfFactor(cur_node);
+		return getPredefTypeOfFactor(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == IDType ){
 
-		// check cur_scope for symbol declaration in symbol tables
-		// -- issue warning if not declared
+		// check cur_scope and upper scopes for symbol declaration in symbol tables
+		// -- issue warning if not declared in any
 		// -- else: return type in table
+
+		symbol* lookup_result = NULL;
+
+		while( cur_scope != NULL && lookup_result == NULL ){
+			lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, NULL), cur_scope);
+			cur_scope = cur_scope->parentTable; //check for outer table
+		}
+
+		if (lookup_result == NULL) {
+			printErrorLineCol(cur_node->line, cur_node->col);
+			printSymbolNotDefinedError(cur_node->field1);
+			return _NULL_;
+		}
+
+		return lookup_result->type;
 
 	}
 	else if( cur_node->type_of_node == IntType ){
@@ -731,15 +752,15 @@ PredefType getPredefTypeOfNode(node* cur_node){
 		return _real_;
 	}
 	else if( cur_node->type_of_node == StringType ){
-		return 
+		return _string_;
 	}
 
-	return NULL;
+	return _NULL_;
 }
 
-void checkErrorType(node* cur_node) {
+void checkErrorType(node* cur_node, table* cur_scope) {
 
-	symbol* lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, STroot), STroot);
+	symbol* lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, STroot), cur_scope);
 
 	if (lookup_result == NULL) {
 		printErrorLineCol(cur_node->line, cur_node->col);
@@ -777,7 +798,7 @@ void printOperatorTypeError(char* op, char* type) {
 }
 
 void printOperatorTypesError(char* op, char* leftType, char* rightType) {
-	printf("Operator %s cannot be applied to types %s, %s\n", type, leftType, rightType);
+	printf("Operator %s cannot be applied to types %s, %s\n", op, leftType, rightType);
 }
 
 void printSymbolAlreadyDefinedError(char* tokenStr) {
