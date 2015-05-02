@@ -86,13 +86,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				//get type string from current type of declarations
 				if (cur_declaration_type != NULL) {
-					char* type_str = cur_declaration_type->field1;
 
-					s = makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope);
-					lookup_result = lookupSymbol(s, cur_scope);
+					lookup_result = lookupSymbol(name, cur_scope);
 
 					if (lookup_result == NULL) {
-						insertSymbol(s, cur_scope);
+
+						char* type_str = cur_declaration_type->field1;
+						insertSymbol(makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope), cur_scope);
 					}
 					else {
 						printErrorLineCol(variable->line, variable->col);
@@ -116,13 +116,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
-			lookup_result = lookupSymbol(s, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
 				// insere o símbolo que representa a tabela mas marcado como não definida
-				insertSymbol(s, cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope), cur_scope);
 
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
@@ -151,8 +150,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
-			lookup_result = lookupSymbol(s, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
@@ -185,15 +183,11 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			s = makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, NOT_DEFINED, cur_scope);
-			lookup_result = lookupSymbol(s, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
-				//mudar estado da função para definida
-				s->isDefined = DEFINED;
-
-				insertSymbol(s, cur_scope);
+				insertSymbol(makeSymbol(IDNode->field1, _function_, NULLFlag, NULL, DEFINED, cur_scope), cur_scope);
 
 				// criar tabela de simbolos (scope) para a nova funcao
 				cur_scope = insertChildTable(cur_scope, makeTable(functionTable));
@@ -204,7 +198,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
-			else if ( !(lookup_result->isDefined) ) {
+			else if ( lookup_result->isDefined == NOT_DEFINED ) {
 
 				//mudar estado da função _existente_ para definida
 				lookup_result->isDefined = DEFINED;
@@ -232,8 +226,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case IDType:
 
-			s = makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, cur_scope);
-			lookup_result = lookupSymbol(s, cur_scope);
+			lookup_result = lookupSymbol(cur_node->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 				printErrorLineCol(cur_node->line, cur_node->col);
@@ -438,7 +431,9 @@ void printSymbolDebug(symbol* node) {
 	printf("%p\n", node->declarationScope);
 }
 
-symbol* lookupSymbol(symbol* s, table* t){
+symbol* lookupSymbol(char* key, table* t){
+
+	symbol* s = makeSymbol(key, _NULL_, NULLFlag, NULL, DEFINED, NULL);
 
 	void* node = tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found 
 	if (node == NULL)
@@ -732,7 +727,7 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 		symbol* lookup_result = NULL;
 
 		while( cur_scope != NULL && lookup_result == NULL ){
-			lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, NULL), cur_scope);
+			lookup_result = lookupSymbol(cur_node->field1, cur_scope);
 			cur_scope = cur_scope->parentTable; //check for outer table
 		}
 
@@ -760,7 +755,7 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 
 void checkErrorType(node* cur_node, table* cur_scope) {
 
-	symbol* lookup_result = lookupSymbol(makeSymbol(cur_node->field1, _NULL_, NULLFlag, NULL, DEFINED, STroot), cur_scope);
+	symbol* lookup_result = lookupSymbol(cur_node->field1, cur_scope);
 
 	if (lookup_result == NULL) {
 		printErrorLineCol(cur_node->line, cur_node->col);
