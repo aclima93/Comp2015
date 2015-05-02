@@ -113,6 +113,8 @@ char* strlwr(char* str);
  * Error printing functions
  */
 
+ int isValidWriteLnArgument(PredefType p);
+
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType);
 
 int isValidOperation(char* op, PredefType leftType, PredefType rightType);

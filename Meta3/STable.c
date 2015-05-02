@@ -251,10 +251,79 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case SimpleExprType: //Operator <token> cannot be applied to type <type>
 		case FactorType:
 		case OPTermListType:
-		
+
+			// check for type matching errors between operators and operands
 			getPredefTypeOfNode(cur_node, cur_scope);
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case IfElseStatType:
+		case WhileStatType:
+			
+			// têm de verificar se a Expr se resolve em booleano
+			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _boolean_ ){
+				// imprimir erro ?
+			}
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case RepeatStatType:
+			
+			// têm de verificar se a Expr se resolve em booleano
+			if( getPredefTypeOfNode(cur_node->field2, cur_scope) != _boolean_ ){
+				// imprimir erro ?
+			}
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case ValParamStatType:
+			
+			// tem de verificar se a Expr devolve um inteiro
+			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _integer_ ){
+				// imprimir erro ?
+			}
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case AssignStatType:
+
+			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
+			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != getPredefTypeOfNode(cur_node->field2, cur_scope) ){
+				// imprimir erro ?
+			}
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case WritelnPListType:
+
+			// tem de veificar se é um integer, real, bool ou string
+
+			; //very important voodoo magic, because switch case can't start with declaration
+
+			PredefType f1 = getPredefTypeOfNode(cur_node->field1, cur_scope);
+			PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
+			
+			if( !( isValidWriteLnArgument(f1) ) ){
+				// imprimir erro ?
+			}
+			
+			if( !( isValidWriteLnArgument(f2) ) ){
+				// imprimir erro ?
+			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
+		case ParamListType:
+		case ExprListType:
+			// TODO
+			// têm de verificar o tipo e número de parâmetros na chamada a função
 			break;
 
 		case FuncIdentType:
@@ -265,20 +334,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case ProgBlockType:
 		case FuncBlockType:
 		case StatType:
-		case IfElseStatType:
-		case RepeatStatType:
-		case WhileStatType:
-		case ValParamStatType:
-		case AssignStatType:
 		case WriteLnStatType:
 		case StatListType:
 		case FuncParamsListType2:
 		case FuncDeclarationListType:
 		case VarDeclarationListType: //Symbol <token> already defined; Symbol <token> not defined
 		case CompStatType:
-		case WritelnPListType:
-		case ParamListType:
-		case ExprListType:
 		case DoubleType:
 		case IntType:
 		case StringType:
@@ -546,6 +607,15 @@ char* strlwr(char* str){
  * Error functions
  */
 
+int isValidWriteLnArgument(PredefType p){
+
+	// WriteLn can only print these types of variables
+	if( p == _integer_ || p == _boolean_ || p == _real_ || p == _string_ ){
+		return 1;
+	}
+	return 0;
+}
+
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType) {
  	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
  		
@@ -734,6 +804,9 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 }
 
 PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
+
+	if(cur_node == NULL)
+		return _NULL_;
 
 	// cur_node can be a terminal (ID, INTLIT, REALLIT, STRING ), Expr, SimpleExpr, Term, Factor
 	// resolve the underlying type and return it
