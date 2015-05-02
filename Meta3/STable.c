@@ -596,8 +596,8 @@ PredefType getPredefTypeOfExpr(node* cur_node){
 
 	if( cur_node->field1 != NULL && cur_node ->field3 != NULL ){
 		
-		PredefType leftType = getPredefTypeOfSimpleExpr(cur_node->field1);
-		PredefType rightType = getPredefTypeOfSimpleExpr(cur_node->field3);
+		PredefType leftType = getPredefTypeOfNode(cur_node->field1);
+		PredefType rightType = getPredefTypeOfNode(cur_node->field3);
 
 		node* op = cur_node->field2;
 
@@ -613,7 +613,7 @@ PredefType getPredefTypeOfExpr(node* cur_node){
 	}
 	else{
 		// retorna o tipo da SimpleExpr que tem
-		return getPredefTypeOfSimpleExpr(cur_node->field2);
+		return getPredefTypeOfNode(cur_node->field2);
 	}
 }
 
@@ -625,8 +625,8 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 	
 	if( cur_node->field1 != NULL ){
 		
-		leftType = getPredefTypeOfSimpleExpr(cur_node->field1);
-		rightType = getPredefTypeOfTerm(cur_node->field3);
+		leftType = getPredefTypeOfNode(cur_node->field1);
+		rightType = getPredefTypeOfNode(cur_node->field3);
 
 		if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
@@ -642,7 +642,7 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 		//só tem um operando à direita, é uma operação unária
 
 		// retorna o tipo da Term que tem
-		rightType = getPredefTypeOfTerm(cur_node->field3);
+		rightType = getPredefTypeOfNode(cur_node->field3);
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
@@ -657,8 +657,8 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 PredefType getPredefTypeOfTerm(node* cur_node){
 
 	node* op = cur_node->field2;		
-	PredefType leftType = getPredefTypeOfTerm(cur_node->field1);
-	PredefType rightType = getPredefTypeOfTerm(cur_node->field3);
+	PredefType leftType = getPredefTypeOfNode(cur_node->field1);
+	PredefType rightType = getPredefTypeOfNode(cur_node->field3);
 
 	if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
@@ -688,7 +688,7 @@ PredefType getPredefTypeOfFactor(node* cur_node){
 	}
 	else{ // UnaryOPType
 
-		rightType = getPredefTypeOfFactor(cur_node->field3);
+		rightType = getPredefTypeOfNode(cur_node->field3);
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
