@@ -1,7 +1,7 @@
 program gcd(output);
 var a,b: integer;
-c,d: float;
-function teste(a:integer):float;
+c,d: real;
+function teste(e:string):real;
 	begin
 	end;
 begin

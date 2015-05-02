@@ -1,2 +1,7 @@
 Line 3, col 6: Symbol float not defined
+Line 4, col 16: Symbol a already defined
+Line 5, col 5: Symbol a already defined
+Line 5, col 7: Symbol b already defined
 Line 6, col 5: Symbol float not defined
+Line 6, col 1: Symbol c already defined
+Line 6, col 3: Symbol d already defined

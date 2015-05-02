@@ -131,7 +131,9 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope);
 
 PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope);
 
-void checkErrorType(node* cur_node, table* cur_scope);
+PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scope);
+
+symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope);
 
 void printErrorLineCol(int l, int c);
 
