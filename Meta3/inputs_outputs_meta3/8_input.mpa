@@ -25,7 +25,7 @@ end;
 
 function myFunc2;
 begin
-	(* esta função não vai dar erro pois não é declarada previamente *)
+	(* esta função vai dar erro pois não é declarada previamente *)
 end;
 
 begin

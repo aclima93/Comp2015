@@ -1,7 +1,8 @@
 program gcd(output);
 var a, b: integer;
-c: string;
-d: double;
+c: real;
+d: integer;
+i:integer;
 function max(num1, num2: integer): integer; forward;
 function min(num3, num4: integer): integer;
 var

@@ -251,7 +251,11 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case SimpleExprType: //Operator <token> cannot be applied to type <type>
 		case FactorType:
 		case OPTermListType:
+		
+			getPredefTypeOfNode(cur_node, cur_scope);
 
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+			break;
 
 		case FuncIdentType:
 		case FuncHeadingType:

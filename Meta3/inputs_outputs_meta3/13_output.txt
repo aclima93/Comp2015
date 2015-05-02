@@ -5,3 +5,4 @@ Line 5, col 7: Symbol b already defined
 Line 6, col 5: Symbol float not defined
 Line 6, col 1: Symbol c already defined
 Line 6, col 3: Symbol d already defined
+Line 17, col 17: Symbol e not defined
