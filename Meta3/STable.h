@@ -45,7 +45,7 @@ table* STroot;
  */
 
 typedef enum {
-    _boolean_, _integer_, _real_, _function_, _program_, _type_, _true_, _false_, _NULL_
+    _boolean_, _integer_, _real_, _function_, _program_, _type_, _true_, _false_, _string_, _NULL_
 } PredefType;
 
 typedef enum {

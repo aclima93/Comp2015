@@ -303,7 +303,7 @@ PredefType getPredefTypeFromStr(char* t) {
 
 char* getPredefTypeStr(PredefType t) {
 	char* str[] = {
-		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "This cannot show!"
+		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "_string_", "This cannot show!"
 	};
 	return str[t];
 }
@@ -524,7 +524,7 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  		// integer/real with integer/real
 		if ( (leftType == _integer_ && leftType == _integer_)
 			return _integer_;
-		else
+		else if ( (leftType == _integer_ || leftType == _real_) && (rightType == _integer_ || rightType == _real_) )
 			return _real_;
  	}
  	else if (strcasecmp(op, "/") == 0)
@@ -533,7 +533,6 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  	else if (strcasecmp(op, "div") == 0 || strcasecmp(op, "mod") == 0) {
  		return _integer_;
  	}
- 	// "<>"|"<="|">="|"<"|">"|"="
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
  		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0  
  		  || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
@@ -543,7 +542,7 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  	return NULL;
 }
 
- int isValidOperation(char* op, PredefType leftType, PredefType rightType){
+int isValidOperation(char* op, PredefType leftType, PredefType rightType){
 
  	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0 || strcasecmp(op, "/") == 0) {
  		// integer/real with integer/real
@@ -556,7 +555,6 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  			return 1;
  		}
  	}
- 	// "<>"|"<="|">="|"<"|">"|"="
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
  		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
  		if ((leftType == _integer_  && rightType == _integer_) || leftType == _real_  && rightType == _real_) {
@@ -570,7 +568,29 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  	}
 
  	return 0;
- }
+}
+
+PredefType outcomeOfUnaryOperation(char* op, PredefType rightType){
+
+	// because unary operators don't change the type, only the value
+	return rightType;
+}
+
+int isValidUnaryOperation(char* op, PredefType rightType){
+
+	if( strcmp(op, "+") == 0 || strcmp(op, "-") == 0 ){
+		if ( rightType == _integer_ || rightType == _real_ ){
+			return 1;
+		}
+	}
+	else if( strcmp(op, "!") == 0 ){ 
+		if( rightType == _boolean_ ){
+			return 1;
+		}
+	}
+
+	return 0;
+}
 
 PredefType getPredefTypeOfExpr(node* cur_node){
 
@@ -588,8 +608,7 @@ PredefType getPredefTypeOfExpr(node* cur_node){
 			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
 		}
 
-
-		return outcomeOfOperation(op->field1, leftType, rightType); // or rightType, because they are equal
+		return outcomeOfOperation(op->field1, leftType, rightType);
 
 	}
 	else{
@@ -607,18 +626,16 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 	if( cur_node->field1 != NULL ){
 		
 		leftType = getPredefTypeOfSimpleExpr(cur_node->field1);
-		rightType = getPredefTypeOfSimpleExpr(cur_node->field3);
+		rightType = getPredefTypeOfTerm(cur_node->field3);
 
-		if( leftType != rightType ){
+		if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
 			//imprimir erro
 			printErrorLineCol(op->line, op->col);
 			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
-			return NULL;
 		}
 
-		if()
-		return leftType; // or rightType, because they are equal
+		return outcomeOfOperation(op->field1, leftType, rightType);
 
 	}
 	else{
@@ -627,31 +644,97 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node){
 		// retorna o tipo da Term que tem
 		rightType = getPredefTypeOfTerm(cur_node->field3);
 
-		if( !( (strcmp(op->field1, "+") == 0 || strcmp(op->field1, "-") == 0) && (rightType == _integer_ || rightType == _real_) ) ){
+		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
-			//imprime erro porque o tipo do term não é real ou integer e o op não é um + ou um -
 			printErrorLineCol(op->line, op->col);
 			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
-			return NULL;
-		}
-		else if( !( strcmp(op->field1, "!") == 0 && rightType == _boolean_ ) ){
-
-			//imprime erro porque ! só pode ser aplicado a booleanos
-			printErrorLineCol(op->line, op->col);
-			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
-			return NULL;
 		}
 
-		return rightType;
+		return outcomeOfUnaryOperation(op->field1, rightType);
 	}
 }
 
 PredefType getPredefTypeOfTerm(node* cur_node){
-	
+
+	node* op = cur_node->field2;		
+	PredefType leftType = getPredefTypeOfTerm(cur_node->field1);
+	PredefType rightType = getPredefTypeOfTerm(cur_node->field3);
+
+	if( !(isValidOperation(op->field1, leftType, rightType)) ){
+
+		//imprimir erro
+		printErrorLineCol(op->line, op->col);
+		printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+	}
+
+	return outcomeOfOperation(op->field1, leftType, rightType);
 }
 
 PredefType getPredefTypeOfFactor(node* cur_node){
-	
+
+	node* op = cur_node->field2;
+	PredefType leftType;
+	PredefType rightType;
+
+	if( op->type_of_node == CallType ){ // function call
+
+		// TODO
+		// check function id in current scope and scopes above it 
+		// (good thing each symbol has a reference to its declaration scope)
+
+		// TODO 2
+		// check number of arguments and Types in ArgumentList
+
+	}
+	else{ // UnaryOPType
+
+		rightType = getPredefTypeOfFactor(cur_node->field3);
+
+		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
+
+			printErrorLineCol(op->line, op->col);
+			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
+		}
+
+		return outcomeOfUnaryOperation(op->field1, rightType);
+	}
+}
+
+PredefType getPredefTypeOfNode(node* cur_node){
+
+	// cur_node can be a terminal (ID, INTLIT, REALLIT, STRING ), Expr, SimpleExpr, Term, Factor
+	// resolve the underlying type and return it
+
+	if( cur_node->type_of_node == ExprType ){
+		return getPredefTypeOfExpr(cur_node);
+	}
+	else if( cur_node->type_of_node == SimpleExprType ){
+		return getPredefTypeOfSimpleExpr(cur_node);
+	}
+	else if ( cur_node->type_of_node == OPTermListType ){
+		return getPredefTypeOfTerm(cur_node);
+	}
+	else if( cur_node->type_of_node == FactorType ){
+		return getPredefTypeOfFactor(cur_node);
+	}
+	else if( cur_node->type_of_node == IDType ){
+
+		// check cur_scope for symbol declaration in symbol tables
+		// -- issue warning if not declared
+		// -- else: return type in table
+
+	}
+	else if( cur_node->type_of_node == IntType ){
+		return _integer_;
+	}
+	else if( cur_node->type_of_node == DoubleType ){
+		return _real_;
+	}
+	else if( cur_node->type_of_node == StringType ){
+		return 
+	}
+
+	return NULL;
 }
 
 void checkErrorType(node* cur_node) {
