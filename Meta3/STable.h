@@ -139,31 +139,31 @@ symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope);
 
 table* getFuncScope(char* key, table* cur_scope);
 
-void printErrorLineCol(int l, int c);
+void printErrorLineCol(int l, int c, char* errorStr);
 
-void printTypeError(char* type);
+char* printTypeError(char* type);
 
-void printFunctionIDError();
+char* printFunctionIDError();
 
-void printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType);
+char* printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType);
 
-void printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType);
+char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType);
 
-void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType);
+char* printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType);
 
-void printOperatorTypeError(char* op, char* type);
+char* printOperatorTypeError(char* op, char* type);
 
-void printOperatorTypesError(char* op, char* leftType, char* rightType);
+char* printOperatorTypesError(char* op, char* leftType, char* rightType);
 
-void printSymbolAlreadyDefinedError(char* tokenStr);
+char* printSymbolAlreadyDefinedError(char* tokenStr);
 
-void printSymbolNotDefinedError(char* tokenStr);
+char* printSymbolNotDefinedError(char* tokenStr);
 
-void printTypeIdentifierExpectedError();
+char* printTypeIdentifierExpectedError();
 
-void printVariableIdentifierExpectedError();
+char* printVariableIdentifierExpectedError();
 
-void printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs);
+char* printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs);
 
 #endif
 

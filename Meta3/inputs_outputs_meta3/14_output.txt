@@ -1,4 +1,1 @@
 Line 6, col 5: Symbol a already defined
-Line 6, col 8: Symbol b already defined
-Line 7, col 1: Symbol c already defined
-Line 7, col 4: Symbol d already defined

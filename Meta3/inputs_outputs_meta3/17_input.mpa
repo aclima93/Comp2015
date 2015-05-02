@@ -1,0 +1,41 @@
+program gcd2(output);
+var x, y: integer;
+function ReadExpression : Integer ; forward;
+function ReadOperand : Integer ; forward ;
+function gcd(A, B: integer): real;
+    begin
+        if A = 0 then
+            gcd := B
+        else
+            begin
+                while B > 0 do
+                    if A > B then
+                        A := A - B
+                    else
+                        B := B - A;
+                gcd := A
+            end
+    end;
+function ReadExpression ; {See forward declaration of heading .}
+var
+this : real;
+op : real;
+begin
+this := ReadOperand;
+while IsOperator(nextsym) do
+begin
+op := ReadOperator;
+this := MakeFormula(this, op, ReadOperand);
+end;
+ReadExpression := this
+end;
+begin
+    if paramcount >= 2 then
+        begin
+            val(paramstr(1), x);
+            val(paramstr(2), y);
+            writeln(gcd(x, y))
+        end
+    else
+        writeln('Error: two parameters required.')
+end.

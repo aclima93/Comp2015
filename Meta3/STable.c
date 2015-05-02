@@ -41,6 +41,10 @@ void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration
 
 void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag) {
 
+	// stop if one error has been found
+	if(semanticErrorCounter){
+		return;
+	}
 
 	if( cur_node == NULL || isLeaf(cur_node) ){
 		return;
@@ -65,8 +69,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = searchForSymbolInRelevantScopes(IDNode, cur_scope);
 
 			if (lookup_result == NULL) {
-				printErrorLineCol(IDNode->line, IDNode->col);
-				printSymbolNotDefinedError(IDNode->field1);
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
@@ -103,8 +106,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 						insertSymbol(makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope), cur_scope);
 					}
 					else {
-						printErrorLineCol(variable->line, variable->col);
-						printSymbolAlreadyDefinedError(name);
+						printErrorLineCol(variable->line, variable->col, printSymbolAlreadyDefinedError(name));
 					}
 
 				}
@@ -240,8 +242,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = searchForSymbolInRelevantScopes(cur_node, cur_scope);
 
 			if (lookup_result == NULL) {
-				printErrorLineCol(cur_node->line, cur_node->col);
-				printSymbolNotDefinedError(cur_node->field1);
+				printErrorLineCol(cur_node->line, cur_node->col, printSymbolNotDefinedError(cur_node->field1));
 			}
 
 			break;
@@ -701,8 +702,7 @@ PredefType getPredefTypeOfExpr(node* cur_node, table* cur_scope){
 		if( !(isValidOperation(op->field1, leftType, rightType))){
 
 			//imprimir erro
-			printErrorLineCol(op->line, op->col);
-			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+			printErrorLineCol(op->line, op->col, printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType)) );
 		}
 
 		return outcomeOfOperation(op->field1, leftType, rightType);
@@ -728,8 +728,7 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope){
 		if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
 			//imprimir erro
-			printErrorLineCol(op->line, op->col);
-			printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+			printErrorLineCol(op->line, op->col, printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType)) );
 		}
 
 		return outcomeOfOperation(op->field1, leftType, rightType);
@@ -743,8 +742,7 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope){
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
-			printErrorLineCol(op->line, op->col);
-			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
+			printErrorLineCol(op->line, op->col, printOperatorTypeError(op->field1, getPredefTypeStr(rightType)) );
 		}
 
 		return outcomeOfUnaryOperation(op->field1, rightType);
@@ -760,8 +758,7 @@ PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope){
 	if( !(isValidOperation(op->field1, leftType, rightType)) ){
 
 		//imprimir erro
-		printErrorLineCol(op->line, op->col);
-		printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType));
+		printErrorLineCol(op->line, op->col, printOperatorTypesError(op->field1, getPredefTypeStr(leftType), getPredefTypeStr(rightType)) );
 	}
 
 	return outcomeOfOperation(op->field1, leftType, rightType);
@@ -794,8 +791,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 		if( !( isValidUnaryOperation(op->field1, rightType) ) ){
 
-			printErrorLineCol(op->line, op->col);
-			printOperatorTypeError(op->field1, getPredefTypeStr(rightType));
+			printErrorLineCol(op->line, op->col, printOperatorTypeError(op->field1, getPredefTypeStr(rightType)) );
 		}
 
 		return outcomeOfUnaryOperation(op->field1, rightType);
@@ -853,8 +849,7 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 	}
 
 	if (lookup_result == NULL) {
-		printErrorLineCol(cur_node->line, cur_node->col);
-		printSymbolNotDefinedError(cur_node->field1);
+		printErrorLineCol(cur_node->line, cur_node->col, printSymbolNotDefinedError(cur_node->field1) );
 		return _NULL_;
 	}
 
@@ -875,57 +870,89 @@ symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope){
 	return lookup_result;
 }
 
-void printErrorLineCol(int l, int c) {
-	semanticErrorCounter++;
-	printf("Line %d, col %d: ", l, c);
+void printErrorLineCol(int l, int c, char* errorStr) {
+
+	// stop if one error has been found
+	if(semanticErrorCounter){
+		semanticErrorCounter++;
+		return ;
+	}
+	else{
+		semanticErrorCounter++;
+		printf("Line %d, col %d: %s", l, c, errorStr);
+	}
 } 
 
-void printTypeError(char* type) {
-	printf("Cannot write values of type %s\n", type);
+char* printTypeError(char* type) {
+	char* errorStr;
+	sprintf(errorStr, "Cannot write values of type %s\n", type);
+	return errorStr;
 }
 
-void printFunctionIDError() {
-	printf("Function identifier expected.\n");
+char* printFunctionIDError() {
+	char* errorStr;
+	sprintf(errorStr, "Function identifier expected.\n");
+	return errorStr;
 }
 
-void printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType) {
-	printf("Incompatible type for argument %d in call to function %s (got %s, expected %s)\n", num, functionStr, gotType, expectedType);
+char* printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType) {
+	char* errorStr;
+	sprintf(errorStr, "Incompatible type for argument %d in call to function %s (got %s, expected %s)\n", num, functionStr, gotType, expectedType);
+	return errorStr;
 }
 
-void printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType) {
-	printf("Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType) {
+	char* errorStr;
+	sprintf(errorStr, "Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+	return errorStr;
 }
 
-void printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType) {
-	printf("Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
+char* printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType) {
+	char* errorStr;
+	sprintf(errorStr, "Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
+	return errorStr;
 }
 
-void printOperatorTypeError(char* op, char* type) {
-	printf("Operator %s cannot be applied to type %s\n", op, type);
+char* printOperatorTypeError(char* op, char* type) {
+	char* errorStr;
+	sprintf(errorStr, "Operator %s cannot be applied to type %s\n", op, type);
+	return errorStr;
 }
 
-void printOperatorTypesError(char* op, char* leftType, char* rightType) {
-	printf("Operator %s cannot be applied to types %s, %s\n", op, leftType, rightType);
+char* printOperatorTypesError(char* op, char* leftType, char* rightType) {
+	char* errorStr;
+	sprintf(errorStr, "Operator %s cannot be applied to types %s, %s\n", op, leftType, rightType);
+	return errorStr;
 }
 
-void printSymbolAlreadyDefinedError(char* tokenStr) {
-	printf("Symbol %s already defined\n", tokenStr);
+char* printSymbolAlreadyDefinedError(char* tokenStr) {
+	char* errorStr;
+	sprintf(errorStr, "Symbol %s already defined\n", tokenStr);
+	return errorStr;
 }
 
-void printSymbolNotDefinedError(char* tokenStr) {
-	printf("Symbol %s not defined\n", tokenStr);
+char* printSymbolNotDefinedError(char* tokenStr) {
+	char* errorStr;
+	sprintf(errorStr, "Symbol %s not defined\n", tokenStr);
+	return errorStr;
 }
 
-void printTypeIdentifierExpectedError() {
-	printf("Type identifier expected\n");
+char* printTypeIdentifierExpectedError() {
+	char* errorStr;
+	sprintf(errorStr, "Type identifier expected\n");
+	return errorStr;
 }
 
-void printVariableIdentifierExpectedError() {
-	printf("Variable identifier expected\n");
+char* printVariableIdentifierExpectedError() {
+	char* errorStr;
+	sprintf(errorStr, "Variable identifier expected\n");
+	return errorStr;
 }
 
-void printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs) {
-	printf("Wrong number of arguments in call to function %s (got %d, expected %d)\n", tokenStr, gotNArgs, expectedNArgs);
+char* printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs) {
+	char* errorStr;
+	sprintf(errorStr, "Wrong number of arguments in call to function %s (got %d, expected %d)\n", tokenStr, gotNArgs, expectedNArgs);
+	return errorStr;
 }
 
 

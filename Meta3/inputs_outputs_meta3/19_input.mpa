@@ -1,0 +1,9 @@
+program gcd2(output);
+function SPJ(w: integer):integer;FORWARD;
+function SPJ; 
+var coiso,coiso2:integer; 
+begin
+gcd3:=w 
+end; 
+begin 
+end.

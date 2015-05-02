@@ -1,0 +1,60 @@
+program gcd2(output);
+function Gcd(var A, B: brolly; l, K213123saa: boolean): integer;
+	var x, y: integer;
+	begin
+		if A = 0 then
+			gcd := B
+	else
+		begin
+			while B > 0 do
+				if A > B then
+					A := A - B
+				else
+					B := B - A;
+			gcd := A
+		end
+	end;
+
+function decla:integer;forward;
+	
+function gcD123(Z, E: integer): integer;
+	var boolean, integer: integer;
+	integ, paramcount: boolean;
+	begin
+		if Z = 0 then
+			gcd123 := E
+	else
+		begin
+			while E > 0 do
+				if Z > E then
+					Z := Z - E
+				else
+					E := E - Z;
+			gcd123 := Z
+		end
+	end;
+
+function declaratio1:integer;forward;
+
+
+function declaratio1;
+var qwerty:integer;
+begin
+end;
+
+function decla;
+var int:integer;
+begin
+end;
+
+
+begin
+	if paramcount >= 2 then
+		begin
+			val(paramstr(1), x);
+			val(paramstr(2), y);
+			writeln(gcd(x, y))
+		end
+	else
+		writeln('Error: two parameters required.')
+end.
