@@ -135,6 +135,8 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 
 symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope);
 
+table* getFuncScope(char* key, table* cur_scope);
+
 void printErrorLineCol(int l, int c);
 
 void printTypeError(char* type);

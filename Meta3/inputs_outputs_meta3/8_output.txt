@@ -18,10 +18,10 @@ myfunc	_function_
 myfunction	_function_
 myfunction1	_function_
 myfunction2	_function_
-troblesome	_integer_
 
 ===== Function Symbol Table =====
 myfunc	_integer_	return
+troblesome	_integer_
 
 ===== Function Symbol Table =====
 myfunction	_integer_	return

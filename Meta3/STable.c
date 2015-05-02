@@ -59,9 +59,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
 
-			;
-			
-			node* IDNode = cur_node->field2;
+			; //very important voodoo magic, because switch case can't start with declaration
+
+			IDNode = cur_node->field2;
 			lookup_result = searchForSymbolInRelevantScopes(IDNode, cur_scope);
 
 			if (lookup_result == NULL) {
@@ -163,6 +163,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			if (lookup_result == NULL) {
 
 				//imprimir erro
+
 			}
 			else {
 
@@ -170,8 +171,10 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				// nao e preciso criar o simbolo que representa a tabela, nem a tabela, porque assumimos que ja foram declarados, apenas falta definir
 			
+				cur_scope = getFuncScope(IDNode->field1, cur_scope);
+
 				//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
-				walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
+				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 
 			break;
@@ -437,6 +440,23 @@ void printSymbolDebug(symbol* node) {
 	printf("%s\n", node->value);
 	printf("%d\n", node->isDefined);
 	printf("%p\n", node->declarationScope);
+}
+
+table* getFuncScope(char *key, table* cur_scope) {
+
+	if (lookupSymbol(key, cur_scope) == NULL) {
+		//print erro
+		return NULL;
+	}
+	else {
+		cur_scope =cur_scope->childrenTableList;
+		while(cur_scope != NULL && lookupSymbol(key, cur_scope) == NULL) {
+			cur_scope = cur_scope->nextSiblingTable;
+		}
+		return cur_scope;
+	}
+
+
 }
 
 symbol* lookupSymbol(char* key, table* t){
