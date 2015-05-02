@@ -59,7 +59,15 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
 
-			checkErrorType(cur_node->field2, cur_scope);
+			;
+			
+			node* IDNode = cur_node->field2;
+			lookup_result = searchForSymbolInRelevantScopes(IDNode, cur_scope);
+
+			if (lookup_result == NULL) {
+				printErrorLineCol(IDNode->line, IDNode->col);
+				printSymbolNotDefinedError(IDNode->field1);
+			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
 			break;
@@ -87,7 +95,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				//get type string from current type of declarations
 				if (cur_declaration_type != NULL) {
 
-					lookup_result = lookupSymbol(name, cur_scope);
+					lookup_result = searchForSymbolInRelevantScopes(variable, cur_scope);
 
 					if (lookup_result == NULL) {
 
@@ -226,7 +234,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case IDType:
 
-			lookup_result = lookupSymbol(cur_node->field1, cur_scope);
+			lookup_result = searchForSymbolInRelevantScopes(cur_node, cur_scope);
 
 			if (lookup_result == NULL) {
 				printErrorLineCol(cur_node->line, cur_node->col);
@@ -719,26 +727,7 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 		return getPredefTypeOfFactor(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == IDType ){
-
-		// check cur_scope and upper scopes for symbol declaration in symbol tables
-		// -- issue warning if not declared in any
-		// -- else: return type in table
-
-		symbol* lookup_result = NULL;
-
-		while( cur_scope != NULL && lookup_result == NULL ){
-			lookup_result = lookupSymbol(cur_node->field1, cur_scope);
-			cur_scope = cur_scope->parentTable; //check for outer table
-		}
-
-		if (lookup_result == NULL) {
-			printErrorLineCol(cur_node->line, cur_node->col);
-			printSymbolNotDefinedError(cur_node->field1);
-			return _NULL_;
-		}
-
-		return lookup_result->type;
-
+		return searchForTypeOfSymbolInRelevantScopes(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == IntType ){
 		return _integer_;
@@ -753,14 +742,40 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 	return _NULL_;
 }
 
-void checkErrorType(node* cur_node, table* cur_scope) {
+PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scope){
 
-	symbol* lookup_result = lookupSymbol(cur_node->field1, cur_scope);
+	// check cur_scope and upper scopes for symbol declaration in symbol tables
+	// -- issue warning if not declared in any
+	// -- else: return type in table
+
+	symbol* lookup_result = NULL;
+
+	while( cur_scope != NULL && lookup_result == NULL ){
+		lookup_result = lookupSymbol(cur_node->field1, cur_scope);
+		cur_scope = cur_scope->parentTable; //check for outer table
+	}
 
 	if (lookup_result == NULL) {
 		printErrorLineCol(cur_node->line, cur_node->col);
 		printSymbolNotDefinedError(cur_node->field1);
+		return _NULL_;
 	}
+
+	return lookup_result->type;
+}
+
+symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope){
+
+	// check cur_scope and upper scopes for symbol declaration in symbol tables
+
+	symbol* lookup_result = NULL;
+
+	while( cur_scope != NULL && lookup_result == NULL ){
+		lookup_result = lookupSymbol(cur_node->field1, cur_scope);
+		cur_scope = cur_scope->parentTable; //check for outer table
+	}
+
+	return lookup_result;
 }
 
 void printErrorLineCol(int l, int c) {
