@@ -42,7 +42,7 @@ void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration
 void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag) {
 
 	// stop if one error has been found
-	if(semanticErrorCounter){
+	if( !DISABLE_ERRORS && semanticErrorCounter){
 		return;
 	}
 
@@ -143,7 +143,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 			else {
+				//TODO
 				//imprimir erro
+				// encontrou uma função com o mesmo nome
 			}
 
 			break;
@@ -163,7 +165,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
-
+				//TODO
 				//imprimir erro
 
 			}
@@ -174,6 +176,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// nao e preciso criar o simbolo que representa a tabela, nem a tabela, porque assumimos que ja foram declarados, apenas falta definir
 			
 				cur_scope = getFuncScope(IDNode->field1, cur_scope);
+
+				if(cur_scope == NULL){
+					//TODO
+					//imprimir erro
+					// não encontrou a função pré declarada
+				}
 
 				//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -227,6 +235,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			}
 			else {
+				//TODO
 				//imprimir erro
 			}
 
@@ -264,6 +273,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			
 			// têm de verificar se a Expr se resolve em booleano
 			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _boolean_ ){
+				//TODO
 				// imprimir erro ?
 			}
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -274,6 +284,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			
 			// têm de verificar se a Expr se resolve em booleano
 			if( getPredefTypeOfNode(cur_node->field2, cur_scope) != _boolean_ ){
+				//TODO
 				// imprimir erro ?
 			}
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -284,6 +295,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			
 			// tem de verificar se a Expr devolve um inteiro
 			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _integer_ ){
+				//TODO
 				// imprimir erro ?
 			}
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -294,6 +306,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
 			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != getPredefTypeOfNode(cur_node->field2, cur_scope) ){
+				//TODO
 				// imprimir erro ?
 			}
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -310,10 +323,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
 			
 			if( !( isValidWriteLnArgument(f1) ) ){
+				//TODO
 				// imprimir erro ?
 			}
 			
 			if( !( isValidWriteLnArgument(f2) ) ){
+				//TODO
 				// imprimir erro ?
 			}
 
@@ -323,10 +338,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case ParamListType:
 		case ExprListType:
-			// TODO
-			// têm de verificar o tipo e número de parâmetros na chamada a função
-			break;
-
 		case FuncIdentType:
 		case FuncHeadingType:
 		case ProgType:
@@ -511,7 +522,6 @@ void printSymbolDebug(symbol* node) {
 table* getFuncScope(char *key, table* cur_scope) {
 
 	if (lookupSymbol(key, cur_scope) == NULL) {
-		//print erro
 		return NULL;
 	}
 	else {
@@ -751,7 +761,7 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope){
 
 PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope){
 
-	node* op = cur_node->field2;		
+	node* op = cur_node->field2;
 	PredefType leftType = getPredefTypeOfNode(cur_node->field1, cur_scope);
 	PredefType rightType = getPredefTypeOfNode(cur_node->field3, cur_scope);
 
@@ -764,6 +774,18 @@ PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope){
 	return outcomeOfOperation(op->field1, leftType, rightType);
 }
 
+int countNumElements(ExprPredefTypeList* exprTypes){
+	ExprPredefTypeList* cur_expr = exprTypes;
+	int numElements = 0;
+
+	while( cur_expr != NULL ){
+		numElements++;
+		cur_expr = cur_expr->next;
+	}
+
+	return numElements;
+}
+
 PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 	node* op = cur_node->field2;
@@ -772,16 +794,62 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 	if( op->type_of_node == CallType ){ // function call
 
-		// TODO
-		// check function id in current scope and scopes above it 
-		// (good thing each symbol has a reference to its declaration scope)
+		ExprPredefTypeList* cur_expectedExpr;
+		ExprPredefTypeList* cur_gotExpr;
+		symbol* lookup_result;
 
-		// TODO 2
+
+		// check function id in current scope and scopes above it 
+
+		lookup_result = searchForSymbolInRelevantScopes(op->field1, cur_scope);
+
+		if (lookup_result == NULL) {
+			//printErrorLineCol(op->line, op->col, printSymbolNotDefinedError(op->field1));
+			printErrorLineCol(op->line, op->col, printFunctionIDError());
+			return _NULL_; // no function return type because the function doesn't exist
+		}
+
+		// get function scope (good thing each symbol has a reference to its declaration scope)
+		table* func_scope = getFuncScope(op->field1, lookup_result->declarationScope);
+
+
 		// check number of arguments and Types in ArgumentList
 
+		ExprPredefTypeList* expectedExprTypes = getPredefTypesOfParamList(func_scope); // expected type list
+		int numExpectedArgs = countNumElements(expectedExprTypes); // count number of arguments in expected List
 
-		// placeholder return 
+		ExprPredefTypeList* gotExprTypes = getPredefTypesOfExprList(cur_node, cur_scope); // gotten type list
+		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
+
+		if( numGottenArgs != numExpectedArgs ){
+			// imprimir erro
+			printErrorLineCol(op->line, op->col, printWrongNumberCallFunctionError(op->field1, numGottenArgs, numExpectedArgs));
+			return _NULL_;
+		}
+
+		// compare gotten types and expected types
+		cur_gotExpr = gotExprTypes;
+		cur_expectedExpr = expectedExprTypes;
+		int num = 1;
+
+		while( cur_gotExpr != NULL && cur_expectedExpr != NULL ){
+
+			if( cur_gotExpr->type != cur_expectedExpr->type ){
+				// printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType)
+				printErrorLineCol(op->line, op->col, printIncompatibleTypeCallFunctionError(num, op->field1, getPredefTypeStr(cur_gotExpr->type), getPredefTypeStr(cur_expectedExpr->type) ) );
+				return _NULL_;
+			}
+
+			num++;
+			cur_gotExpr = cur_gotExpr->next;
+			cur_expectedExpr = cur_expectedExpr->next;
+		}
+
 		// return type of func
+		lookup_result = lookupSymbol(op->field1, func_scope);
+		if( lookup_result != NULL && lookup_result->flag == returnFlag )
+			return lookup_result->type;
+
 		return _NULL_;
 
 	}
@@ -796,6 +864,26 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 		return outcomeOfUnaryOperation(op->field1, rightType);
 	}
+
+}
+
+ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
+	//TODO
+	// return list of types of param symbols for this function
+	return NULL;
+}
+
+ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope){
+
+	if( cur_node == NULL )
+		return NULL;
+
+	ExprPredefTypeList* exprTypes = malloc( sizeof(ExprPredefTypeList) );
+	
+	exprTypes->type = getPredefTypeOfNode(cur_node->field1, cur_scope);
+	exprTypes->next = getPredefTypesOfExprList(cur_node->field2, cur_scope);
+
+	return exprTypes; // return list of gotten types of arguments in function call
 
 }
 

@@ -13,7 +13,7 @@
 #include <search.h>
 #include <ctype.h>
 
-#define DISABLE_ERRORS 1
+#define DISABLE_ERRORS 0
 #define INSERTION_DEBUG 0
 #define LOOKUP_DEBUG 0
 
@@ -65,6 +65,20 @@ typedef struct {
 
 int semanticErrorCounter;
 
+/*
+ * List to hold all expression types involved in a function call
+ */
+
+typedef struct {
+    PredefType type;
+    void* next;
+} ExprPredefTypeList;
+
+
+/*
+ * Symbol insertions, printing and deletion functions
+ */
+
 int createSymbolTable(node* ASTroot);
 
 void walkASTNodeChildren(table* cur_scope, node* cur_node, node* cur_declaration_type, PredefFlag cur_flag);
@@ -80,7 +94,7 @@ PredefType getPredefTypeFromStr(char* t);
 char* getPredefTableStr(PredefTable t);
 
 /*
- * Insertions, printing and deletion functions
+ * Table insertions, printing and deletion functions
  */
 
 table* makeTable(PredefTable t);
@@ -132,6 +146,10 @@ PredefType getPredefTypeOfSimpleExpr(node* cur_node, table* cur_scope);
 PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope);
 
 PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope);
+
+ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope);
+
+ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope);
 
 PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope);
 
