@@ -1,0 +1,1 @@
+Line 5, col 14: Symbol A already defined

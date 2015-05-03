@@ -21,6 +21,8 @@
 // don't change these
 #define DEFINED 1
 #define NOT_DEFINED 0
+#define MAX_INT_LEN 6 // the maximum int in C is +/- 32767, so we need at most 6 chars to hold it ;)
+
 
 /*
  * Tables

@@ -884,73 +884,102 @@ void printErrorLineCol(int l, int c, char* errorStr) {
 } 
 
 char* printTypeError(char* type) {
-	char* errorStr;
+	char* errorStr = malloc(sizeof(char) * ( strlen("Cannot write values of type \n") + strlen(type) ) );
 	sprintf(errorStr, "Cannot write values of type %s\n", type);
 	return errorStr;
 }
 
 char* printFunctionIDError() {
-	char* errorStr;
+	int len = strlen("Function identifier expected.\n");
+	char* errorStr = malloc(sizeof(char) * len );
 	sprintf(errorStr, "Function identifier expected.\n");
 	return errorStr;
 }
 
 char* printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType) {
-	char* errorStr;
+	int len = 0;
+	len += MAX_INT_LEN;
+	len += strlen("Incompatible type for argument  in call to function  (got , expected )\n");
+	len += strlen(functionStr) + strlen(gotType) + strlen(expectedType);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type for argument %d in call to function %s (got %s, expected %s)\n", num, functionStr, gotType, expectedType);
 	return errorStr;
 }
 
 char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Incompatible type in assignment to  (got , expected )\n");
+	len += strlen(tokenStr) + strlen(gotType) + strlen(expectedType);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
 	return errorStr;
 }
 
 char* printIncompatibleTypeStatementError(char* statementStr, char* gotType, char* expectedType) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Incompatible type in  statement (got , expected )\n");
+	len += strlen(statementStr) + strlen(gotType) + strlen(expectedType);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
 	return errorStr;
 }
 
 char* printOperatorTypeError(char* op, char* type) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Operator  cannot be applied to type \n");
+	len += strlen(op) + strlen(type);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Operator %s cannot be applied to type %s\n", op, type);
 	return errorStr;
 }
 
 char* printOperatorTypesError(char* op, char* leftType, char* rightType) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Operator  cannot be applied to types , \n");
+	len += strlen(op) + strlen(leftType) + strlen(rightType);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Operator %s cannot be applied to types %s, %s\n", op, leftType, rightType);
 	return errorStr;
 }
 
 char* printSymbolAlreadyDefinedError(char* tokenStr) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Symbol  already defined\n");
+	len += strlen(tokenStr);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Symbol %s already defined\n", tokenStr);
 	return errorStr;
 }
 
 char* printSymbolNotDefinedError(char* tokenStr) {
-	char* errorStr;
+	int len = 0;
+	len += strlen("Symbol  not defined\n");
+	len += strlen(tokenStr);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Symbol %s not defined\n", tokenStr);
 	return errorStr;
 }
 
 char* printTypeIdentifierExpectedError() {
-	char* errorStr;
+	int len = strlen("Type identifier expected\n");
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Type identifier expected\n");
 	return errorStr;
 }
 
 char* printVariableIdentifierExpectedError() {
-	char* errorStr;
+	int len = strlen("Variable identifier expected\n");
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Variable identifier expected\n");
 	return errorStr;
 }
 
 char* printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs) {
-	char* errorStr;
+	int len = 0;
+	len += MAX_INT_LEN * 2;
+	len += strlen("Wrong number of arguments in call to function  (got , expected )\n");
+	len += strlen(tokenStr);
+	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Wrong number of arguments in call to function %s (got %d, expected %d)\n", tokenStr, gotNArgs, expectedNArgs);
 	return errorStr;
 }
