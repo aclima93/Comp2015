@@ -872,6 +872,9 @@ symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope){
 
 void printErrorLineCol(int l, int c, char* errorStr) {
 
+	if(DISABLE_ERRORS)
+		return ;
+
 	// stop if one error has been found
 	if(semanticErrorCounter){
 		semanticErrorCounter++;

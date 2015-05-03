@@ -13,7 +13,7 @@
 #include <search.h>
 #include <ctype.h>
 
-//#define DEBUG_WALKNODES 0
+#define DISABLE_ERRORS 1
 #define INSERTION_DEBUG 0
 #define LOOKUP_DEBUG 0
 
