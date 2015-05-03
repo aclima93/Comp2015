@@ -16,6 +16,8 @@
 #define DISABLE_ERRORS 0
 #define INSERTION_DEBUG 0
 #define LOOKUP_DEBUG 0
+#define LOOKUP_UPPER_SCOPES_DEBUG 0
+#define FUNCTION_CALL_DEBUG 0
 
 
 // don't change these
@@ -74,6 +76,8 @@ typedef struct {
     void* next;
 } ExprPredefTypeList;
 
+
+ExprPredefTypeList* paramSymbolList;
 
 /*
  * Symbol insertions, printing and deletion functions
@@ -147,6 +151,12 @@ PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope);
 
 PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope);
 
+void addSymbolToParamList(symbol* s);
+
+void param_walker(const void *node, const VISIT which, const int depth);
+
+int countNumElements(ExprPredefTypeList* exprTypes);
+
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope);
 
 ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope);
@@ -155,7 +165,7 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope);
 
 PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scope);
 
-symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope);
+symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope);
 
 table* getFuncScope(char* key, table* cur_scope);
 

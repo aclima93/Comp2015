@@ -2,7 +2,7 @@ program gcd2(output);
 var a, b,c: integer;
 x:reAl;
 function SPJ(w: integer):integer;FORWARD;
-function gcd(A,B: integer):integer;
+function gcd(d,e: integer):integer;
 begin
 if A = 0 then
 gcd:=B

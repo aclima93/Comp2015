@@ -1,1 +1,1 @@
-Line 3, col 6: Symbol float not defined
+Line 4, col 16: Symbol a already defined

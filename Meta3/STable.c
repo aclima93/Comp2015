@@ -62,16 +62,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
 			/* passar o novo tipo das variáveis que se vão seguir*/
-
-			; //very important voodoo magic, because switch case can't start with declaration
-
-			IDNode = cur_node->field2;
-			lookup_result = searchForSymbolInRelevantScopes(IDNode, cur_scope);
-
-			if (lookup_result == NULL) {
-				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
-			}
-
 			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
 			break;
 
@@ -98,7 +88,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				//get type string from current type of declarations
 				if (cur_declaration_type != NULL) {
 
-					lookup_result = searchForSymbolInRelevantScopes(variable, cur_scope);
+					lookup_result = searchForSymbolInRelevantScopes(variable->field1, cur_scope);
 
 					if (lookup_result == NULL) {
 
@@ -248,7 +238,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 		case IDType:
 
-			lookup_result = searchForSymbolInRelevantScopes(cur_node, cur_scope);
+			lookup_result = searchForSymbolInRelevantScopes(cur_node->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 				printErrorLineCol(cur_node->line, cur_node->col, printSymbolNotDefinedError(cur_node->field1));
@@ -452,6 +442,7 @@ int lookup_compare(const void* l, const void* r){
 }
 
 int insert_compare(const void* l, const void* r){
+	//TODO find a way to preserve insertion order and order by name
     // always insert at the end, preserving insertion order
     return 1;
 }
@@ -525,30 +516,32 @@ table* getFuncScope(char *key, table* cur_scope) {
 		return NULL;
 	}
 	else {
-		cur_scope =cur_scope->childrenTableList;
+		cur_scope = cur_scope->childrenTableList;
 		while(cur_scope != NULL && lookupSymbol(key, cur_scope) == NULL) {
 			cur_scope = cur_scope->nextSiblingTable;
 		}
 		return cur_scope;
 	}
-
-
 }
 
 symbol* lookupSymbol(char* key, table* t){
 
-	symbol* s = makeSymbol(key, _NULL_, NULLFlag, NULL, DEFINED, NULL);
+	symbol* s = makeSymbol(key, _NULL_, NULLFlag, NULL, DEFINED, NULL); // only the name matters in lookup_compare
 
 	void* node = tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found 
-	if (node == NULL)
+
+	if (node == NULL){
 		return NULL;
+	}
 	else{
 
 		if(LOOKUP_DEBUG){
-			printf("\n--------\nSearching\n");
-			printSymbolDebug(s);
+			printf("\n--------\n");
+			printTable(t);
+			printf("Searching\n");
+			printf("%s\n", key);
 			printf("Got\n");
-			printSymbolDebug(node);
+			printSymbolDebug( (*(symbol**)node) );
 		}
 		return (*(symbol**)node);
 	}
@@ -774,18 +767,6 @@ PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope){
 	return outcomeOfOperation(op->field1, leftType, rightType);
 }
 
-int countNumElements(ExprPredefTypeList* exprTypes){
-	ExprPredefTypeList* cur_expr = exprTypes;
-	int numElements = 0;
-
-	while( cur_expr != NULL ){
-		numElements++;
-		cur_expr = cur_expr->next;
-	}
-
-	return numElements;
-}
-
 PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 	node* op = cur_node->field2;
@@ -799,6 +780,11 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		symbol* lookup_result;
 
 
+		if(FUNCTION_CALL_DEBUG){
+			printf("\n---------\nCurrent Scope\n");
+			printTable(cur_scope);
+		}
+
 		// check function id in current scope and scopes above it 
 
 		lookup_result = searchForSymbolInRelevantScopes(op->field1, cur_scope);
@@ -809,8 +795,18 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 			return _NULL_; // no function return type because the function doesn't exist
 		}
 
+		if(FUNCTION_CALL_DEBUG){
+			printf("\n---------\nFunction %s in Function Call\n", lookup_result->name);
+			printSymbolDebug(lookup_result);
+		}
+
 		// get function scope (good thing each symbol has a reference to its declaration scope)
 		table* func_scope = getFuncScope(op->field1, lookup_result->declarationScope);
+
+		if(FUNCTION_CALL_DEBUG){
+			printf("\n---------\nScope of Function %s in Function Call\n", lookup_result->name);
+			printTable(func_scope);
+		}
 
 
 		// check number of arguments and Types in ArgumentList
@@ -867,10 +863,68 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 }
 
+void addSymbolToParamList(symbol* s){
+
+	if( s == NULL )
+		return ;
+
+	// create new element and add to end of list
+	ExprPredefTypeList* new_element = malloc( sizeof(ExprPredefTypeList) );
+	new_element->type = s->type;
+	new_element->next = NULL;
+
+	if( paramSymbolList == NULL ){
+		paramSymbolList = new_element;
+		return ;
+	}
+
+	ExprPredefTypeList* temp = paramSymbolList;
+
+	while( temp->next != NULL ){
+		temp = temp->next;
+	}
+
+	temp->next = new_element;
+}
+
+void param_walker(const void *node, const VISIT which, const int depth) {
+
+  symbol *s;
+  s = *(symbol **)node;
+
+   switch (which) {
+
+		case preorder:
+		case endorder:
+		   break;
+	
+		case leaf:
+		case postorder:
+			if( s->flag == paramFlag || s->flag == varparamFlag){
+				addSymbolToParamList(s);
+			}
+			break;
+   }
+}
+
+int countNumElements(ExprPredefTypeList* exprTypes){
+	ExprPredefTypeList* cur_expr = exprTypes;
+	int numElements = 0;
+
+	while( cur_expr != NULL ){
+		numElements++;
+		cur_expr = cur_expr->next;
+	}
+
+	return numElements;
+}
+
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
 	//TODO
 	// return list of types of param symbols for this function
-	return NULL;
+	paramSymbolList = NULL; // this should eb a deallocation, but the'res no time for fancy stuff right now
+	twalk(func_scope->symbol_variables, param_walker); // fetch all types of function parameters
+	return paramSymbolList;
 }
 
 ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope){
@@ -944,15 +998,35 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 	return lookup_result->type;
 }
 
-symbol* searchForSymbolInRelevantScopes(node* cur_node, table* cur_scope){
+symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope){
 
 	// check cur_scope and upper scopes for symbol declaration in symbol tables
 
 	symbol* lookup_result = NULL;
+	table* upper_scope = cur_scope;
 
-	while( cur_scope != NULL && lookup_result == NULL ){
-		lookup_result = lookupSymbol(cur_node->field1, cur_scope);
-		cur_scope = cur_scope->parentTable; //check for outer table
+	while( upper_scope != NULL ){
+
+		lookup_result = lookupSymbol(key, upper_scope);
+		
+		if( LOOKUP_UPPER_SCOPES_DEBUG ){
+
+			if( upper_scope != NULL ){
+				printf("\n\nLooking for %s in Scope\n", key);
+				printTable(upper_scope);
+			}
+
+			if( lookup_result != NULL ){
+				printf("\n\nSymbol Found\n");
+				printSymbolDebug(lookup_result);
+			}
+		}
+
+		upper_scope = upper_scope->parentTable; //check for outer table
+
+		if(lookup_result != NULL)
+			return lookup_result;
+
 	}
 
 	return lookup_result;
