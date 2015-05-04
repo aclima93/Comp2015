@@ -133,6 +133,8 @@ char* strlwr(char* str);
 
 int isValidType(PredefType t);
 
+int isValidAssignment(PredefType leftType, PredefType rightType);
+
 int isValidWriteLnArgument(PredefType p);
 
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType);

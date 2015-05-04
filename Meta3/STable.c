@@ -225,6 +225,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 					//TODO
 					//imprimir erro
 					// não encontrou a função pré declarada
+					printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 				}
 
 			}
@@ -372,6 +373,16 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("val-paramstr", getPredefTypeStr(expr_type), getPredefTypeStr(_integer_)) );
 			}
 
+			
+			IDNode = cur_node->field2;
+			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			// têm de verificar se o ID é válido
+			if( lookup_result == NULL ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
+			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
@@ -392,6 +403,14 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
+			// se o ID for uma função então temos de ir buscar o tipo de retorno da mesma para avaliarmos
+			if( lookup_result != NULL && lookup_result->type == _function_ ){
+				//TODO
+				//ir buscar o tipo de retorno
+				//lookup_result = ;
+				//type1 = ;
+			}
+
 			// erro de atribuição a field 1 se for um const nas tabelas relevantes
 			if( lookup_result != NULL && lookup_result->flag == constantFlag ){
 				// imprimir erro
@@ -399,7 +418,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			}
 
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
-			if( type1 != type2 ){
+			if( !isValidAssignment(type1, type2) ){
 				// imprimir erro
 				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
 			}
@@ -752,6 +771,18 @@ int isValidType(PredefType t){
 	return 0;
 }
 
+int isValidAssignment(PredefType leftType, PredefType rightType){
+
+	if( leftType == rightType ){
+		return 1;
+	}
+	if( rightType == _integer_ && leftType == _real_ ){
+		return 1;
+	}
+
+	return 0;
+}
+
 int isValidWriteLnArgument(PredefType p){
 
 	// WriteLn can only print these types of variables
@@ -959,23 +990,17 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		ExprPredefTypeList* expectedExprTypes = getPredefTypesOfParamList(func_scope); // expected type list
 		int numExpectedArgs = countNumElements(expectedExprTypes); // count number of arguments in expected List
 
-
-		//ExprPredefTypeList* gotExprTypes = getPredefTypesOfExprList(cur_node, cur_scope); // gotten type list
-
 		
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
-
 		ExprPredefTypeList* temp_exprType = gotExprTypes;
 		node* temp_node = cur_node;
-
 		while( temp_node != NULL ){
-
 			temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
 			temp_exprType = temp_exprType->next;
 			temp_node = temp_node->field2;
 		}
-		
 		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
+
 
 		if(PARAMLIST_DEBUG){
 			printf("\n\n------------------\nGotten Argument Symbols\n");
