@@ -441,24 +441,26 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			; //very important voodoo magic, because switch case can't start with declaration
 
-			if( cur_node->field2 != NULL ){
-				PredefType f1 = getPredefTypeOfNode(cur_node->field1, cur_scope);
+			if( cur_node->field1 != NULL ){
+				temp = cur_node->field1;
+				PredefType f1 = getPredefTypeOfNode(temp, cur_scope);
 				
 				if( !( isValidWriteLnArgument(f1) ) ){
 					// imprimir erro
-					printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
+					printErrorLineCol(temp->line, temp->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
 				}
 			}
 			
 			if( cur_node->field2 != NULL ){
-				PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
+				temp = cur_node->field2;
+				PredefType f2 = getPredefTypeOfNode(temp, cur_scope);
 
 				if( f2 == _NULL_ )
 					f2 = _type_;
 
 				 if( !( isValidWriteLnArgument(f2) ) ){
 					// imprimir erro
-					printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
+					printErrorLineCol(temp->line, temp->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
 				}
 			}
 
@@ -809,6 +811,7 @@ int isValidWriteLnArgument(PredefType p){
 }
 
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType) {
+ 	
  	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
  		
  		// integer/real with integer/real
@@ -849,7 +852,7 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
- 		if ((leftType == _integer_  || leftType == _real_ ) && (rightType == _integer_ || rightType == _real_) ) {
+ 		if ( (( leftType == _integer_  || leftType == _real_ ) && (rightType == _integer_ || rightType == _real_ )) || ( leftType == _boolean_ && rightType == _boolean_ ) ) {
  			return 1;
  		}
  	}
@@ -1018,6 +1021,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
 		ExprPredefTypeList* temp_exprType;
 		node* temp_node = cur_node;
+		PredefType tempType; 
 		
 		while( temp_node != NULL ){
 
@@ -1026,9 +1030,11 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 			//TODO
 			// debug prints here and fix this shit up
+			
+			tempType = getPredefTypeOfNode(temp_node->field1, cur_scope);
 
 			if(gotExprTypes == NULL){
-				gotExprTypes = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+				gotExprTypes = makeTypeListElement( tempType);
 			}
 			else{
 
@@ -1039,7 +1045,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 					temp_exprType = temp_exprType->next;
 				}
 
-				temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+				temp_exprType->next = makeTypeListElement(tempType);
 				temp_node = temp_node->field2;
 			}
 		}
@@ -1116,6 +1122,10 @@ int countNumElements(ExprPredefTypeList* exprTypes){
 
 ExprPredefTypeList* makeTypeListElement(PredefType t){
 
+	if( EXPR_TYPES_DEBUG ){
+		printf("Type: %s\n", getPredefTypeStr(t));
+	}
+
 	// create new element and add to end of list
 	ExprPredefTypeList* new_element = malloc( sizeof(ExprPredefTypeList) );
 	new_element->type = t;
@@ -1180,8 +1190,12 @@ ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope){
 
 PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 
-	if(cur_node == NULL)
+	if(cur_node == NULL )
 		return _NULL_;
+
+	if( GETTYPES_DEBUG && !isLeaf(cur_node) ){
+		printf("node type: %s\n", getNodeTypeStr(cur_node->type_of_node) );
+	}
 
 	// cur_node can be a terminal (ID, INTLIT, REALLIT, STRING ), Expr, SimpleExpr, Term, Factor
 	// resolve the underlying type and return it
