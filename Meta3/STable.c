@@ -54,6 +54,8 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 	node* temp;
 	node* IDNode;
+	node* expr_node;
+	PredefType expr_type, type1, type2;
 	node* returnType;
 	symbol* s;
 	symbol* lookup_result;
@@ -259,46 +261,88 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			break;
 
 		case IfElseStatType:
+
+			;
+			expr_node = cur_node->field1;
+			expr_type = getPredefTypeOfNode(expr_node, cur_scope);
+
+			// têm de verificar se a Expr se resolve em booleano
+			if( expr_type != _boolean_ ){
+				// imprimir erro
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("IfElse", getPredefTypeStr(expr_type), "_boolean_") );
+			}
+
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
+			break;
+
 		case WhileStatType:
 			
+			expr_node = cur_node->field1;
+			expr_type = getPredefTypeOfNode(expr_node, cur_scope);
+
 			// têm de verificar se a Expr se resolve em booleano
-			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _boolean_ ){
-				//TODO
-				// imprimir erro ?
+			if( expr_type != _boolean_ ){
+				// imprimir erro
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("While", getPredefTypeStr(expr_type), "_boolean_") );
 			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
 		case RepeatStatType:
 			
+			expr_node = cur_node->field2;
+			expr_type = getPredefTypeOfNode(expr_node, cur_scope);
+
 			// têm de verificar se a Expr se resolve em booleano
-			if( getPredefTypeOfNode(cur_node->field2, cur_scope) != _boolean_ ){
-				//TODO
-				// imprimir erro ?
+			if( expr_type != _boolean_ ){
+				// imprimir erro
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("Repeat", getPredefTypeStr(expr_type), "_boolean_") );
 			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
 		case ValParamStatType:
 			
-			// tem de verificar se a Expr devolve um inteiro
-			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != _integer_ ){
-				//TODO
-				// imprimir erro ?
+			expr_node = cur_node->field1;
+			expr_type = getPredefTypeOfNode(expr_node, cur_scope);
+
+			// têm de verificar se a Expr se resolve em inteiro
+			if( expr_type != _integer_ ){
+				// imprimir erro
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("ValParam", getPredefTypeStr(expr_type), "_integer_") );
 			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
 		case AssignStatType:
 
+			IDNode = cur_node->field1;
+			type1 = getPredefTypeOfNode(IDNode, cur_scope);
+			type2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
+
+
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
-			if( getPredefTypeOfNode(cur_node->field1, cur_scope) != getPredefTypeOfNode(cur_node->field2, cur_scope) ){
-				//TODO
-				// imprimir erro ?
+			if( type1 != type2 ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type1), getPredefTypeStr(type2)) );
 			}
+			
+			
+			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			// erro de atribuição a field 1 se for um const nas tabelas relevantes
+			if( lookup_result != NULL && lookup_result->flag == constantFlag ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printVariableIdentifierExpectedError() );
+			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
@@ -500,8 +544,8 @@ void insertSymbol(symbol* s, table* t){
 }
 
 void printSymbolDebug(symbol* node) {
-	printf("No %p\n", node);
 
+	printf("Node address: %p\n", node);
 	printf("%s\n", node->name);
 	printf("%s\n", getPredefTypeStr(node->type));
 	printf("%s\n", getPredefFlagStr(node->flag));
