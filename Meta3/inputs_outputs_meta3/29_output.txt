@@ -1,1 +1,1 @@
-Line 3, col 16: Symbol b already defined
+Line 5, col 3: Symbol c not defined

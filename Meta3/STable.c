@@ -437,17 +437,22 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			; //very important voodoo magic, because switch case can't start with declaration
 
-			PredefType f1 = getPredefTypeOfNode(cur_node->field1, cur_scope);
-			PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
-			
-			if( !( isValidWriteLnArgument(f1) ) ){
-				// imprimir erro
-				printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
+			if( cur_node->field2 != NULL ){
+				PredefType f1 = getPredefTypeOfNode(cur_node->field1, cur_scope);
+				
+				if( !( isValidWriteLnArgument(f1) ) ){
+					// imprimir erro
+					printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
+				}
 			}
 			
-			if( !( isValidWriteLnArgument(f2) ) ){
-				// imprimir erro
-				printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
+			if( cur_node->field2 != NULL ){
+				PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
+
+				 if( !( isValidWriteLnArgument(f2) ) ){
+					// imprimir erro
+					printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
+				}
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);

@@ -1,1 +1,0 @@
-Line 4, col 4: Type identifier expected

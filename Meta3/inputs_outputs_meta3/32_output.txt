@@ -1,1 +1,1 @@
-Line 6, col 4: syntax error: .
+Line 9, col 8: Wrong number of arguments in call to function add (got 3, expected 2)

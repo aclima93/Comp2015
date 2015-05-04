@@ -3,15 +3,13 @@ var a, b: integer;
 begin
     val(paramstr(1), a);
     val(paramstr(2), b);
-    if a + a then
+    if a > 0 then
         writeln(b)
     else
         begin
-            while b > 0 do
-                if a > b then
+            repeat
                     a := a - b
-                else
-                    a := - b + a + c;
+            until a + a;
             writeln(a)
         end
         
