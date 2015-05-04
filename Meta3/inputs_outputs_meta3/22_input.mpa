@@ -1,0 +1,7 @@
+program gcd(output);
+function gcd(x,y: integer): integer;
+	begin
+			x := functionnotexist(x,y)
+	end;
+begin
+end.

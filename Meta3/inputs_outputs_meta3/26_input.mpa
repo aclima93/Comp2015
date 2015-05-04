@@ -1,0 +1,9 @@
+program gcd(output);
+var b: boolean;
+function gcd(x,y: integer): integer;
+	begin
+		while b > 0 do
+			x := y
+	end;
+begin
+end.

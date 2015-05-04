@@ -1,0 +1,7 @@
+program gcd(output);
+function gcd(x,y: abc): integer;
+	begin
+			integer := 1;
+	end;
+begin
+end.

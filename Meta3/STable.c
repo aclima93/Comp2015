@@ -132,13 +132,14 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 			else {
 				//TODO
 				//imprimir erro
 				// encontrou uma função com o mesmo nome
 			}
+
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
@@ -176,8 +177,10 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				}
 
 				//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
+
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
+
 
 			break;
 			
@@ -209,7 +212,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			}
 			else if ( lookup_result->isDefined == NOT_DEFINED ) {
 
@@ -223,13 +225,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 				insertSymbol(makeSymbol(IDNode->field1, getPredefTypeFromStr(returnType->field1), returnFlag, NULL, DEFINED, cur_scope), cur_scope);
 
-				walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
-
 			}
 			else {
 				//TODO
 				//imprimir erro
 			}
+
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
 
@@ -246,6 +248,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				printErrorLineCol(cur_node->line, cur_node->col, printSymbolNotDefinedError(cur_node->field1));
 			}
 
+			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 			break;
 
 
