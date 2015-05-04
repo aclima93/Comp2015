@@ -207,6 +207,9 @@ int main(int argc, char** args){
 	// read input and create Abstract Syntax Tree
 	yyparse();
 
+	if(errorCounter)
+		return 0;
+
     // create Symbol Table
     errorCounter += createSymbolTable(ASTroot);
 	

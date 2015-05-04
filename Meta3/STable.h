@@ -17,6 +17,7 @@
 #define LOOKUP_DEBUG 0
 #define LOOKUP_UPPER_SCOPES_DEBUG 0
 #define FUNCTION_CALL_DEBUG 0
+#define PARAMLIST_DEBUG 1
 
 
 // don't change these
@@ -161,7 +162,7 @@ table* getFuncScope(char* key, table* cur_scope);
 
 void printErrorLineCol(int l, int c, char* errorStr);
 
-char* printTypeError(char* type);
+char* printCannotWriteTypeError(char* type);
 
 char* printFunctionIDError();
 

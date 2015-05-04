@@ -134,9 +134,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			}
 			else {
-				//TODO
 				//imprimir erro
 				// encontrou uma função com o mesmo nome
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolAlreadyDefinedError(IDNode->field1));
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -158,8 +158,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
-				//TODO
 				//imprimir erro
+				// a função já deveria estar declarada para agora ser definida
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 
 			}
 			else {
@@ -176,9 +177,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 					// não encontrou a função pré declarada
 				}
 
-				//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 			}
 
+			//walkASTNodeChildren(lookup_result->declarationScope, cur_node, cur_declaration_type, cur_flag);
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 
@@ -227,8 +228,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			}
 			else {
-				//TODO
 				//imprimir erro
+				// já existe uma função com este nome definida
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolAlreadyDefinedError(IDNode->field1));
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -272,7 +274,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("IfElse", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("if", getPredefTypeStr(expr_type), "_boolean_") );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -287,7 +289,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("While", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("while", getPredefTypeStr(expr_type), "_boolean_") );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -302,7 +304,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("Repeat", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("repeat-until", getPredefTypeStr(expr_type), "_boolean_") );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -317,7 +319,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em inteiro
 			if( expr_type != _integer_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("ValParam", getPredefTypeStr(expr_type), "_integer_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("val-paramstr", getPredefTypeStr(expr_type), "_integer_") );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -334,7 +336,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
 			if( type1 != type2 ){
 				// imprimir erro
-				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type1), getPredefTypeStr(type2)) );
+				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
 			}
 			
 			
@@ -360,13 +362,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
 			
 			if( !( isValidWriteLnArgument(f1) ) ){
-				//TODO
-				// imprimir erro ?
+				// imprimir erro
+				printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
 			}
 			
 			if( !( isValidWriteLnArgument(f2) ) ){
-				//TODO
-				// imprimir erro ?
+				// imprimir erro
+				printErrorLineCol(cur_node->line, cur_node->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -847,11 +849,26 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 		// check number of arguments and Types in ArgumentList
 
+		if(PARAMLIST_DEBUG){
+			printf("\n\n------------------\nExpected Argument Symbols\n");
+		}
+
 		ExprPredefTypeList* expectedExprTypes = getPredefTypesOfParamList(func_scope); // expected type list
 		int numExpectedArgs = countNumElements(expectedExprTypes); // count number of arguments in expected List
 
+
 		ExprPredefTypeList* gotExprTypes = getPredefTypesOfExprList(cur_node, cur_scope); // gotten type list
 		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
+
+		if(PARAMLIST_DEBUG){
+			printf("\n\n------------------\nGotten Argument Symbols\n");
+
+			ExprPredefTypeList* temp = gotExprTypes;
+			while(temp != NULL){
+				printf("%s\n", getPredefTypeStr(temp->type));
+				temp = temp->next;
+			}
+		}
 
 		if( numGottenArgs != numExpectedArgs ){
 			// imprimir erro
@@ -899,30 +916,6 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 }
 
-void addSymbolToParamList(ExprPredefTypeList* paramSymbolList, symbol* s){
-
-	if( s == NULL )
-		return ;
-
-	// create new element and add to end of list
-	ExprPredefTypeList* new_element = malloc( sizeof(ExprPredefTypeList) );
-	new_element->type = s->type;
-	new_element->next = NULL;
-
-	if( paramSymbolList == NULL ){
-		paramSymbolList = new_element;
-		return ;
-	}
-
-	ExprPredefTypeList* temp = paramSymbolList;
-
-	while( temp->next != NULL ){
-		temp = temp->next;
-	}
-
-	temp->next = new_element;
-}
-
 int countNumElements(ExprPredefTypeList* exprTypes){
 	ExprPredefTypeList* cur_expr = exprTypes;
 	int numElements = 0;
@@ -935,21 +928,53 @@ int countNumElements(ExprPredefTypeList* exprTypes){
 	return numElements;
 }
 
+ExprPredefTypeList* makeTypeListElement(PredefType t){
+
+	// create new element and add to end of list
+	ExprPredefTypeList* new_element = malloc( sizeof(ExprPredefTypeList) );
+	new_element->type = t;
+	new_element->next = NULL;
+
+	return new_element;
+}
+
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
 
 	// return list of types of param symbols for this function
-	ExprPredefTypeList* paramSymbolList = NULL; // this should eb a deallocation, but the'res no time for fancy stuff right now
+	ExprPredefTypeList* paramSymbolList = NULL; // this should eb a deallocation, but there's no time for fancy stuff right now
+	ExprPredefTypeList* temp;
 
 	symbol* cur_symbol = func_scope->symbol_variables;
 
 	while( cur_symbol != NULL ){
 
 		if( cur_symbol->flag == paramFlag || cur_symbol->flag == varparamFlag){
-			addSymbolToParamList(paramSymbolList, cur_symbol);
+
+			if( paramSymbolList == NULL ){
+
+				paramSymbolList = makeTypeListElement(cur_symbol->type);
+			}
+			else{
+
+				//TODO: find a way to cut down this quadratic complexity :(
+
+				temp = paramSymbolList;
+
+				while( temp->next != NULL ){
+					temp = temp->next;
+				}
+
+				temp->next = makeTypeListElement(cur_symbol->type);
+			}
+
+			if(PARAMLIST_DEBUG){
+				printSymbolDebug(cur_symbol);
+			}
 		}
 
 		cur_symbol = cur_symbol->nextSymbol;
 	}
+
 	return paramSymbolList;
 }
 
@@ -1074,7 +1099,7 @@ void printErrorLineCol(int l, int c, char* errorStr) {
 	}
 } 
 
-char* printTypeError(char* type) {
+char* printCannotWriteTypeError(char* type) {
 	char* errorStr = malloc(sizeof(char) * ( strlen("Cannot write values of type \n") + strlen(type) ) );
 	sprintf(errorStr, "Cannot write values of type %s\n", type);
 	return errorStr;
