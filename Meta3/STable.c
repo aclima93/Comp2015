@@ -168,7 +168,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
@@ -205,7 +205,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 				//imprimir erro
@@ -250,7 +250,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
+			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
@@ -1018,10 +1018,14 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
 		ExprPredefTypeList* temp_exprType;
 		node* temp_node = cur_node;
+		
 		while( temp_node != NULL ){
 
 			//TODO
 			// find a way to get rid of this quadratic complexity
+
+			//TODO
+			// debug prints here and fix this shit up
 
 			if(gotExprTypes == NULL){
 				gotExprTypes = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
@@ -1066,13 +1070,10 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		while( cur_gotExpr != NULL && cur_expectedExpr != NULL ){
 
 			if( cur_gotExpr->type != cur_expectedExpr->type ){
-				// printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* gotType, char* expectedType)
+				// imprimir erro
 				printErrorLineCol(op->line, op->col, printIncompatibleTypeCallFunctionError(num, op->field1, getPredefTypeStr(cur_gotExpr->type), getPredefTypeStr(cur_expectedExpr->type) ) );
 				return _NULL_;
 			}
-
-			//TODO
-			// debug prints here and fix this shit up
 
 			num++;
 			cur_gotExpr = cur_gotExpr->next;

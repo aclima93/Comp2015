@@ -1,10 +1,10 @@
 
 
-- symbol not defined têm precedência sobre type identifier expected! (o segundo só aparece se o símbolo existir mas não for do type _type_ )
+√ symbol not defined têm precedência sobre type identifier expected! (o segundo só aparece se o símbolo existir mas não for do type _type_ )
 
 √ atribuir inteiro a real não é problema, apenas o contrário
 
-- podemos declarar funões e variáveis que já tenham sido declaradas como sendo outra coisa, not a problem, desde que fique no scope da declaração também! (verificar se o lookup_result tem omesmo scope de declaração!)
+√ podemos declarar funões e variáveis que já tenham sido declaradas como sendo outra coisa, not a problem, desde que fique no scope da declaração também! (verificar se o lookup_result tem omesmo scope de declaração!)
 
 √ atribuição a id de função só é válido se estivermos no scope da funçao ( "paramcount := 1;" só é válido se estivermos no scope do paramcount )
 
