@@ -222,7 +222,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				cur_scope = getFuncScope(IDNode->field1, cur_scope);
 
 				if(cur_scope == NULL){
-					//TODO
 					//imprimir erro
 					// não encontrou a função pré declarada
 					printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
@@ -405,7 +404,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 
 			// se o ID for uma função então temos de ir buscar o tipo de retorno da mesma para avaliarmos
 			if( lookup_result != NULL && lookup_result->type == _function_ ){
-				//TODO
 				//ir buscar o tipo de retorno
 
 				// get function scope (good thing each symbol has a reference to its declaration scope)
@@ -822,9 +820,7 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  			return _boolean_;
  	}
  	else if ((strcasecmp(op, "and") == 0 || strcasecmp(op, "or") == 0) ) {
- 		if (leftType ==  _boolean_ && rightType == _boolean_ ) {
- 			return _boolean_;
- 		}
+		return _boolean_;
  	}
 
  	return _NULL_;
@@ -854,7 +850,7 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if ((strcasecmp(op, "and") == 0 || strcasecmp(op, "or") == 0) ) {
-		if (leftType ==  rightType) {
+		if (leftType ==  _boolean_ && rightType == _boolean_ ) {
 			return 1;
 		}
  	}
@@ -1299,7 +1295,7 @@ symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope){
  * Error printing Functions
  */
 
-void printErrorLineCol(int l, int c, char* errorStr) {
+void printErrorLineCol(int l, int c, char* str) {
 
 	if(DISABLE_ERRORS)
 		return ;
@@ -1311,19 +1307,21 @@ void printErrorLineCol(int l, int c, char* errorStr) {
 	}
 	else{
 		semanticErrorCounter++;
-		printf("Line %d, col %d: %s", l, c, errorStr);
+		printf("Line %d, col %d: %s", l, c, str);
 	}
 } 
 
 char* printCannotWriteTypeError(char* type) {
-	char* errorStr = malloc(sizeof(char) * ( strlen("Cannot write values of type \n") + strlen(type) ) );
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * ( strlen("Cannot write values of type \n") + strlen(type) ) );
 	sprintf(errorStr, "Cannot write values of type %s\n", type);
 	return errorStr;
 }
 
 char* printFunctionIDError() {
 	int len = strlen("Function identifier expected.\n");
-	char* errorStr = malloc(sizeof(char) * len );
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len );
 	sprintf(errorStr, "Function identifier expected.\n");
 	return errorStr;
 }
@@ -1333,7 +1331,8 @@ char* printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* g
 	len += MAX_INT_LEN;
 	len += strlen("Incompatible type for argument  in call to function  (got , expected )\n");
 	len += strlen(functionStr) + strlen(gotType) + strlen(expectedType);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type for argument %d in call to function %s (got %s, expected %s)\n", num, functionStr, gotType, expectedType);
 	return errorStr;
 }
@@ -1342,7 +1341,8 @@ char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* 
 	int len = 0;
 	len += strlen("Incompatible type in assigment to  (got , expected )\n"); //não corrigir o erro em "assignment", é de propósito!! (como está no enunciado =P)
 	len += strlen(tokenStr) + strlen(gotType) + strlen(expectedType);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
 	return errorStr;
 }
@@ -1351,7 +1351,8 @@ char* printIncompatibleTypeStatementError(char* statementStr, char* gotType, cha
 	int len = 0;
 	len += strlen("Incompatible type in  statement (got , expected )\n");
 	len += strlen(statementStr) + strlen(gotType) + strlen(expectedType);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type in %s statement (got %s, expected %s)\n", statementStr, gotType, expectedType);
 	return errorStr;
 }
@@ -1360,7 +1361,8 @@ char* printOperatorTypeError(char* op, char* type) {
 	int len = 0;
 	len += strlen("Operator  cannot be applied to type \n");
 	len += strlen(op) + strlen(type);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Operator %s cannot be applied to type %s\n", op, type);
 	return errorStr;
 }
@@ -1369,7 +1371,8 @@ char* printOperatorTypesError(char* op, char* leftType, char* rightType) {
 	int len = 0;
 	len += strlen("Operator  cannot be applied to types , \n");
 	len += strlen(op) + strlen(leftType) + strlen(rightType);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Operator %s cannot be applied to types %s, %s\n", op, leftType, rightType);
 	return errorStr;
 }
@@ -1378,7 +1381,8 @@ char* printSymbolAlreadyDefinedError(char* tokenStr) {
 	int len = 0;
 	len += strlen("Symbol  already defined\n");
 	len += strlen(tokenStr);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Symbol %s already defined\n", tokenStr);
 	return errorStr;
 }
@@ -1387,21 +1391,24 @@ char* printSymbolNotDefinedError(char* tokenStr) {
 	int len = 0;
 	len += strlen("Symbol  not defined\n");
 	len += strlen(tokenStr);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Symbol %s not defined\n", tokenStr);
 	return errorStr;
 }
 
 char* printTypeIdentifierExpectedError() {
 	int len = strlen("Type identifier expected\n");
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Type identifier expected\n");
 	return errorStr;
 }
 
 char* printVariableIdentifierExpectedError() {
 	int len = strlen("Variable identifier expected\n");
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Variable identifier expected\n");
 	return errorStr;
 }
@@ -1411,9 +1418,33 @@ char* printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expect
 	len += MAX_INT_LEN * 2;
 	len += strlen("Wrong number of arguments in call to function  (got , expected )\n");
 	len += strlen(tokenStr);
-	char* errorStr = malloc(sizeof(char) * len);
+	free(errorStr);
+	errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Wrong number of arguments in call to function %s (got %d, expected %d)\n", tokenStr, gotNArgs, expectedNArgs);
 	return errorStr;
+}
+
+void freeSymbol(symbol* cur_symbol){
+
+	if( cur_symbol == NULL )
+		return ;
+
+	freeSymbol(cur_symbol->nextSymbol);
+	free(cur_symbol);
+}
+
+void freeSymbolTable(table* cur_table){
+
+	if( cur_table == NULL )
+		return ;
+
+	freeSymbol(cur_table->symbol_variables);
+	freeSymbolTable(cur_table->childrenTableList);
+	freeSymbolTable(cur_table->nextSiblingTable);
+
+	//freeSymbolTable(parentTable); // don't free this, it's just a referrence
+
+	free(cur_table);
 }
 
 

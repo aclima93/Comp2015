@@ -152,43 +152,43 @@ Stat: CompStat 																		{$$ = $1;}
 	| WRITELN WritelnPList_Optional 												{$$ = $2;} 
 	;
 
-IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleaf(IDType, ($1)->string, ($1)->line, ($1)->col), $3, NULL, line, col);} 
+IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleaf(IDType, ($1)->string, ($1)->line, ($1)->col), $3, NULL, ($1)->line, ($1)->col);} 
 	| 																				{$$ = NULL;}
 	;
 
-WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, $1, NULL, NULL, line, col);} 
+WritelnPList_Optional: WritelnPList 												{$$ = makenode(WriteLnStatType, $1, NULL, NULL, ($1)->line, ($1)->col);} 
 	| 																				{$$ = NULL;}
 	;
 
-WritelnPList: '(' Expr CommaExprString_Repeat ')' 									{$$ = makenode(WritelnPListType, $2, $3, NULL, line, col);} 
-	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, makeleaf(StringType, ($2)->string, ($2)->line, ($2)->col), $3, NULL, line, col);} 
+WritelnPList: '(' Expr CommaExprString_Repeat ')' 									{$$ = makenode(WritelnPListType, $2, $3, NULL, ($2)->line, ($2)->col);} 
+	| '(' STRING CommaExprString_Repeat ')' 										{$$ = makenode(WritelnPListType, makeleaf(StringType, ($2)->string, ($2)->line, ($2)->col), $3, NULL, ($2)->line, ($2)->col);} 
 	;
 
-CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(WritelnPListType, $2, $3, NULL, line, col);}
-	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, makeleaf(StringType, ($2)->string, ($2)->line, ($2)->col), $3, NULL, line, col);}
+CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(WritelnPListType, $2, $3, NULL, ($2)->line, ($2)->col);}
+	| ',' STRING CommaExprString_Repeat 											{$$ = makenode(WritelnPListType, makeleaf(StringType, ($2)->string, ($2)->line, ($2)->col), $3, NULL, ($2)->line, ($2)->col);}
 	| 																				{$$ = NULL;}
 	;
 
-Expr: SimpleExpr 																	{$$ = makenode(ExprType, NULL, $1, NULL, line, col);}
-	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, line, col);}
+Expr: SimpleExpr 																	{$$ = makenode(ExprType, NULL, $1, NULL, ($1)->line, ($1)->col);}
+	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
 	;
 
-SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, line, col);} 
-	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, line, col);}
-	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ($1)->string, ($1)->line, ($1)->col), $2, line, col);}
+SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);} 
+	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
+	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ($1)->string, ($1)->line, ($1)->col), $2, ($1)->line, ($1)->col);}
 	| Term 																			{$$ = $1;}
 	;
 
-Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, line, col);}
-	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, line, col);}
+Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
+	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
 	| Factor 																		{$$ = $1;}
 	;
 
-Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleaf(UnaryOPType, ($1)->string, ($1)->line, ($1)->col), $2, line, col);}
+Factor: NOT Factor																	{$$ = makenode(FactorType, NULL, makeleaf(UnaryOPType, ($1)->string, ($1)->line, ($1)->col), $2, ($1)->line, ($1)->col);}
 	| '(' Expr ')' 																	{$$ = $2;}
 	| INTLIT 																		{$$ = makeleaf(IntType, ($1)->string, ($1)->line, ($1)->col);}
 	| REALLIT 																		{$$ = makeleaf(DoubleType, ($1)->string, ($1)->line, ($1)->col);}
-	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleaf(CallType, ($1)->string, ($1)->line, ($1)->col), $2, line, col);}
+	| ID ParamList 																	{$$ = makenode(FactorType, NULL, makeleaf(CallType, ($1)->string, ($1)->line, ($1)->col), $2, ($1)->line, ($1)->col);}
 	| ID 					 														{$$ = makeleaf(IDType, ($1)->string, ($1)->line, ($1)->col);}
 	;
 
@@ -260,6 +260,7 @@ int main(int argc, char** args){
 
 	// free all nodes in AST
 	freeNode(ASTroot);
+	freeSymbolTable(STroot);
 
 	return 0;
 }

@@ -70,6 +70,7 @@ typedef struct {
 } symbol;
 
 int semanticErrorCounter;
+char* errorStr;
 
 /*
  * List to hold all expression types involved in a function call
@@ -177,7 +178,7 @@ table* getFuncScope(char* key, table* cur_scope);
  * Error printing Functions
  */
 
-void printErrorLineCol(int l, int c, char* errorStr);
+void printErrorLineCol(int l, int c, char* str);
 
 char* printCannotWriteTypeError(char* type);
 
@@ -202,6 +203,10 @@ char* printTypeIdentifierExpectedError();
 char* printVariableIdentifierExpectedError();
 
 char* printWrongNumberCallFunctionError(char* tokenStr, int gotNArgs, int expectedNArgs);
+
+void freeSymbol(symbol* cur_symbol);
+
+void freeSymbolTable(table* cur_table);
 
 #endif
 

@@ -1,0 +1,8 @@
+program gcd(output); 
+	var b: boolean; 
+	function g(a: integer):integer; 
+	begin 
+		a:=g; 
+	end; 
+begin 
+end.
