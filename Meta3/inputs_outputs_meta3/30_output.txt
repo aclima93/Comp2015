@@ -1,1 +1,1 @@
-Line 4, col 4: Incompatible type in assignment to x (got This cannot show!, expected _integer_)
+Line 2, col 19: Type identifier expected

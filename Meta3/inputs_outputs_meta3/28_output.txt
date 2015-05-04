@@ -1,1 +1,20 @@
-Line 3, col 16: Symbol b already defined
+===== Outer Symbol Table =====
+boolean	_type_	constant	_boolean_
+integer	_type_	constant	_integer_
+real	_type_	constant	_real_
+false	_boolean_	constant	_false_
+true	_boolean_	constant	_true_
+paramcount	_function_
+program	_program_
+
+===== Function Symbol Table =====
+paramcount	_integer_	return
+
+===== Program Symbol Table =====
+b	_boolean_
+gcd	_function_
+
+===== Function Symbol Table =====
+gcd	_integer_	return
+a	_integer_	param
+b	_integer_	param

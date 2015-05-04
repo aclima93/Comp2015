@@ -134,7 +134,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				//get type string from current type of declarations
 				if (cur_declaration_type != NULL) {
 
-					lookup_result = searchForSymbolInRelevantScopes(variable->field1, cur_scope);
+					lookup_result = lookupSymbol(variable->field1, cur_scope);
 
 					if (lookup_result == NULL) {
 
@@ -168,7 +168,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
+			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
@@ -205,7 +205,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
+			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 				//imprimir erro
@@ -250,7 +250,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// adicionar funcao ao scope onde estamos
 			temp = cur_node->field1;
 			IDNode = temp->field1;
-			lookup_result = lookupSymbol(IDNode->field1, cur_scope);
+			lookup_result = searchForFuncSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if (lookup_result == NULL) {
 
@@ -383,19 +383,25 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			type2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
 
 
-			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
-			if( type1 != type2 ){
+			// verificar se o tipo da direita é válido
+			if( !isValidType(type2) ){
 				// imprimir erro
-				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
+				temp = cur_node->field2;
+				printErrorLineCol(temp->line, temp->col, printTypeIdentifierExpectedError());
 			}
-			
-			
+
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			// erro de atribuição a field 1 se for um const nas tabelas relevantes
 			if( lookup_result != NULL && lookup_result->flag == constantFlag ){
 				// imprimir erro
 				printErrorLineCol(IDNode->line, IDNode->col, printVariableIdentifierExpectedError() );
+			}
+
+			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
+			if( type1 != type2 ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -616,6 +622,31 @@ table* getFuncScope(char *key, table* cur_scope) {
 	}
 }
 
+symbol* lookupFuncSymbol(char* key, table* t){
+
+	symbol* cur_symbol = t->symbol_variables;
+
+	while( cur_symbol != NULL ){
+
+		if( strcasecmp(cur_symbol->name, key) == 0 && cur_symbol->type == _function_ ){
+			break;
+		}
+
+		cur_symbol = cur_symbol->nextSymbol;
+	}
+
+	if(LOOKUP_DEBUG){
+		printf("\n--------\n");
+		printTable(t);
+		printf("Searching\n");
+		printf("%s\n", key);
+		printf("Got\n");
+		printSymbolDebug( cur_symbol );
+	}
+
+	return cur_symbol;
+}
+
 symbol* lookupSymbol(char* key, table* t){
 
 	symbol* cur_symbol = t->symbol_variables;
@@ -709,8 +740,17 @@ char* strlwr(char* str){
 }
 
 /*
- * Error functions
+ * Error checking functions
  */
+
+int isValidType(PredefType t){
+
+	if( t == _boolean_ || t == _integer_ || t == _real_ ){
+		return 1;
+	}
+
+	return 0;
+}
 
 int isValidWriteLnArgument(PredefType p){
 
@@ -725,7 +765,7 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
  		
  		// integer/real with integer/real
-		if ( leftType == _integer_ && leftType == _integer_)
+		if ( leftType == _integer_ && rightType == _integer_)
 			return _integer_;
 		else if ( (leftType == _integer_ || leftType == _real_) && (rightType == _integer_ || rightType == _real_) )
 			return _real_;
@@ -888,7 +928,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 		// check function id in current scope and scopes above it 
 
-		lookup_result = searchForSymbolInRelevantScopes(op->field1, cur_scope);
+		lookup_result = searchForFuncSymbolInRelevantScopes(op->field1, cur_scope);
 
 		if (lookup_result == NULL) {
 			//printErrorLineCol(op->line, op->col, printSymbolNotDefinedError(op->field1));
@@ -920,7 +960,21 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		int numExpectedArgs = countNumElements(expectedExprTypes); // count number of arguments in expected List
 
 
-		ExprPredefTypeList* gotExprTypes = getPredefTypesOfExprList(cur_node, cur_scope); // gotten type list
+		//ExprPredefTypeList* gotExprTypes = getPredefTypesOfExprList(cur_node, cur_scope); // gotten type list
+
+		
+		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
+
+		ExprPredefTypeList* temp_exprType = gotExprTypes;
+		node* temp_node = cur_node;
+
+		while( temp_node != NULL ){
+
+			temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+			temp_exprType = temp_exprType->next;
+			temp_node = temp_node->field2;
+		}
+		
 		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
 
 		if(PARAMLIST_DEBUG){
@@ -958,7 +1012,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		}
 
 		// return type of func
-		lookup_result = lookupSymbol(op->field1, func_scope);
+		lookup_result = lookupFuncSymbol(op->field1, func_scope);
 		if( lookup_result != NULL && lookup_result->flag == returnFlag )
 			return lookup_result->type;
 
@@ -1112,6 +1166,41 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 	return lookup_result->type;
 }
 
+symbol* searchForFuncSymbolInRelevantScopes(char* key, table* cur_scope){
+
+	// check cur_scope and upper scopes for symbol declaration in symbol tables
+
+	symbol* lookup_result = NULL;
+	table* upper_scope = cur_scope;
+
+	while( upper_scope != NULL ){
+
+		lookup_result = lookupSymbol(key, upper_scope);
+		
+		if( LOOKUP_UPPER_SCOPES_DEBUG ){
+
+			if( upper_scope != NULL ){
+				printf("\n\nLooking for %s in Scope\n", key);
+				printTable(upper_scope);
+			}
+
+			if( lookup_result != NULL && lookup_result->type == _function_ ){
+				printf("\n\nSymbol Found\n");
+				printSymbolDebug(lookup_result);
+			}
+		}
+
+		upper_scope = upper_scope->parentTable; //check for outer table
+
+		if(lookup_result != NULL && lookup_result->type == _function_ ){
+			return lookup_result;
+		}
+
+	}
+
+	return lookup_result;
+}
+
 symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope){
 
 	// check cur_scope and upper scopes for symbol declaration in symbol tables
@@ -1145,6 +1234,10 @@ symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope){
 
 	return lookup_result;
 }
+
+/*
+ * Error printing Functions
+ */
 
 void printErrorLineCol(int l, int c, char* errorStr) {
 
@@ -1187,7 +1280,7 @@ char* printIncompatibleTypeCallFunctionError(int num, char* functionStr, char* g
 
 char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* expectedType) {
 	int len = 0;
-	len += strlen("Incompatible type in assignment to  (got , expected )\n");
+	len += strlen("Incompatible type in assigment to  (got , expected )\n"); //não corrigir o erro em "assignment", é de propósito!! (como está no enunciado =P)
 	len += strlen(tokenStr) + strlen(gotType) + strlen(expectedType);
 	char* errorStr = malloc(sizeof(char) * len);
 	sprintf(errorStr, "Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);

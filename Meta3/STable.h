@@ -113,6 +113,8 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* s
 
 void insertSymbol(symbol* s, table* t);
 
+symbol* lookupFuncSymbol(char* key, table* t);
+
 symbol* lookupSymbol(char* key, table* t);
 
 void printSymbol(symbol* s);
@@ -126,10 +128,12 @@ void printAllSymbolTables( table* root_table );
 char* strlwr(char* str);
 
 /*
- * Error printing functions
+ * Error checking functions
  */
 
- int isValidWriteLnArgument(PredefType p);
+int isValidType(PredefType t);
+
+int isValidWriteLnArgument(PredefType p);
 
 PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightType);
 
@@ -151,6 +155,8 @@ void addSymbolToParamList(ExprPredefTypeList* paramSymbolList, symbol* s);
 
 int countNumElements(ExprPredefTypeList* exprTypes);
 
+ExprPredefTypeList* makeTypeListElement(PredefType t);
+
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope);
 
 ExprPredefTypeList* getPredefTypesOfExprList(node* cur_node, table* cur_scope);
@@ -159,9 +165,15 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope);
 
 PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scope);
 
+symbol* searchForFuncSymbolInRelevantScopes(char* key, table* cur_scope);
+
 symbol* searchForSymbolInRelevantScopes(char* key, table* cur_scope);
 
 table* getFuncScope(char* key, table* cur_scope);
+
+/*
+ * Error printing Functions
+ */
 
 void printErrorLineCol(int l, int c, char* errorStr);
 

@@ -1,0 +1,13 @@
+- symbol not defined têm precedência sobre type identifier expected! (o segundo só aparece se o símbolo existir mas não for do type _type_ )
+
+- atribuir inteiro a real não é problema, apenas o contrário
+
+- podemos declarar funões e variáveis que já tenham sido declaradas como sendo outra coisa, not a problem, desde que fique no scope da declaração também! (verificar se o lookup_result tem omesmo scope de declaração!)
+
+- atribuição a id de função só é válido se estivermos no scope da funçao ( "paramcount := 1;" só é válido se estivermos no scope do paramcount )
+
+- atenção às linhas e colunas das expressões (deve aparecer o início da expressão, ver bem o que éguardado na linha e na coluna de uma expressão no .l)
+
+- "assignment" tem de ser mal escrito como "assigment" devido a uma gralha
+
+- verificar se o 2º parâmetro do valparamstr está definido
