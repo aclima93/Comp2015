@@ -1,1 +1,1 @@
-Line 4, col 9: Function identifier expected.
+Line 4, col 6: Function identifier expected.

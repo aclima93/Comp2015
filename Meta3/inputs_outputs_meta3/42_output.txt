@@ -1,1 +1,1 @@
-Line 15, col 11: Type identifier expected
+Line 15, col 11: Incompatible type in assigment to ret (got _function_, expected _integer_)

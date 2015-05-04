@@ -400,13 +400,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			type2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
 			temp = cur_node->field2;
 
-			// verificar se o tipo da direita é válido
-			if( !isValidType(type2) ){
-				// imprimir erro
-				printErrorLineCol(temp->line, temp->col, printTypeIdentifierExpectedError());
-			}
-
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			// têm de verificar se o ID é válido
+			if( lookup_result == NULL ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
+			}
 
 			// se o ID for uma função então temos de ir buscar o tipo de retorno da mesma para avaliarmos
 			if( lookup_result != NULL && lookup_result->type == _function_ ){
@@ -780,15 +780,6 @@ char* strlwr(char* str){
  * Error checking functions
  */
 
-int isValidType(PredefType t){
-
-	if( t == _boolean_ || t == _integer_ || t == _real_ ){
-		return 1;
-	}
-
-	return 0;
-}
-
 int isValidAssignment(PredefType leftType, PredefType rightType){
 
 	if( leftType == rightType ){
@@ -851,13 +842,8 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  			return 1;
  		}
  	}
- 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
- 		if ( (( leftType == _integer_  || leftType == _real_ ) && (rightType == _integer_ || rightType == _real_ )) || ( leftType == _boolean_ && rightType == _boolean_ ) ) {
- 			return 1;
- 		}
- 	}
- 	else if ((strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0) ) {
- 		if (leftType ==  rightType) {
+ 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0 || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
+ 		if ( ( leftType == _integer_  || leftType == _real_  || leftType == _boolean_ ) && ( rightType == _integer_ || rightType == _real_ || rightType == _boolean_ ) ) {
  			return 1;
  		}
  	}
@@ -883,7 +869,7 @@ int isValidUnaryOperation(char* op, PredefType rightType){
 			return 1;
 		}
 	}
-	else if( strcmp(op, "!") == 0 || strcmp(op, "not") == 0 ){ 
+	else if( strcmp(op, "not") == 0 ){ 
 		if( rightType == _boolean_ ){
 			return 1;
 		}
@@ -989,7 +975,6 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		lookup_result = searchForFuncSymbolInRelevantScopes(op->field1, cur_scope);
 
 		if (lookup_result == NULL) {
-			//printErrorLineCol(op->line, op->col, printSymbolNotDefinedError(op->field1));
 			printErrorLineCol(op->line, op->col, printFunctionIDError());
 			return _NULL_; // no function return type because the function doesn't exist
 		}
@@ -1020,7 +1005,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
 		ExprPredefTypeList* temp_exprType;
-		node* temp_node = cur_node;
+		node* temp_node = cur_node->field3;
 		PredefType tempType; 
 		
 		while( temp_node != NULL ){
@@ -1028,9 +1013,6 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 			//TODO
 			// find a way to get rid of this quadratic complexity
 
-			//TODO
-			// debug prints here and fix this shit up
-			
 			tempType = getPredefTypeOfNode(temp_node->field1, cur_scope);
 
 			if(gotExprTypes == NULL){
@@ -1046,8 +1028,8 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 				}
 
 				temp_exprType->next = makeTypeListElement(tempType);
-				temp_node = temp_node->field2;
 			}
+			temp_node = temp_node->field2;
 		}
 		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
 
@@ -1213,6 +1195,15 @@ PredefType getPredefTypeOfNode(node* cur_node, table* cur_scope){
 		return getPredefTypeOfFactor(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == IDType ){
+
+		symbol* lookup_result = searchForSymbolInRelevantScopes(cur_node->field1, cur_scope);
+
+		// têm de verificar se o ID é válido
+		if( lookup_result == NULL ){
+			// imprimir erro
+			printErrorLineCol(cur_node->line, cur_node->col, printSymbolNotDefinedError(cur_node->field1));
+		}
+
 		return searchForTypeOfSymbolInRelevantScopes(cur_node, cur_scope);
 	}
 	else if( cur_node->type_of_node == IntType ){

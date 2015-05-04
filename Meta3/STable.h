@@ -134,8 +134,6 @@ char* strlwr(char* str);
  * Error checking functions
  */
 
-int isValidType(PredefType t);
-
 int isValidAssignment(PredefType leftType, PredefType rightType);
 
 int isValidWriteLnArgument(PredefType p);

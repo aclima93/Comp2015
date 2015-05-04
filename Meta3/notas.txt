@@ -32,12 +32,12 @@
 
 √ expressão no writeln é que dá a coluna
 
-- nas expressões num write line temos de verificar cada elemento por lookup
+√ nas expressões num write line temos de verificar cada elemento por lookup
 
 
 [F]
 
-- a raiz da expressão no assignment é que dá a coluna
+√ a raiz da expressão no assignment é que dá a coluna
 -- operação mais pesada
 
-- relacionais tudo errado porque podemos comparar booleanos com <, > <= ,>=
+√ relacionais tudo errado porque podemos comparar booleanos com <, > <= ,>=
