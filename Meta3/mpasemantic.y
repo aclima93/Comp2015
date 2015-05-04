@@ -170,17 +170,17 @@ CommaExprString_Repeat: ',' Expr CommaExprString_Repeat 							{$$ = makenode(Wr
 	;
 
 Expr: SimpleExpr 																	{$$ = makenode(ExprType, NULL, $1, NULL, ($1)->line, ($1)->col);}
-	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
+	| SimpleExpr OP2 SimpleExpr 													{$$ = makenode(ExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($2)->line, ($2)->col);}
 	;
 
-SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);} 
-	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
+SimpleExpr: SimpleExpr OP3 Term														{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($2)->line, ($2)->col);} 
+	| SimpleExpr OR Term															{$$ = makenode(SimpleExprType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($2)->line, ($2)->col);}
 	| OP3 Term 																		{$$ = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ($1)->string, ($1)->line, ($1)->col), $2, ($1)->line, ($1)->col);}
 	| Term 																			{$$ = $1;}
 	;
 
-Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
-	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($1)->line, ($1)->col);}
+Term: Term OP4 Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($2)->line, ($2)->col);}
+	| Term AND Term 																{$$ = makenode(OPTermListType, $1, makeleaf(OPType, ($2)->string, ($2)->line, ($2)->col), $3, ($2)->line, ($2)->col);}
 	| Factor 																		{$$ = $1;}
 	;
 

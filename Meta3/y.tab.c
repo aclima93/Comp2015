@@ -1765,17 +1765,17 @@ yyreduce:
 
   case 51:
 #line 173 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(1) - (3)].node_pointer))->line, ((yyvsp[(1) - (3)].node_pointer))->col);}
+    {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 52:
 #line 176 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(1) - (3)].node_pointer))->line, ((yyvsp[(1) - (3)].node_pointer))->col);}
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 53:
 #line 177 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(1) - (3)].node_pointer))->line, ((yyvsp[(1) - (3)].node_pointer))->col);}
+    {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 54:
@@ -1790,12 +1790,12 @@ yyreduce:
 
   case 56:
 #line 182 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(1) - (3)].node_pointer))->line, ((yyvsp[(1) - (3)].node_pointer))->col);}
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 57:
 #line 183 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(1) - (3)].node_pointer))->line, ((yyvsp[(1) - (3)].node_pointer))->col);}
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 58:

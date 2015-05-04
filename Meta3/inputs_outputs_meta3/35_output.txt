@@ -1,1 +1,1 @@
-Line 11, col 20: Incompatible type in if statement (got _integer_, expected _boolean_)
+Line 11, col 22: Incompatible type in if statement (got _integer_, expected _boolean_)
