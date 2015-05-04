@@ -481,37 +481,6 @@ table* insertChildTable(table* cur_table, table* new_table){
 	}
 }
 
-int lookup_compare(const void* l, const void* r){
-	// compare normaly
-    const symbol* lm = l;
-    const symbol* lr = r;
-    return strcasecmp(lm->name, lr->name);
-}
-
-int insert_compare(const void* l, const void* r){
-	//TODO find a way to preserve insertion order and order by name
-    // always insert at the end, preserving insertion order
-    return 1;
-}
-
-void walker(const void *node, const VISIT which, const int depth) {
-
-  symbol *s;
-  s = *(symbol **)node;
-
-   switch (which) {
-
-		case preorder:
-		case endorder:
-		   break;
-	
-		case leaf:
-		case postorder:
-			printSymbol(s);
-			break;
-   }
-}
-
 symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* scope){
 
 	symbol* s = malloc(sizeof(symbol));
@@ -522,6 +491,7 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* s
     s->value = v;
     s->isDefined = d;
 	s->declarationScope = scope;
+	s->nextSymbol = NULL;
 
     return s;
 }
@@ -535,9 +505,19 @@ void insertSymbol(symbol* s, table* t){
 		printf("\nBefore insertion\n");
 		printTable(t);
 	}
-	
 
-    tsearch(s, &(t->symbol_variables), insert_compare); // if it isn't found with tsearch it is inserted
+	if( t->symbol_variables == NULL ){
+		t->symbol_variables = s;
+		return ;
+	}
+	
+	symbol* cur_symbol = t->symbol_variables;
+
+	while( cur_symbol->nextSymbol != NULL ){
+		cur_symbol = cur_symbol->nextSymbol;
+	}
+
+	cur_symbol->nextSymbol = s;    
 
     if(INSERTION_DEBUG){
 		printf("\nAfter insertion\n");
@@ -573,25 +553,27 @@ table* getFuncScope(char *key, table* cur_scope) {
 
 symbol* lookupSymbol(char* key, table* t){
 
-	symbol* s = makeSymbol(key, _NULL_, NULLFlag, NULL, DEFINED, NULL); // only the name matters in lookup_compare
+	symbol* cur_symbol = t->symbol_variables;
 
-	void* node = tfind(s, &(t->symbol_variables), lookup_compare); //return NULL if element isn't found 
+	while( cur_symbol != NULL ){
 
-	if (node == NULL){
-		return NULL;
-	}
-	else{
-
-		if(LOOKUP_DEBUG){
-			printf("\n--------\n");
-			printTable(t);
-			printf("Searching\n");
-			printf("%s\n", key);
-			printf("Got\n");
-			printSymbolDebug( (*(symbol**)node) );
+		if( strcasecmp(cur_symbol->name, key) == 0 ){
+			break;
 		}
-		return (*(symbol**)node);
+
+		cur_symbol = cur_symbol->nextSymbol;
 	}
+
+	if(LOOKUP_DEBUG){
+		printf("\n--------\n");
+		printTable(t);
+		printf("Searching\n");
+		printf("%s\n", key);
+		printf("Got\n");
+		printSymbolDebug( cur_symbol );
+	}
+
+	return cur_symbol;
 }
 
 void printSymbol(symbol* s){
@@ -611,7 +593,14 @@ void printSymbol(symbol* s){
 void printTable( table* t){
 
 	printf("===== %s Symbol Table =====\n", getPredefTableStr(t->type));
-    twalk(t->symbol_variables, walker); // prints all nodes in inorder
+
+	symbol* cur_symbol = t->symbol_variables;
+
+	while( cur_symbol != NULL ){
+	
+		printSymbol( cur_symbol );
+		cur_symbol = cur_symbol->nextSymbol;
+	}
 }
 
 void printSiblings(table* cur_table){
@@ -910,7 +899,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 }
 
-void addSymbolToParamList(symbol* s){
+void addSymbolToParamList(ExprPredefTypeList* paramSymbolList, symbol* s){
 
 	if( s == NULL )
 		return ;
@@ -934,26 +923,6 @@ void addSymbolToParamList(symbol* s){
 	temp->next = new_element;
 }
 
-void param_walker(const void *node, const VISIT which, const int depth) {
-
-  symbol *s;
-  s = *(symbol **)node;
-
-   switch (which) {
-
-		case preorder:
-		case endorder:
-		   break;
-	
-		case leaf:
-		case postorder:
-			if( s->flag == paramFlag || s->flag == varparamFlag){
-				addSymbolToParamList(s);
-			}
-			break;
-   }
-}
-
 int countNumElements(ExprPredefTypeList* exprTypes){
 	ExprPredefTypeList* cur_expr = exprTypes;
 	int numElements = 0;
@@ -967,10 +936,20 @@ int countNumElements(ExprPredefTypeList* exprTypes){
 }
 
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
-	//TODO
+
 	// return list of types of param symbols for this function
-	paramSymbolList = NULL; // this should eb a deallocation, but the'res no time for fancy stuff right now
-	twalk(func_scope->symbol_variables, param_walker); // fetch all types of function parameters
+	ExprPredefTypeList* paramSymbolList = NULL; // this should eb a deallocation, but the'res no time for fancy stuff right now
+
+	symbol* cur_symbol = func_scope->symbol_variables;
+
+	while( cur_symbol != NULL ){
+
+		if( cur_symbol->flag == paramFlag || cur_symbol->flag == varparamFlag){
+			addSymbolToParamList(paramSymbolList, cur_symbol);
+		}
+
+		cur_symbol = cur_symbol->nextSymbol;
+	}
 	return paramSymbolList;
 }
 

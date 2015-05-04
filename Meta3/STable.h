@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <search.h>
 #include <ctype.h>
 
 #define DISABLE_ERRORS 0
@@ -63,6 +62,7 @@ typedef struct {
     char* value;
     int isDefined;
     table* declarationScope;
+    void* nextSymbol;
 } symbol;
 
 int semanticErrorCounter;
@@ -76,8 +76,6 @@ typedef struct {
     void* next;
 } ExprPredefTypeList;
 
-
-ExprPredefTypeList* paramSymbolList;
 
 /*
  * Symbol insertions, printing and deletion functions
@@ -106,12 +104,6 @@ table* makeTable(PredefTable t);
 table* insertSiblingTable(table* cur_table, table* new_table);
 
 table* insertChildTable(table* cur_table, table* new_table);
-
-int lookup_compare(const void* l, const void* r);
-
-int insert_compare(const void* l, const void* r);
-
-void walker(const void *node, const VISIT which, const int depth);
 
 symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* scope);
 
@@ -151,9 +143,7 @@ PredefType getPredefTypeOfTerm(node* cur_node, table* cur_scope);
 
 PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope);
 
-void addSymbolToParamList(symbol* s);
-
-void param_walker(const void *node, const VISIT which, const int depth);
+void addSymbolToParamList(ExprPredefTypeList* paramSymbolList, symbol* s);
 
 int countNumElements(ExprPredefTypeList* exprTypes);
 

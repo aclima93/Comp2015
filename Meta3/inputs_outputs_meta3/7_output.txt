@@ -1,1 +1,1 @@
-Line 25, col 6: Operator not cannot be applied to type _integer_
+Line 18, col 3: Incompatible type in assignment to a1 (got _integer_, expected _boolean_)

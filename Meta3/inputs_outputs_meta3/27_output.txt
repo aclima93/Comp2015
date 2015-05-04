@@ -1,0 +1,1 @@
+Line 5, col 11: Operator + cannot be applied to types _boolean_, _boolean_

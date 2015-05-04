@@ -1,0 +1,1 @@
+Line 3, col 16: Symbol b already defined

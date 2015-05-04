@@ -1,1 +1,1 @@
-Line 7, col 12: Symbol A not defined
+Line 8, col 13: Incompatible type in assignment to gcd (got _real_, expected _integer_)

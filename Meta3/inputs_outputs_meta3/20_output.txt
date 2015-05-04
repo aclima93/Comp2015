@@ -1,1 +1,1 @@
-Line 5, col 6: Symbol A not defined
+Line 5, col 8: Operator = cannot be applied to types This cannot show!, _integer_

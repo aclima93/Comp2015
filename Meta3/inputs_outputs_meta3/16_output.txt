@@ -1,1 +1,1 @@
-Line 15, col 11: Function identifier expected.
+Line 15, col 11: Wrong number of arguments in call to function max (got 2, expected 0)

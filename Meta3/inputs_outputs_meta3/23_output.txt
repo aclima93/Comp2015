@@ -1,0 +1,1 @@
+Line 9, col 9: Wrong number of arguments in call to function add (got 2, expected 0)
