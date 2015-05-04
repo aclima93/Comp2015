@@ -75,7 +75,5 @@ function myFunction: integer;
 	end;
 
 begin
-
 	a1 := a2;
-
 end.

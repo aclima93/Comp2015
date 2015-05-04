@@ -1,1 +1,1 @@
-Line 10, col 25: Incompatible type in while statement (got _integer_, expected _boolean_)
+Line 10, col 19: Incompatible type in while statement (got _integer_, expected _boolean_)
