@@ -77,7 +77,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if( lookup_result == NULL ){
-				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 			}
 			else if( lookup_result->type != _type_ ){
 				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
@@ -94,7 +94,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if( lookup_result == NULL ){
-				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 			}
 			else if( lookup_result->type != _type_ ){
 				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
@@ -111,7 +111,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
 
 			if( lookup_result == NULL ){
-				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 			}
 			else if( lookup_result->type != _type_ ){
 				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());

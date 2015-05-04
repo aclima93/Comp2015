@@ -1,1 +1,1 @@
-Line 5, col 13: Type identifier expected
+Line 5, col 13: Symbol string not defined
