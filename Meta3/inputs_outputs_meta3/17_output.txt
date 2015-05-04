@@ -1,1 +1,1 @@
-Line 8, col 13: Incompatible type in assignment to gcd (got _real_, expected _integer_)
+Line 8, col 13: Incompatible type in assignment to gcd (got _integer_, expected _real_)

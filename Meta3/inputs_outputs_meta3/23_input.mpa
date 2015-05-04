@@ -6,7 +6,7 @@ function add(x,y:integer): integer;
 	end;
 function gcd(x,y: integer): integer;
 	begin
-			y := add(x,b)
+			y := add(x,y,b)
 	end;
 begin
 end.

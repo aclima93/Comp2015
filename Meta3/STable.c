@@ -422,6 +422,9 @@ PredefType getPredefTypeFromStr(char* t) {
 }
 
 char* getPredefTypeStr(PredefType t) {
+
+	assert(t != _NULL_); // isto não for verdade é porque vamos imprimir algo que não deveriamos
+
 	char* str[] = {
 		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "_string_", "This cannot show!"
 	};
@@ -722,7 +725,7 @@ int isValidUnaryOperation(char* op, PredefType rightType){
 			return 1;
 		}
 	}
-	else if( strcmp(op, "!") == 0 ){ 
+	else if( strcmp(op, "!") == 0 || strcmp(op, "not") == 0 ){ 
 		if( rightType == _boolean_ ){
 			return 1;
 		}

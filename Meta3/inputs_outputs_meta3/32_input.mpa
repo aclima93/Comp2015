@@ -3,10 +3,10 @@ var b: boolean;
 function add(x,y:integer): integer;
 begin
 	add := x+y
-end.
-function gcd(x,y,c: integer): integer;
+end;
+function gcd2(x,y,c: integer): integer;
 	begin
-			A := add(x,b,c)
+		x := add(x,b,c)
 	end;
 begin
 end.

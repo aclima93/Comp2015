@@ -15,17 +15,17 @@ function myFunction: integer;
 		a1 := b1 mod c1;
 		a1 := b1 div c1;
 
-		a1 := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
 
 		{
 		a1 := + b1 + c1;
 		a1 := - b1 + c1;
 		}
 
-		if not b1 then
+		if not false then
 			a1 := b1 + c1;
 
-		a1 := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
 
 		if a1 > b1 then
 			a1 := b1 + c1;
@@ -45,7 +45,7 @@ function myFunction: integer;
 		if a1 = b1 then
 			a1 := b1 + c1;
 
-		a1 := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
 
 		if a1 > b1 then
 			a1 := b1 + c1

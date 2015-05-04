@@ -1,1 +1,1 @@
-Line 4, col 4: Incompatible type in assignment to integer (got _type_, expected _integer_)
+Line 4, col 4: Incompatible type in assignment to integer (got _integer_, expected _type_)

@@ -11,6 +11,7 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <assert.h>
 
 #define DISABLE_ERRORS 0
 #define INSERTION_DEBUG 0
