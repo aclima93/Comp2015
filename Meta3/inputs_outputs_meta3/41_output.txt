@@ -1,0 +1,1 @@
+Line 15, col 11: Wrong number of arguments in call to function max (got 3, expected 2)

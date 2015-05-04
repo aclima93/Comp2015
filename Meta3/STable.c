@@ -382,6 +382,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				printErrorLineCol(IDNode->line, IDNode->col, printSymbolNotDefinedError(IDNode->field1));
 			}
 
+			expr_type = getPredefTypeOfNode(IDNode, cur_scope);
+			// têm de verificar se a ID se resolve em inteiro
+			if( expr_type != _integer_ ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeStatementError("val-paramstr", getPredefTypeStr(expr_type), getPredefTypeStr(_integer_)) );
+			}
+
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
 			break;
