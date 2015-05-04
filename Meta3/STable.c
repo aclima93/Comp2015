@@ -407,8 +407,12 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			if( lookup_result != NULL && lookup_result->type == _function_ ){
 				//TODO
 				//ir buscar o tipo de retorno
-				//lookup_result = ;
-				//type1 = ;
+
+				// get function scope (good thing each symbol has a reference to its declaration scope)
+				table* func_scope = getFuncScope(IDNode->field1, lookup_result->declarationScope);
+
+				lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+				type1 = lookup_result->type;
 			}
 
 			// erro de atribuição a field 1 se for um const nas tabelas relevantes
@@ -812,6 +816,11 @@ PredefType outcomeOfOperation(char* op, PredefType leftType, PredefType rightTyp
  		  || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
  			return _boolean_;
  	}
+ 	else if ((strcasecmp(op, "and") == 0 || strcasecmp(op, "or") == 0) ) {
+ 		if (leftType ==  _boolean_ && rightType == _boolean_ ) {
+ 			return _boolean_;
+ 		}
+ 	}
 
  	return _NULL_;
 }
@@ -838,6 +847,11 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		if (leftType ==  rightType) {
  			return 1;
  		}
+ 	}
+ 	else if ((strcasecmp(op, "and") == 0 || strcasecmp(op, "or") == 0) ) {
+		if (leftType ==  rightType) {
+			return 1;
+		}
  	}
 
  	return 0;
@@ -995,9 +1009,15 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		ExprPredefTypeList* temp_exprType = gotExprTypes;
 		node* temp_node = cur_node;
 		while( temp_node != NULL ){
-			temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
-			temp_exprType = temp_exprType->next;
-			temp_node = temp_node->field2;
+
+			if(temp_exprType == NULL){
+				temp_exprType = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+			}
+			else{
+				temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+				temp_exprType = temp_exprType->next;
+				temp_node = temp_node->field2;
+			}
 		}
 		int numGottenArgs = countNumElements(gotExprTypes); // count number of arguments in gotten List
 
