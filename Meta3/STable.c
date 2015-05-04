@@ -1006,16 +1006,26 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 
 		
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
-		ExprPredefTypeList* temp_exprType = gotExprTypes;
+		ExprPredefTypeList* temp_exprType;
 		node* temp_node = cur_node;
 		while( temp_node != NULL ){
 
-			if(temp_exprType == NULL){
-				temp_exprType = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
+			//TODO
+			// find a way to get rid of this quadratic complexity
+
+			if(gotExprTypes == NULL){
+				gotExprTypes = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
 			}
 			else{
+
+				temp_exprType = gotExprTypes;
+
+				while( temp_exprType->next != NULL ){
+
+					temp_exprType = temp_exprType->next;
+				}
+
 				temp_exprType->next = makeTypeListElement(getPredefTypeOfNode(temp_node->field1, cur_scope));
-				temp_exprType = temp_exprType->next;
 				temp_node = temp_node->field2;
 			}
 		}
