@@ -10,17 +10,25 @@ int createSymbolTable(node* ASTroot) {
 	// tabela do outer scope
 	STroot = makeTable(outerTable);
 
-	insertSymbol(makeSymbol("boolean", _type_, constantFlag, "_boolean_", DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("integer", _type_, constantFlag, "_integer_", DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("real", _type_, constantFlag, "_real_", DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("false", _boolean_, constantFlag, "_false_", DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("true", _boolean_, constantFlag, "_true_", DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("paramcount", _function_, NULLFlag, NULL, DEFINED, STroot), STroot);
-	insertSymbol(makeSymbol("program", _program_, NULLFlag, NULL, DEFINED, STroot), STroot);
+	char* str = "boolean\0";
+	insertSymbol(makeSymbol(strdup(str), _type_, constantFlag, getPredefTypeStr(_boolean_), DEFINED, STroot), STroot);
+	str = "integer\0";
+	insertSymbol(makeSymbol(strdup(str), _type_, constantFlag, getPredefTypeStr(_integer_), DEFINED, STroot), STroot);
+	str = "real\0";
+	insertSymbol(makeSymbol(strdup(str), _type_, constantFlag, getPredefTypeStr(_real_), DEFINED, STroot), STroot);
+	str = "false\0";
+	insertSymbol(makeSymbol(strdup(str), _boolean_, constantFlag, getPredefTypeStr(_false_), DEFINED, STroot), STroot);
+	str = "true\0";
+	insertSymbol(makeSymbol(strdup(str), _boolean_, constantFlag, getPredefTypeStr(_true_), DEFINED, STroot), STroot);
+	str = "paramcount\0";
+	insertSymbol(makeSymbol(strdup(str), _function_, NULLFlag, NULL, DEFINED, STroot), STroot);
+	str = "program\0";
+	insertSymbol(makeSymbol(strdup(str), _program_, NULLFlag, NULL, DEFINED, STroot), STroot);
 
 	// tabela da funcao paramcount
 	table* paramcount_scope = insertChildTable(STroot, makeTable(functionTable));
-	insertSymbol(makeSymbol("paramcount", _integer_, returnFlag, NULL, DEFINED, paramcount_scope), paramcount_scope);
+	str = "paramcount\0";
+	insertSymbol(makeSymbol(strdup(str), _integer_, returnFlag, NULL, DEFINED, paramcount_scope), paramcount_scope);
 
 	// tabela do program
 	table* program_scope = insertChildTable(STroot, makeTable(programTable));
@@ -63,18 +71,54 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 	switch(t) {
 
 		case VarDeclarationType: //Type identifier expected; Cannot write values of type <type>
+
+			IDNode = cur_node->field2;
+
+			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			if( lookup_result == NULL ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+			else if( lookup_result->type != _type_ ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+
 			/* passar o novo tipo das variáveis que se vão seguir*/
-			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, cur_flag);
+			walkASTNodeChildren(cur_scope, cur_node, IDNode, cur_flag);
 			break;
 
 		case VarParamsType:
+
+			IDNode = cur_node->field2;
+
+			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			if( lookup_result == NULL ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+			else if( lookup_result->type != _type_ ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+
 			/* passar o novo tipo das variáveis que se vão seguir*/
-			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, varparamFlag);
+			walkASTNodeChildren(cur_scope, cur_node, IDNode, varparamFlag);
 			break;
 
 		case ParamsType:
+
+			IDNode = cur_node->field2;
+
+			lookup_result = searchForSymbolInRelevantScopes(IDNode->field1, cur_scope);
+
+			if( lookup_result == NULL ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+			else if( lookup_result->type != _type_ ){
+				printErrorLineCol(IDNode->line, IDNode->col, printTypeIdentifierExpectedError());
+			}
+
 			/* passar o novo tipo das variáveis que se vão seguir*/
-			walkASTNodeChildren(cur_scope, cur_node, cur_node->field2, paramFlag);
+			walkASTNodeChildren(cur_scope, cur_node, IDNode, paramFlag);
 			break;
 
 		case IDListType:
@@ -98,7 +142,13 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 						insertSymbol(makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope), cur_scope);
 					}
 					else {
-						printErrorLineCol(variable->line, variable->col, printSymbolAlreadyDefinedError(name));
+						if( lookup_result->type != _type_ ){
+							printErrorLineCol(variable->line, variable->col, printSymbolAlreadyDefinedError(name));
+						}
+						else{
+							char* type_str = cur_declaration_type->field1;
+							insertSymbol(makeSymbol(name, getPredefTypeFromStr(type_str), cur_flag, NULL, DEFINED, cur_scope), cur_scope);
+						}
 					}
 
 				}
@@ -274,7 +324,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("if", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("if", getPredefTypeStr(expr_type), getPredefTypeStr(_boolean_)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -289,7 +339,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("while", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("while", getPredefTypeStr(expr_type), getPredefTypeStr(_boolean_)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -304,7 +354,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em booleano
 			if( expr_type != _boolean_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("repeat-until", getPredefTypeStr(expr_type), "_boolean_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("repeat-until", getPredefTypeStr(expr_type), getPredefTypeStr(_boolean_)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -319,7 +369,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// têm de verificar se a Expr se resolve em inteiro
 			if( expr_type != _integer_ ){
 				// imprimir erro
-				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("val-paramstr", getPredefTypeStr(expr_type), "_integer_") );
+				printErrorLineCol(expr_node->line, expr_node->col, printIncompatibleTypeStatementError("val-paramstr", getPredefTypeStr(expr_type), getPredefTypeStr(_integer_)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -423,17 +473,18 @@ PredefType getPredefTypeFromStr(char* t) {
 
 char* getPredefTypeStr(PredefType t) {
 
-	assert(t != _NULL_); // isto não for verdade é porque vamos imprimir algo que não deveriamos
+	if( ENABLE_ASSERT )
+		assert(t != _NULL_); // isto não for verdade é porque vamos imprimir algo que não deveriamos
 
 	char* str[] = {
-		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "_string_", "This cannot show!"
+		"_boolean_", "_integer_", "_real_", "_function_", "_program_", "_type_", "_true_", "_false_", "_string_", NO_CAN_DO
 	};
 	return str[t];
 }
 
 char* getPredefFlagStr(PredefFlag f) {
 	char* str[] = {
-		"constant", "return", "param", "varparam", NULL
+		"constant", "return", "param", "varparam", NO_CAN_DO
 	};
 	return str[f];
 }
@@ -490,10 +541,19 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* s
 
 	symbol* s = malloc(sizeof(symbol));
 
-    s->name = n;
+    if( v != NULL)
+	    s->name = strdup(n);
+	else
+		s->name = n;
+
     s->type = t;
     s->flag = f;
-    s->value = v;
+    
+    if( v != NULL)
+	    s->value = strdup(v);
+	else
+		s->value = v;
+    
     s->isDefined = d;
 	s->declarationScope = scope;
 	s->nextSymbol = NULL;

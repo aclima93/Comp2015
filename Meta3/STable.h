@@ -13,19 +13,21 @@
 #include <ctype.h>
 #include <assert.h>
 
+#define IGNORE_ERROR_COUNTER 0
 #define DISABLE_ERRORS 0
 #define INSERTION_DEBUG 0
 #define LOOKUP_DEBUG 0
 #define LOOKUP_UPPER_SCOPES_DEBUG 0
 #define FUNCTION_CALL_DEBUG 0
-#define PARAMLIST_DEBUG 1
+#define PARAMLIST_DEBUG 0
+#define ENABLE_ASSERT 0
 
 
 // don't change these
 #define DEFINED 1
 #define NOT_DEFINED 0
 #define MAX_INT_LEN 6 // the maximum int in C is +/- 32767, so we need at most 6 chars to hold it ;)
-
+#define NO_CAN_DO "This cannot show!\0"
 
 /*
  * Tables

@@ -2074,14 +2074,16 @@ int main(int argc, char** args){
 	// read input and create Abstract Syntax Tree
 	yyparse();
 
-	if(errorCounter)
+
+	if(errorCounter && !IGNORE_ERROR_COUNTER)
 		return 0;
 
     // create Symbol Table
     errorCounter += createSymbolTable(ASTroot);
 	
+
 	// terminate program if any errors were found
-	if(errorCounter)
+	if(errorCounter && !IGNORE_ERROR_COUNTER)
 		return 0;
 
     // checks which flags were requested
