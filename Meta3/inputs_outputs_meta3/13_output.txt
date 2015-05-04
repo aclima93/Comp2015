@@ -1,1 +1,1 @@
-Line 4, col 16: Symbol a already defined
+Line 3, col 6: Type identifier expected

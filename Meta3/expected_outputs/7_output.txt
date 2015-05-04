@@ -1,0 +1,1 @@
+Line 79, col 8: Incompatible type in assigment to a1 (got _real_, expected _integer_)

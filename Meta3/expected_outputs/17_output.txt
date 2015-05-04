@@ -1,0 +1,1 @@
+Line 25, col 7: Symbol IsOperator not defined

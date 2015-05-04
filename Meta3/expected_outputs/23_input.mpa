@@ -1,0 +1,12 @@
+program gcd(output);
+var b: boolean;
+function add(x,y:integer): integer;
+	begin
+		add := x+y
+	end;
+function gcd(x,y: integer): integer;
+	begin
+			y := add(x,y,b)
+	end;
+begin
+end.

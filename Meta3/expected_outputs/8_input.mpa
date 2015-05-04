@@ -1,0 +1,32 @@
+(* Function Declarations, Definitions and Calls *)
+
+program gcd(output);
+
+var a1, b1, c1 :integer;
+
+function myFunc: integer; forward;
+
+function myFunction: integer;
+begin
+end;
+
+function myFunction1(num1: integer): integer;
+begin
+end;
+
+function myFunction2(num1, num2: integer): integer;
+begin
+end;
+
+function myFunc;
+var troblesome: integer;
+begin
+end;
+
+function myFunc2;
+begin
+	(* esta função vai dar erro pois não é declarada previamente *)
+end;
+
+begin
+end.

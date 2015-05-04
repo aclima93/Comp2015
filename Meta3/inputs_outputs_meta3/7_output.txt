@@ -1,1 +1,1 @@
-Line 78, col 2: Incompatible type in assignment to a1 (got _real_, expected _integer_)
+Line 78, col 8: Incompatible type in assigment to a1 (got _real_, expected _integer_)

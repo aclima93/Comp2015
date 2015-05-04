@@ -1,0 +1,30 @@
+program gcd2(output);
+var a, b,c: integer;
+x:reAl;
+function SPJ(w: integer):integer;FORWARD;
+function gcd(d,e: integer):integer;
+begin
+if A = 0 then
+gcd:=B
+else
+gcd:=A
+end;
+function SPJ;
+begin
+gcd3:=w
+end;
+begin
+val(paramstr(1),a);
+val(paramstr(2),b);
+if a = 0 then
+	writeln(b)
+else
+	begin
+		while b > 0 do
+		if a > b then
+		a := a - b
+		else
+		b := b - a;
+		writeln(a)
+	end
+end.

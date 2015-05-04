@@ -391,12 +391,11 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			IDNode = cur_node->field1;
 			type1 = getPredefTypeOfNode(IDNode, cur_scope);
 			type2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
-
+			temp = cur_node->field2;
 
 			// verificar se o tipo da direita é válido
 			if( !isValidType(type2) ){
 				// imprimir erro
-				temp = cur_node->field2;
 				printErrorLineCol(temp->line, temp->col, printTypeIdentifierExpectedError());
 			}
 
@@ -422,7 +421,7 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
 			if( !isValidAssignment(type1, type2) ){
 				// imprimir erro
-				printErrorLineCol(IDNode->line, IDNode->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
+				printErrorLineCol(temp->line, temp->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
 			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
@@ -446,6 +445,9 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 			
 			if( cur_node->field2 != NULL ){
 				PredefType f2 = getPredefTypeOfNode(cur_node->field2, cur_scope);
+
+				if( f2 == _NULL_ )
+					f2 = _type_;
 
 				 if( !( isValidWriteLnArgument(f2) ) ){
 					// imprimir erro
@@ -840,7 +842,7 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0)   {
- 		if ((leftType == _integer_  && rightType == _integer_) || (leftType == _real_  && rightType == _real_) ) {
+ 		if ((leftType == _integer_  || leftType == _real_ ) && (rightType == _integer_ || rightType == _real_) ) {
  			return 1;
  		}
  	}
@@ -1061,6 +1063,9 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 				printErrorLineCol(op->line, op->col, printIncompatibleTypeCallFunctionError(num, op->field1, getPredefTypeStr(cur_gotExpr->type), getPredefTypeStr(cur_expectedExpr->type) ) );
 				return _NULL_;
 			}
+
+			//TODO
+			// debug prints here and fix this shit up
 
 			num++;
 			cur_gotExpr = cur_gotExpr->next;
@@ -1343,7 +1348,7 @@ char* printIncompatibleTypeAssignmentError(char* tokenStr, char* gotType, char* 
 	len += strlen(tokenStr) + strlen(gotType) + strlen(expectedType);
 	free(errorStr);
 	errorStr = malloc(sizeof(char) * len);
-	sprintf(errorStr, "Incompatible type in assignment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
+	sprintf(errorStr, "Incompatible type in assigment to %s (got %s, expected %s)\n", tokenStr, gotType, expectedType);
 	return errorStr;
 }
 

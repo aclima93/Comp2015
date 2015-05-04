@@ -1,0 +1,8 @@
+program gcd(output);
+var a,b: integer;
+c,d: real;
+function teste(e:string):real;
+	begin
+	end;
+begin
+end.

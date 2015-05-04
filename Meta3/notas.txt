@@ -11,3 +11,14 @@
 √ "assignment" tem de ser mal escrito como "assigment" devido a uma gralha
 
 √ verificar se o 2º parâmetro do valparamstr está definido
+
+√ coluna de uma assignment é o da expressão
+
+- valparm recebe um inteiro no segundo id
+
+- "_type_" type no writeln quando é null
+-- verificar os tipos do writeln no iso
+
+√ assignment ainda está bem escrito algures
+
+- inteiro e real podem ser comparados com "<"

@@ -1,0 +1,81 @@
+(* Expression & Statements *)
+
+program gcd(output);
+
+var a1, b1, c1 :integer; a2:real; separadorDeDebugComUmNomeMuitoGrandeEPomposo:boolean;
+
+function myFunction: integer;
+
+	begin
+		
+		a1 := b1 + c1;
+		a1 := b1 - c1;
+		a1 := b1 * c1;
+		a2 := b1 / c1;
+		a1 := b1 mod c1;
+		a1 := b1 div c1;
+
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+
+		{
+		a1 := + b1 + c1;
+		a1 := - b1 + c1;
+		}
+
+		if not false then
+			a1 := b1 + c1;
+
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+
+		if a1 > b1 then
+			a1 := b1 + c1;
+
+		if a1 < b1 then
+			a1 := b1 + c1;
+
+		if a1 <> b1 then
+			a1 := b1 + c1;
+
+		if a1 <= b1 then
+			a1 := b1 + c1;
+
+		if a1 >= b1 then
+			a1 := b1 + c1;
+
+		if a1 = b1 then
+			a1 := b1 + c1;
+
+		separadorDeDebugComUmNomeMuitoGrandeEPomposo := separadorDeDebugComUmNomeMuitoGrandeEPomposo;
+
+		if a1 > b1 then
+			a1 := b1 + c1
+		else
+			a1 := b1 - c1;
+
+		while a1 < b1 do
+			a1 := b1 + c1;
+
+		repeat 	
+			begin
+				a1 := a1 + 1;
+			end;
+		until a1 < b1;
+
+		if a1 < b1 then
+			a1 := b1 + c1;
+
+		writeln ( 'string catita e fofinha mas extremamente máscula' );
+
+		writeln ( a1 );
+
+		Val ( ParamStr( b1 ), a1 );
+
+		Val (ParamStr( b1 + c1 ), a1 );
+
+	end;
+
+begin
+
+	a1 := a2;
+
+end.

@@ -1,0 +1,1 @@
+Line 5, col 9: Incompatible type in assigment to b (got _integer_, expected _boolean_)

@@ -1,0 +1,7 @@
+program gcd(output);
+function gcd(A,B: integer): integer;
+	begin
+		writeln(integer)
+	end;
+begin
+end.

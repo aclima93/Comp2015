@@ -2,7 +2,7 @@ program gcd(output);
 var b: boolean;
 function gcd(x,y: integer): integer;
 	begin
-			b := x
+b := x
 	end;
 begin
 end.

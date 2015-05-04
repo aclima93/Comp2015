@@ -1,0 +1,18 @@
+program gcd(output);
+var a, b: integer;
+begin
+    val(paramstr(1), a);
+    val(paramstr(2), b);
+    if a = 0 then
+        writeln(b)
+    else
+        begin
+            while a+a do
+                if a > b then
+                    a := a - b
+                else
+                    a := - b + a + c;
+            writeln(a)
+        end
+        
+end.

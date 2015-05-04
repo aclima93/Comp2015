@@ -1,0 +1,1 @@
+Line 6, col 10: Incompatible type in if statement (got _integer_, expected _boolean_)

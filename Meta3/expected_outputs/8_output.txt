@@ -1,0 +1,1 @@
+Line 26, col 10: Symbol myFunc2 not defined

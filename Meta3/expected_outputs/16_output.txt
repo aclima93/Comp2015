@@ -1,0 +1,39 @@
+Line 1, col 28: illegal character ('')
+Line 2, col 25: illegal character ('')
+Line 3, col 44: illegal character ('')
+Line 4, col 21: illegal character ('')
+Line 5, col 6: illegal character ('')
+Line 6, col 25: illegal character ('')
+Line 7, col 21: illegal character ('')
+Line 8, col 8: illegal character ('')
+Line 9, col 22: illegal character ('')
+Line 10, col 18: illegal character ('')
+Line 11, col 5: illegal character ('')
+Line 12, col 6: illegal character ('')
+Line 13, col 13: illegal character ('')
+Line 14, col 13: illegal character ('')
+Line 15, col 21: illegal character ('')
+Line 16, col 38: illegal character ('')
+===== Outer Symbol Table =====
+boolean	_type_	constant	_boolean_
+integer	_type_	constant	_integer_
+real	_type_	constant	_real_
+false	_boolean_	constant	_false_
+true	_boolean_	constant	_true_
+paramcount	_function_
+program	_program_
+
+===== Function Symbol Table =====
+paramcount	_integer_	return
+
+===== Program Symbol Table =====
+a	_integer_
+b	_integer_
+ret	_integer_
+max	_function_
+
+===== Function Symbol Table =====
+max	_integer_	return
+num1	_integer_	param
+num2	_integer_	param
+result	_integer_

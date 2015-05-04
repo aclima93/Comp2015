@@ -1,0 +1,49 @@
+program gcd(output);
+var a, b: integer;
+c: real;
+d: integer;
+i:integer;
+function max(num1, num2: integer): integer; forward;
+function min(num3, num4: integer): integer;
+var
+	result: integer;
+begin
+	if num3 < num4
+	then
+		result := num4
+	else
+		result := num3;
+	min := result;
+end;
+function max;
+var
+	result: integer;
+begin
+	if num1 > num2
+	then
+		result := num1
+	else
+		result := num2;
+	max := result;
+end;
+begin
+	val(paramstr(1), a);
+	val(paramstr(2), b);
+	if a = 0 then
+		writeln(b)
+	else
+		begin
+			while b >= 0 do
+				if a >= b then
+					a := a - b
+				else
+					b := b - a - (b - a);
+			writeln(a)
+		end;
+	i := 0;
+	repeat
+		i := i + 1;
+	until
+		i = 10;
+	writeln(i)
+end.

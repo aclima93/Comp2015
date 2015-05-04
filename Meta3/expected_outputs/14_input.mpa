@@ -1,0 +1,16 @@
+program gcd(output);
+var a,b: integer;
+c,d: real;
+function teste:real; forward;
+function teste;
+var a, b:integer;
+c, d: real;
+	begin
+		while b > 0  do
+				if a > b then
+	end;
+function teste3(var x3:real; i:integer):real;
+begin
+end;
+begin
+end.
