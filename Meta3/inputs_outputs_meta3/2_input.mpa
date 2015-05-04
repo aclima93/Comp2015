@@ -4,10 +4,9 @@
 { ----------- }
 (* Program 1 *)
 
-Program Lesson1_Program1;   
+Program Lesson1Program1(output);   
 Begin    
- Write('Hello World. Prepare to learn PASCAL!!');
- Readln;   
+ Writeln('Hello World. Prepare to learn PASCAL!!');
 End.
 
 { ---------- *)
@@ -15,25 +14,22 @@ End.
 { ----------- }
 (* Program 2 *)
 
-Program Lesson1_Program2;begin 
-Write('Hello World. Prepare to learn PASCAL!!');Readln;End.
+Program Lesson1Program2(output);begin 
+Writeln('Hello World. Prepare to learn PASCAL!!');Readln;End.
 
 { ---------- *)
 (* ---------- }
 { ----------- }
 (* Program 3 *)
 
-Program Lesson1_Program3;
+Program Lesson1Program3(output);
 Var Num1, Num2, Sum : Integer;  Num3, Num4, Sum5 : Integer;
 
 Begin {no semicolon}
- Write('Input number 1:'); 
- Readln(Num1);
+ Writeln('Input number 1:'); 
  Writeln('Input number 2:');
- Readln(Num2);
  Sum := Num1 + Num2; {addition} 
  Writeln(Sum);
- Readln;
 End.
 
 { ---------- *)
@@ -41,18 +37,15 @@ End.
 { ----------- }
 (* Program 4 *)
 
-Program Lesson2_Program1;
+Program Lesson2Program1(output);
 Var name, surname: String;
                      
 Begin
- Write('Enter your name:');
- readln(name);
- Write('Enter your surname:');
- readln(surname);
+ Writeln('Enter your name:');
+ Writeln('Enter your surname:');
  writeln;{new line}
  writeln;{new line}
  Writeln('Your full name is: ',name,' ',surname);
- Readln;
 End.
 
 { ---------- *)
@@ -60,7 +53,7 @@ End.
 { ----------- }
 (* Program 5 *)
 
-Program Lesson2_Program2;
+Program Lesson2Program2(output);
 Var 
      surname: String; 
 
@@ -69,12 +62,10 @@ Const {the reserved word 'const'
      name = 'Victor';
                      
 Begin
- Write('Enter your surname:');
- readln(surname);
+ Writeln('Enter your surname:');
  writeln;
  writeln;
  Writeln('Your full name is: ',name,' ',surname);
- Readln;
 End.
 
 { ---------- *)
@@ -82,7 +73,7 @@ End.
 { ----------- }
 (* Program 5 *)
 
-Program lesson2_Program3;
+Program lesson2Program3(output);
 Var PD, Dname, Cmodel : String;
     TotalKM, CostPD, TCostPD, Distance : Real; 
      {real is a decimal (described later)} 
@@ -101,18 +92,12 @@ begin
  Writeln('with your car every week. Then '+
         +'the computer calculates the total cost');
  Writeln('you spend in fuel every week.');
- Readln;
- Write('Diesel or Petrol?: ');
- Readln(PD);
- Write('Name Of Driver: ');
- Readln(Dname);
- Write('Car Model: ');
- Readln(Cmodel);
- Write('Cost of Diesel/Petrol: (£) ');
- Readln(CostPD);
+ Writeln('Diesel or Petrol?: ');
+ Writeln('Name Of Driver: ');
+ Writeln('Car Model: ');
+ Writeln('Cost of Diesel/Petrol: (£) ');
  Writeln('Average distance you travel '+
         +'with your car every week: (kilometres) ');
- Readln(Distance);
  Writeln;
  Writeln;
  Writeln('Name of Driver:',Dname);
@@ -131,5 +116,4 @@ begin
         +'£',(Distance * CostPD):1:2); {this}
  Writeln('Total cost of ',PD,' per week:'+
         +'£',Distance * CostPD); {and this - without ':1:2'}
- readln;
 End.

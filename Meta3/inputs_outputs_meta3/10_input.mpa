@@ -1,7 +1,7 @@
 program gcd(output);
 
 	var a, b: integer;
-		 a, b, c, d, e: integer;
+		 c, d, e: integer;
 		 x, y, z: string;
 	 	s,f,g: real;
 
