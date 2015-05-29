@@ -1,0 +1,67 @@
+
+
+√ symbol not defined têm precedência sobre type identifier expected! (o segundo só aparece se o símbolo existir mas não for do type _type_ )
+
+√ atribuir inteiro a real não é problema, apenas o contrário
+
+√ podemos declarar funões e variáveis que já tenham sido declaradas como sendo outra coisa, not a problem, desde que fique no scope da declaração também! (verificar se o lookup_result tem omesmo scope de declaração!)
+
+√ atribuição a id de função só é válido se estivermos no scope da funçao ( "paramcount := 1;" só é válido se estivermos no scope do paramcount )
+
+√ atenção às linhas e colunas das expressões (deve aparecer o início da expressão, ver bem o que é guardado na linha e na coluna de uma expressão no .l)
+
+√ "assignment" tem de ser mal escrito como "assigment" devido a uma gralha
+
+√ verificar se o 2º parâmetro do valparamstr está definido
+
+√ coluna de uma assignment é o da expressão
+
+√ valparm recebe um inteiro no segundo id
+
+√ "_type_" type no writeln quando é null
+--- verificar os tipos do writeln no iso
+
+√ assignment ainda está bem escrito algures
+
+√ inteiro e real podem ser comparados com "<"
+
+
+[E]
+
+- "paramcount := 0" não pode acontecer
+
+√ expressão no writeln é que dá a coluna
+
+√ nas expressões num write line temos de verificar cada elemento por lookup
+
+
+[F]
+
+√ a raiz da expressão no assignment é que dá a coluna
+--- operação mais pesada
+
+√ relacionais tudo errado porque podemos comparar booleanos com <, > <= ,>=
+
+
+[TODO]
+
+- melhorar inserções nas listas ligadas
+--- utilizar cabeçalhos para as listas, este cabeçalho tem um ponteiro para o último nó da lista
+
+- obter 600 pontos na meta2
+
+- obter 500 opntos na meta3
+
+- começar a meta 4
+--- guardar alguma informação sobre os símbolos da STable nos nós correspondentes da ASTree
+--- começar pelo writeln("HelloWorld") ou writeln(0) em MiliPascal, os programas masi pequenos que podem gerar output, and then build from that.
+------ o IntLit/StringLit por si só não vão fazer nada, mas vão poder alocar os espaço necessário para as variáveis qu ee stão a ser usadas nessa instrução
+------ ter um contador global no LLVMPrinter.c que guarda o nº da variável temporária a usar, com prefixo "mpa."
+--- depois passar aos parâmetros de entrada
+--- usar o prefixo "mpa." para as variáveis em LLVM de forma a impedir colisões com outros nomes em C e em Pascal
+--- numerar as labels também! pode haver mais do que uma (duh)
+--- 
+
+
+
+
