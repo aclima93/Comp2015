@@ -106,7 +106,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "mpasemantic.y"
+#line 21 "mpacompiler.y"
 {
 	tokenInfo* info;
 	node* node_pointer;

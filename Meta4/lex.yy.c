@@ -689,8 +689,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "mpasemantic.l"
-#line 2 "mpasemantic.l"
+#line 1 "mpacompiler.l"
+#line 2 "mpacompiler.l"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -893,7 +893,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 146 "mpasemantic.l"
+#line 146 "mpacompiler.l"
 
 
 
@@ -982,254 +982,254 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 149 "mpasemantic.l"
+#line 149 "mpacompiler.l"
 ;	{BEGIN COMMENT; commentLines = line; commentCols = col + strlen(yytext); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 151 "mpasemantic.l"
+#line 151 "mpacompiler.l"
 ;	{BEGIN 0; commentCols += strlen(yytext); line = commentLines; col = commentCols; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 153 "mpasemantic.l"
+#line 153 "mpacompiler.l"
 ;	{printf("Line %d, col %d: unterminated comment\n", line, col); BEGIN 0; commentCols += strlen(yytext); line = commentLines; col = commentCols;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 155 "mpasemantic.l"
+#line 155 "mpacompiler.l"
 ;	{commentCols += strlen(yytext);}
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 156 "mpasemantic.l"
+#line 156 "mpacompiler.l"
 ;	{commentLines++; commentCols = 1;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 161 "mpasemantic.l"
+#line 161 "mpacompiler.l"
 ;	{BEGIN STRINGLIT; readString = strdup(yytext); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 163 "mpasemantic.l"
+#line 163 "mpacompiler.l"
 ;	{readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 164 "mpasemantic.l"
+#line 164 "mpacompiler.l"
 ;	{readString = strdup(strcat(readString, yytext)); BEGIN 0; 
 								col += strlen(readString); yylval.info = makeTokenInfo(readString, line, col); 
 								yytext = strdup(readString); return STRING;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 168 "mpasemantic.l"
+#line 168 "mpacompiler.l"
 ;	{readString = strdup(strcat(readString, yytext));}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 169 "mpasemantic.l"
+#line 169 "mpacompiler.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; line++; col = 1; yytext = strdup(readString); }
 	YY_BREAK
 case YY_STATE_EOF(STRINGLIT):
-#line 170 "mpasemantic.l"
+#line 170 "mpacompiler.l"
 ;	{printf("Line %d, col %d: unterminated string\n", line, col); BEGIN 0; col += strlen(readString); yytext = strdup(readString); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 175 "mpasemantic.l"
+#line 175 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return INTLIT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 177 "mpasemantic.l"
+#line 177 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return REALLIT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 180 "mpasemantic.l"
+#line 180 "mpacompiler.l"
 ;	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return RESERVED;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 183 "mpasemantic.l"
+#line 183 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ASSIGN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 184 "mpasemantic.l"
+#line 184 "mpacompiler.l"
 ; 	{col += strlen(yytext); return BEGIN_token;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 185 "mpasemantic.l"
+#line 185 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ':';}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 186 "mpasemantic.l"
+#line 186 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ',';}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 187 "mpasemantic.l"
+#line 187 "mpacompiler.l"
 ; 	{col += strlen(yytext); return DO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 188 "mpasemantic.l"
+#line 188 "mpacompiler.l"
 ; 	{col += strlen(yytext); return '.';}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 189 "mpasemantic.l"
+#line 189 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ELSE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 190 "mpasemantic.l"
+#line 190 "mpacompiler.l"
 ; 	{col += strlen(yytext); return END;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 191 "mpasemantic.l"
+#line 191 "mpacompiler.l"
 ; 	{col += strlen(yytext); return FORWARD;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 192 "mpasemantic.l"
+#line 192 "mpacompiler.l"
 ; 	{col += strlen(yytext); return FUNCTION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 193 "mpasemantic.l"
+#line 193 "mpacompiler.l"
 ; 	{col += strlen(yytext); return IF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 194 "mpasemantic.l"
+#line 194 "mpacompiler.l"
 ; 	{col += strlen(yytext); return '(';}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 196 "mpasemantic.l"
+#line 196 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return NOT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 198 "mpasemantic.l"
+#line 198 "mpacompiler.l"
 ; 	{col += strlen(yytext); return OUTPUT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 199 "mpasemantic.l"
+#line 199 "mpacompiler.l"
 ; 	{col += strlen(yytext); return PARAMSTR;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 200 "mpasemantic.l"
+#line 200 "mpacompiler.l"
 ; 	{col += strlen(yytext); return PROGRAM;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 201 "mpasemantic.l"
+#line 201 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ')';}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 202 "mpasemantic.l"
+#line 202 "mpacompiler.l"
 ; 	{col += strlen(yytext); return REPEAT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 203 "mpasemantic.l"
+#line 203 "mpacompiler.l"
 ; 	{col += strlen(yytext); return ';';}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 204 "mpasemantic.l"
+#line 204 "mpacompiler.l"
 ; 	{col += strlen(yytext); return THEN;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 205 "mpasemantic.l"
+#line 205 "mpacompiler.l"
 ; 	{col += strlen(yytext); return UNTIL;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 206 "mpasemantic.l"
+#line 206 "mpacompiler.l"
 ; 	{col += strlen(yytext); return VAL;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 207 "mpasemantic.l"
+#line 207 "mpacompiler.l"
 ; 	{col += strlen(yytext); return VAR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 208 "mpasemantic.l"
+#line 208 "mpacompiler.l"
 ; 	{col += strlen(yytext); return WHILE;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 209 "mpasemantic.l"
+#line 209 "mpacompiler.l"
 ; 	{col += strlen(yytext); return WRITELN;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 212 "mpasemantic.l"
+#line 212 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return AND;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 213 "mpasemantic.l"
+#line 213 "mpacompiler.l"
 ;	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 214 "mpasemantic.l"
+#line 214 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP2;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 215 "mpasemantic.l"
+#line 215 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP3;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 216 "mpasemantic.l"
+#line 216 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return OP4;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 219 "mpasemantic.l"
+#line 219 "mpacompiler.l"
 ; 	{col += strlen(yytext); yylval.info = makeTokenInfo(yytext, line, col); return ID;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 222 "mpasemantic.l"
+#line 222 "mpacompiler.l"
 ;	{col += strlen(yytext); }
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 223 "mpasemantic.l"
+#line 223 "mpacompiler.l"
 ; 	{line++; col = 1; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 225 "mpasemantic.l"
+#line 225 "mpacompiler.l"
 ; 	{printf("Line %d, col %d: illegal character (\'%c\')\n", line, col, yytext[0]); col += strlen(yytext); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 227 "mpasemantic.l"
+#line 227 "mpacompiler.l"
 ;	{return 0;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 229 "mpasemantic.l"
+#line 229 "mpacompiler.l"
 ECHO;
 	YY_BREAK
 #line 1236 "lex.yy.c"
@@ -2227,7 +2227,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 229 "mpasemantic.l"
+#line 229 "mpacompiler.l"
 
 
 

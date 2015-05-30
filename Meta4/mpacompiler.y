@@ -6,6 +6,7 @@
 
 #include "ASTree.h"
 #include "STable.h"
+#include "LLVMCode.h"
 
 void yyerror(char *s);
 
@@ -260,7 +261,7 @@ int main(int argc, char** args){
 
 	if( !printTree && !printSymbolTable ){
 		// only generate IR LLVM if no errors were found (checked beforehand) AND no printing flags were activated
-		printLLVMCode( ASTroot, STroot );
+		printLLVM( ASTroot );
 	}
 
 	// free all nodes in AST
