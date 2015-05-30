@@ -1,1 +1,1 @@
-Line 24, col 9: Incompatible type in assigment to this (got _function_, expected _real_)
+Line 25, col 7: Function identifier expected.

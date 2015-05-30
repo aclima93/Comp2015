@@ -450,19 +450,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 					printErrorLineCol(temp->line, temp->col, printCannotWriteTypeError(getPredefTypeStr(f1)) );
 				}
 			}
-			
-			if( cur_node->field2 != NULL ){
-				temp = cur_node->field2;
-				PredefType f2 = getPredefTypeOfNode(temp, cur_scope);
-
-				if( f2 == _NULL_ )
-					f2 = _type_;
-
-				 if( !( isValidWriteLnArgument(f2) ) ){
-					// imprimir erro
-					printErrorLineCol(temp->line, temp->col, printCannotWriteTypeError(getPredefTypeStr(f2)) );
-				}
-			}
 
 			walkASTNodeChildren(cur_scope, cur_node, cur_declaration_type, cur_flag);
 
@@ -1069,9 +1056,10 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		}
 
 		// return type of func
-		lookup_result = lookupFuncSymbol(op->field1, func_scope);
-		if( lookup_result != NULL && lookup_result->flag == returnFlag )
+		lookup_result = lookupSymbol(op->field1, func_scope);
+		if( lookup_result != NULL && lookup_result->flag == returnFlag ){
 			return lookup_result->type;
+		}
 
 		return _NULL_;
 
@@ -1226,9 +1214,11 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 	// -- else: return type in table
 
 	symbol* lookup_result = NULL;
+	table* outer_scope = NULL;
 
 	while( cur_scope != NULL && lookup_result == NULL ){
 		lookup_result = lookupSymbol(cur_node->field1, cur_scope);
+		outer_scope = cur_scope;
 		cur_scope = cur_scope->parentTable; //check for outer table
 	}
 
@@ -1237,7 +1227,25 @@ PredefType searchForTypeOfSymbolInRelevantScopes(node* cur_node, table* cur_scop
 		return _NULL_;
 	}
 
-	return lookup_result->type;
+	// for function calls with no parenthesis
+	if( lookup_result->type == _function_ ){
+
+		// get scope of function return type
+		table* func_scope = getFuncScope(cur_node->field1, outer_scope);
+		
+		// return type of func
+		lookup_result = lookupSymbol(cur_node->field1, func_scope);
+		if( lookup_result != NULL && lookup_result->flag == returnFlag ){
+			return lookup_result->type;
+		}
+		else{
+			return _NULL_;
+		}
+
+	}
+	else{
+		return lookup_result->type;
+	}
 }
 
 symbol* searchForFuncSymbolInRelevantScopes(char* key, table* cur_scope){
