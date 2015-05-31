@@ -13,16 +13,18 @@
 #include <ctype.h>
 #include <assert.h>
 
-/* Counts current local variables. Don't forget to reset it once we start a new method! */
 
-int varCounter = 0;
-int localVarCounter = 0;
-int labelCounter = 0;
-int returnLabelCounter = 0;
+int localVarCounter;
+int labelCounter;
+int returnLabelCounter;
 
-/* Structure used to remember what LLVM object we are refferencing and its LLVM data type, namely in complex expressions */
+typedef enum {
+	i1Type, i32Type, doubleType
+} LLVMType;
+
+/* Structure used to remember what LLVM object we are refferencing and its LLVM data type */
 typedef struct {
-	int tempVarNum;
+	int returnVarNum;
 	LLVMType type;
 } LLVMReturnReff;
 
@@ -31,11 +33,9 @@ typedef struct {
 void printLLVM(node* ast_root);
 void printLLVMHeader();
 void printLLVMCode(node* cur_node);
-void printChildrenLLVMCode(node* cur_node);
 
 /* Counter printing functions */
 
-char* printCurVar();
 char* printCurLocalVar();
 char* printCurLabelCounter();
 char* printCurReturnLabel();
