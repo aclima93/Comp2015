@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <assert.h>
 
+#define LLVM_DEBUG_PRINTS 1
 
 int localVarCounter;
 int labelCounter;
@@ -44,8 +45,8 @@ void generateLLVMFunction(node* funcNode);
  * Auxiliary printing functions
  */
 
-char* getLLVMTypeStrFromNode(node* cur_node);
-LLVMType getLLVMTypeFromNode(node* cur_node);
+char* getLLVMTypeStrFromNodeStr(char* str);
+LLVMType getLLVMTypeFromStr(char* type_str);
 char* getLLVMTypeStr(LLVMType t);
 char* printCurLocalVar();
 char* printCurLabelCounter();

@@ -42,7 +42,7 @@ void printLLVMCodeChildren(node* cur_node){
 
 void printLLVMCode(node* cur_node){
 
-	if( cur_node == NULL ){
+	if( cur_node == NULL || isLeaf(cur_node) ){
 		return;
 	}
 
@@ -52,7 +52,7 @@ void printLLVMCode(node* cur_node){
 
 		case ProgType:
 			
-
+			printLLVMCodeChildren(cur_node);
 			break;
 
 		case ProgBlockType:
@@ -141,13 +141,14 @@ void generateLLVMFunction(node* funcNode){
 
 	    //
 	    // function header
-	    printf("define %s @%s(", getLLVMTypeStrFromNode(funcReturnType->field1), funcID->field1);
+	    printf("define %s @%s(", getLLVMTypeStrFromNodeStr(funcReturnType->field1), funcID->field1);
 
 	    //
 	    // function parameters (cubic complexity! ouch)
 	    node* formalParamList = funcHeading->field2;
 	    node* formalParams;
 		node* formalParamsIDList;
+		node* formalParamsIDListType;
 		char* formalParamsIDListTypeStr;
 		node* formalParamID;
 		char firstFormalParam = 1;
@@ -155,26 +156,23 @@ void generateLLVMFunction(node* funcNode){
 	    while( formalParamList != NULL){
 
 	    	formalParams = formalParamList->field1;
+	    	formalParamsIDList = formalParams->field1;
+	    	formalParamsIDListType = formalParams->field2;
+	    	formalParamsIDListTypeStr = getLLVMTypeStrFromNodeStr(formalParamsIDListType->field1);
 
-	    	while( formalParams != NULL ){
+        	while( formalParamsIDList != NULL ){
 
-		    	formalParamsIDList = formalParams->field1;
-		    	formalParamsIDListTypeStr = getLLVMTypeStrFromNode(formalParams->field2);
-		        
-	        	while( formalParamsIDList != NULL ){
-
-	        		formalParamID = formalParamsIDList->field1;
-		        	if(firstFormalParam){
-		        		firstFormalParam = 0;
-		        		printf("%s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
-		        	}
-		        	else{
-			        	printf(", %s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
-			        }
-		        	formalParamsIDList = formalParamsIDList->field2;
+        		formalParamID = formalParamsIDList->field1;
+	        	if(firstFormalParam){
+	        		firstFormalParam = 0;
+	        		printf("%s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
+	        	}
+	        	else{
+		        	printf(", %s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
 		        }
-		        formalParams = formalParams->field2;
-		    }
+	        	formalParamsIDList = formalParamsIDList->field2;
+	        }
+
 	        formalParamList = formalParamList->field2;
 	    }
 
@@ -221,10 +219,28 @@ void generateLLVMFunction(node* funcNode){
 }
 
 
-char* getLLVMTypeStrFromNode(node* cur_node){
-	return getLLVMTypeStr(getLLVMTypeFromNode(cur_node));
+char* getLLVMTypeStrFromNodeStr(char* str){
+	return getLLVMTypeStr(getLLVMTypeFromStr(str));
 }
 
+LLVMType getLLVMTypeFromStr(char* type_str){
+
+	if( strcasecmp(type_str, "boolean") == 0 )
+		return llvm_i1;
+
+	if( strcasecmp(type_str, "real") == 0 )
+		return llvm_double;
+
+	if( strcasecmp(type_str, "integer") == 0 )
+		return llvm_i32;
+
+	if( strcasecmp(type_str, "string") == 0 )
+		return llvm_null;
+
+	return llvm_null;
+}
+
+/*
 LLVMType getLLVMTypeFromNode(node* cur_node){
 
 	NodeType t = cur_node->type_of_node;
@@ -246,6 +262,7 @@ LLVMType getLLVMTypeFromNode(node* cur_node){
 
 	return llvm_null;
 }
+*/
 
 char* getLLVMTypeStr(LLVMType t){
 
