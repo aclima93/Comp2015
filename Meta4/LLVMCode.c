@@ -33,6 +33,13 @@ void printLLVMHeader(){
     printf("\n\n");
 }
 
+void printLLVMCodeChildren(node* cur_node){
+
+	printLLVMCode(cur_node->field1);
+	printLLVMCode(cur_node->field2);
+	printLLVMCode(cur_node->field3);
+}
+
 void printLLVMCode(node* cur_node){
 
 	if( cur_node == NULL ){
@@ -51,6 +58,14 @@ void printLLVMCode(node* cur_node){
 		case ProgBlockType:
 
 			// TODO: criar aqui a função "main" onde são chamadas as outras
+
+			printLLVMCodeChildren(cur_node);
+			break;
+
+		case FuncDeclarationListType:
+
+			generateLLVMFunction(cur_node->field1);
+			printLLVMCode(cur_node->field2);
 
 			break;
 
@@ -88,150 +103,212 @@ void printLLVMCode(node* cur_node){
 			// SimpleExpr
 			else{
 			}
+
+			printLLVMCodeChildren(cur_node);
 			break;
 
 		case SimpleExprType:
 		case FactorType:
 		case OPTermListType: 
 
-
+			printLLVMCodeChildren(cur_node);
 			break;
 
 
 		default:
-			printLLVMCode(cur_node->field1);
-			printLLVMCode(cur_node->field2);
-			printLLVMCode(cur_node->field3);
+			printLLVMCodeChildren(cur_node);
 			break;
 	}
 
 }
 
-/*
-void printLLVMFunction(node* methodDecl){
+
+void generateLLVMFunction(node* funcNode){
+
+	// we can't define the function in LLVM with just a declaration, wait for the actual definition later on
+	if( funcNode->field2 == NULL )
+		return;
 
     localVarCounter = 1;
-    curFunctionType = methodDecl->type;
-    curFunctionName = methodDecl->id;
-    currentLocalTable = getLocalTable(methodDecl->id);
 
-    // function header
-    printf("define %s @%s(", getLLVMTypeStr(methodDecl->type)), methodDecl->id);
+    // "regular" function declaration and definition
+    if( funcNode->type_of_node == FuncDefinitionType){
 
-    node* aux = methodDecl->paramList;
-    if(aux != NULL){
+    	node* funcHeading = funcNode->field1;
 
-        getLLVMTypeStr(aux->type);
-        printf("%s %%%s.param", llvmgetLLVMTypeStr(aux->type), aux->id);
-        aux = aux->next;
-    }
-    while( aux != NULL){
+	    node* funcReturnType = funcHeading->field3;
+	    node* funcID = funcHeading->field1;
 
-        printf(", %s %%%s.param", llvmType, aux->id);
-        aux = aux->next;
-    }
+	    //
+	    // function header
+	    printf("define %s @%s(", getLLVMTypeStrFromNode(funcReturnType->field1), funcID->field1);
 
-    printf(")\n{\n");
+	    //
+	    // function parameters (cubic complexity! ouch)
+	    node* formalParamList = funcHeading->field2;
+	    node* formalParams;
+		node* formalParamsIDList;
+		char* formalParamsIDListTypeStr;
+		node* formalParamID;
+		char firstFormalParam = 1;
 
-    //Save arguments to stack
-    MethodTable* localTable = getLocalTable(methodDecl->id);
-    MethodTableEntry* aux3 = localTable->entries;
-    for(; aux3 != NULL; aux3 = aux3->next)
-        if(aux3->isParam)
-        {
-            getLLVMTypeStr(aux3->type);
-            printf("\t%%%s = alloca %s\n", aux3->id, llvmType);
-            printf("\tstore %s %%%s.param, %s* %%%s\n", llvmType, aux3->id, llvmType, aux3->id);
-        }
+	    while( formalParamList != NULL){
 
-    //Generate variable definition code
-    VarDeclList* aux2 = methodDecl->varDeclList;
-    for(; aux2 != NULL; aux2 = aux2->next)
-        genLocalVar(aux2->varDecl);
+	    	formalParams = formalParamList->field1;
 
-    //Generate statements code
-    genStmtList(methodDecl->stmtList);
+	    	while( formalParams != NULL ){
 
-    //Add a default return
-    if(strcmp(methodDecl->id, "main") == 0)
-        printf("\tret i32 0\n");
-    else
-    {
-        if(methodDecl->type == VOID_T)
-            printf("\tret void\n");
-        else if(methodDecl->type == INT_T)
-            printf("\tret i32 0\n");
-        else if(methodDecl->type == BOOL_T)
-            printf("\tret i1 0\n");
-    }
+		    	formalParamsIDList = formalParams->field1;
+		    	formalParamsIDListTypeStr = getLLVMTypeStrFromNode(formalParams->field2);
+		        
+	        	while( formalParamsIDList != NULL ){
 
-    printf("}\n\n");
+	        		formalParamID = formalParamsIDList->field1;
+		        	if(firstFormalParam){
+		        		firstFormalParam = 0;
+		        		printf("%s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
+		        	}
+		        	else{
+			        	printf(", %s %%%s.param", formalParamsIDListTypeStr, formalParamID->field1);
+			        }
+		        	formalParamsIDList = formalParamsIDList->field2;
+		        }
+		        formalParams = formalParams->field2;
+		    }
+	        formalParamList = formalParamList->field2;
+	    }
+
+	    printf(")\n{\n");
+
+	    /*
+
+	    //Save arguments to stack
+	    table* localTable = getLocalTable(funcID->field1);
+
+	    symbol* aux3 = localTable->entries;
+	    while( aux3 != NULL){
+	        if(aux3->isParam){
+
+	            printf("\t%%%s = alloca %s\n", aux3->id, getLLVMTypeStr(aux3->type_of_node));
+	            printf("\tstore %s %%%s.param, %s* %%%s\n", getLLVMTypeStr(aux3->type_of_node), aux3->id, getLLVMTypeStr(aux3->type_of_node), aux3->id);
+	        }
+	        aux3 = aux3->nextSymbol;
+	    }
+
+	    //Generate variable definition code
+	    node* aux2 = funcBlockNode->field1;
+	    while( aux2 != NULL){
+
+	        generateLocalVar(aux2->field2);
+	        aux2 = aux2->field1;
+	    }
+
+	    //Generate statements code
+	    generateStmtList(funcBlockNode->field2);
+
+	    //Add a default return
+	    if(funcReturnType == VOID_T)
+	        printf("\tret double 0\n");
+	    else if(funcReturnType == INT_T)
+	        printf("\tret i32 0\n");
+	    else if(funcReturnType == BOOL_T)
+	        printf("\tret i1 0\n");
+
+	    printf("}\n\n");
+
+	    */
+	}
 }
-*/
 
+
+char* getLLVMTypeStrFromNode(node* cur_node){
+	return getLLVMTypeStr(getLLVMTypeFromNode(cur_node));
+}
+
+LLVMType getLLVMTypeFromNode(node* cur_node){
+
+	NodeType t = cur_node->type_of_node;
+
+	if( t == DoubleType){
+		return llvm_double;
+	}
+	else if( t == IntType){
+		return llvm_i32;
+	}
+	else if( t == IDType ){
+
+		if( strcasecmp(cur_node->field1, "boolean") == 0 )
+			return llvm_i1;
+	}
+	else if( t ==  StringType){
+		return llvm_null;
+	}
+
+	return llvm_null;
+}
 
 char* getLLVMTypeStr(LLVMType t){
 
-	char* str[] = { "i1", "i32", "double"};
+	char* str[] = { "i1", "i32", "double", "This cannot show!"};
 	return str[t];
 }
 
-void printUnaryOPLLVMCode(char* str){
+void printUnaryOPLLVMCode(char* op_str){
 
-	if( strcasecmp ( "+", str ) == 0){
-
-	}
-	else if( strcasecmp ( "-", str ) == 0){
+	if( strcasecmp ( "+", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "not", str ) == 0){
+	else if( strcasecmp ( "-", op_str ) == 0){
+
+	}
+	else if( strcasecmp ( "not", op_str ) == 0){
 
 	}
 
 }
 
-void printOPLLVMCode(char* str){
+void printOPLLVMCode(char* op_str){
 
-	if( strcasecmp ( "and", str ) == 0){
-
-	}
-	else if( strcasecmp ( "or", str ) == 0){
+	if( strcasecmp ( "and", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "<>", str ) == 0){
+	else if( strcasecmp ( "or", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "<=", str ) == 0){
+	else if( strcasecmp ( "<>", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( ">=", str ) == 0){
+	else if( strcasecmp ( "<=", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "<", str ) == 0){
+	else if( strcasecmp ( ">=", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( ">", str ) == 0){
+	else if( strcasecmp ( "<", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "=", str ) == 0){
+	else if( strcasecmp ( ">", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "+", str ) == 0){
+	else if( strcasecmp ( "=", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "-", str ) == 0){
+	else if( strcasecmp ( "+", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "*", str ) == 0){
+	else if( strcasecmp ( "-", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "/", str ) == 0){
+	else if( strcasecmp ( "*", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "mod", str ) == 0){
+	else if( strcasecmp ( "/", op_str ) == 0){
 
 	}
-	else if( strcasecmp ( "div", str ) == 0){
+	else if( strcasecmp ( "mod", op_str ) == 0){
+
+	}
+	else if( strcasecmp ( "div", op_str ) == 0){
 
 	}
 }
