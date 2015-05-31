@@ -52,14 +52,42 @@ void printLLVMCode(node* cur_node){
 
 		case ProgType:
 			
-			printLLVMCodeChildren(cur_node);
+			; // very importnt voodoo magic ;)
+
+			//
+			// print the functions in FuncPart first so we can refference them in main
+			node* progBlock = cur_node->field2;
+			printLLVMCode(progBlock->field2);
+
+			//
+			// create a function stub for LLVM's main function from the program's VarPart and StatPart
+
+			// change the title to "main" and add a return type
+			node* progID = cur_node->field1;
+			strcpy(progID->field1, "main");
+			node* progFuncHeading = makenode(FuncHeadingType, progID, NULL, NULL, -1, -1);
+
+			// "glue" the VarPart and StatPart nodes together so that they can be called with generateLLVMFunction()
+			node* progFuncBlock = makenode(FuncDefinitionType, progBlock->field1, progBlock->field3, NULL, -1, -1);
+
+			// print LLVM's main function and its body
+			node* mainFuncNode = makenode(FuncDefinitionType, progFuncHeading, progFuncBlock, NULL, -1, -1);
+			generateLLVMFunction(mainFuncNode);
+
 			break;
 
 		case ProgBlockType:
 
-			// TODO: criar aqui a função "main" onde são chamadas as outras
-
 			printLLVMCodeChildren(cur_node);
+
+			/*
+			// print the functions first so we can refference them
+			printLLVMCode(cur_node->field2);
+
+			// pinrt LLVM's main function and its body
+			generateLLVMMainFunction(cur_node->field1, cur_node->field1);
+			*/
+
 			break;
 
 		case FuncDeclarationListType:
@@ -122,7 +150,6 @@ void printLLVMCode(node* cur_node){
 
 }
 
-
 void generateLLVMFunction(node* funcNode){
 
 	// we can't define the function in LLVM with just a declaration, wait for the actual definition later on
@@ -142,7 +169,12 @@ void generateLLVMFunction(node* funcNode){
 
 	    //
 	    // function header
-	    printf("define %s @%s(", getLLVMTypeStrFromNodeStr(funcReturnType->field1), funcID->field1);
+	    if( strcmp(funcID->field1, "main") == 0){
+		    printf("define void @%s(", funcID->field1);
+		}
+		else{
+		    printf("define %s @%s(", getLLVMTypeStrFromNodeStr(funcReturnType->field1), funcID->field1);
+		}
 
 	    //
 	    // function parameters (quadratic complexity!)
@@ -214,7 +246,12 @@ void generateLLVMFunction(node* funcNode){
 	    */
 
 	    //Add a default return
-        printf("\tret %s 0\n", getLLVMTypeStrFromNodeStr(funcReturnType->field1));
+	    if( strcmp(funcID->field1, "main") == 0 ){
+	    	printf("\tret void\n");
+	    }
+	    else{
+	    	printf("\tret %s 0\n", getLLVMTypeStrFromNodeStr(funcReturnType->field1));
+	    }
 
 	    printf("}\n\n");
 
