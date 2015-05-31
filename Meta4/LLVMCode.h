@@ -40,14 +40,18 @@ void printLLVM(node* ast_root);
 void printLLVMHeader();
 void printLLVMCode(node* cur_node);
 void generateLLVMFunction(node* funcNode);
+void generateLLVMLocalVar(node* varDeclarationNode);
 
 /* 
  * Auxiliary printing functions
  */
 
 char* getLLVMTypeStrFromNodeStr(char* str);
+char* getLLVMTypeStrFromNode(node* cur_node);
 LLVMType getLLVMTypeFromStr(char* type_str);
+LLVMType getLLVMTypeFromNode(node* cur_node);
 char* getLLVMTypeStr(LLVMType t);
+
 char* printCurLocalVar();
 char* printCurLabelCounter();
 char* printCurReturnLabel();

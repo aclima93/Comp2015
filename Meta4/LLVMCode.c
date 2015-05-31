@@ -135,6 +135,7 @@ void generateLLVMFunction(node* funcNode){
     if( funcNode->type_of_node == FuncDefinitionType){
 
     	node* funcHeading = funcNode->field1;
+    	node* funcBlock = funcNode->field2;
 
 	    node* funcReturnType = funcHeading->field3;
 	    node* funcID = funcHeading->field1;
@@ -144,7 +145,7 @@ void generateLLVMFunction(node* funcNode){
 	    printf("define %s @%s(", getLLVMTypeStrFromNodeStr(funcReturnType->field1), funcID->field1);
 
 	    //
-	    // function parameters (cubic complexity! ouch)
+	    // function parameters (quadratic complexity!)
 	    node* formalParamList = funcHeading->field2;
 	    node* formalParams;
 		node* formalParamsIDList;
@@ -179,7 +180,7 @@ void generateLLVMFunction(node* funcNode){
 	    printf(")\n{\n");
 
 	    /*
-
+	    //
 	    //Save arguments to stack
 	    table* localTable = getLocalTable(funcID->field1);
 
@@ -192,35 +193,58 @@ void generateLLVMFunction(node* funcNode){
 	        }
 	        aux3 = aux3->nextSymbol;
 	    }
+	    */
 
+	    //
 	    //Generate variable definition code
-	    node* aux2 = funcBlockNode->field1;
-	    while( aux2 != NULL){
+	    node* varPart = funcBlock->field1;
 
-	        generateLocalVar(aux2->field2);
-	        aux2 = aux2->field1;
+	    while( varPart != NULL){
+
+	    	if( varPart->field1 != NULL){
+		        generateLLVMLocalVar(varPart->field1);
+	    	}
+	        varPart = varPart->field2;
 	    }
 
+	    /*
+	    //
 	    //Generate statements code
-	    generateStmtList(funcBlockNode->field2);
+	    generateStmtList(funcBlock->field2);
+	    */
 
 	    //Add a default return
-	    if(funcReturnType == VOID_T)
-	        printf("\tret double 0\n");
-	    else if(funcReturnType == INT_T)
-	        printf("\tret i32 0\n");
-	    else if(funcReturnType == BOOL_T)
-	        printf("\tret i1 0\n");
+        printf("\tret %s 0\n", getLLVMTypeStrFromNodeStr(funcReturnType->field1));
 
 	    printf("}\n\n");
 
-	    */
 	}
+}
+
+void generateLLVMLocalVar(node* varDeclarationNode){
+
+    node* IDList = varDeclarationNode->field1;
+    node* IDListType = varDeclarationNode->field2;
+    char* llvmType = getLLVMTypeStrFromNode(IDListType);
+    node* IDNode;
+
+    while( IDList != NULL){
+
+    	IDNode = IDList->field1;
+        printf("\t%%%s = alloca %s\n", IDNode->field1, llvmType);
+        IDList = IDList->field2;
+    }
+
+    printf("\n");
 }
 
 
 char* getLLVMTypeStrFromNodeStr(char* str){
 	return getLLVMTypeStr(getLLVMTypeFromStr(str));
+}
+
+char* getLLVMTypeStrFromNode(node* cur_node){
+	return getLLVMTypeStr(getLLVMTypeFromNode(cur_node));
 }
 
 LLVMType getLLVMTypeFromStr(char* type_str){
@@ -240,7 +264,6 @@ LLVMType getLLVMTypeFromStr(char* type_str){
 	return llvm_null;
 }
 
-/*
 LLVMType getLLVMTypeFromNode(node* cur_node){
 
 	NodeType t = cur_node->type_of_node;
@@ -252,9 +275,7 @@ LLVMType getLLVMTypeFromNode(node* cur_node){
 		return llvm_i32;
 	}
 	else if( t == IDType ){
-
-		if( strcasecmp(cur_node->field1, "boolean") == 0 )
-			return llvm_i1;
+		return getLLVMTypeFromStr(cur_node->field1);
 	}
 	else if( t ==  StringType){
 		return llvm_null;
@@ -262,7 +283,6 @@ LLVMType getLLVMTypeFromNode(node* cur_node){
 
 	return llvm_null;
 }
-*/
 
 char* getLLVMTypeStr(LLVMType t){
 

@@ -1,6 +1,7 @@
 program gcd2(output);
 var x, y: integer;
 function gcd(A, B: integer): integer;
+    (*var useless, variables: integer; reside, here:real;*)
     begin
         if A = 0 then
             gcd := B
