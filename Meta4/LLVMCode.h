@@ -17,7 +17,6 @@
 
 int localVarCounter;
 int labelCounter;
-int returnLabelCounter;
 
 typedef enum {
 	llvm_i1, llvm_i32, llvm_double, llvm_null
@@ -29,7 +28,7 @@ typedef enum {
 
 typedef struct {
 	int returnVarNum;
-	LLVMType type;
+	LLVMType returnVarType;
 } LLVMReturnReff;
 
 /* 
@@ -39,8 +38,18 @@ typedef struct {
 void printLLVM(node* ast_root);
 void printLLVMHeader();
 void printLLVMCode(node* cur_node);
+
 void generateLLVMFunction(node* funcNode);
+void generateLLVMFunctionParameters(node* formalParamList);
 void generateLLVMLocalVar(node* varDeclarationNode);
+
+void generateLLVMStatementList(node* statementList);
+void generateLLVMStatement(node* statement);
+
+LLVMReturnReff buildExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnReff rightExpr, char* operation);
+LLVMReturnReff genExpr(node* expr);
+LLVMReturnReff printUnaryOPLLVMCode(node* expr);
+LLVMReturnReff printOPLLVMCode(node* expr);
 
 /* 
  * Auxiliary printing functions
@@ -54,7 +63,9 @@ char* getLLVMTypeStr(LLVMType t);
 
 char* printCurLocalVar();
 char* printCurLabelCounter();
-char* printCurReturnLabel();
+
+int incrementAndGetLocalVarCounter();
+int incrementAndGetLabelCounter();
 
 #endif
 
