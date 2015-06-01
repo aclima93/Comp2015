@@ -5,6 +5,8 @@
 #define LLVMCODE
 
 #include "ASTree.h"
+#include "STable.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -15,8 +17,11 @@
 
 #define LLVM_DEBUG_PRINTS 1
 
-int localVarCounter;
-int labelCounter;
+// greater range with unsigned variables
+#define COUNTER_TYPE unsigned int
+COUNTER_TYPE localVarCounter;
+COUNTER_TYPE labelCounter;
+COUNTER_TYPE tabCounter;
 
 typedef enum {
 	llvm_i1, llvm_i32, llvm_double, llvm_null
@@ -27,7 +32,7 @@ typedef enum {
  */
 
 typedef struct {
-	int returnVarNum;
+	COUNTER_TYPE returnVarNum;
 	LLVMType returnVarType;
 } LLVMReturnReff;
 
@@ -39,8 +44,9 @@ void printLLVM(node* ast_root);
 void printLLVMHeader();
 void printLLVMCode(node* cur_node);
 
-void generateLLVMFunction(node* funcNode);
+void generateLLVMFunction(node* funcNode, int isMainFunc);
 void generateLLVMFunctionParameters(node* formalParamList);
+void saveLLVMFunctionParamaterInStack(char* funcIDStr, int isMainFunc);
 void generateLLVMLocalVar(node* varDeclarationNode);
 
 void generateLLVMStatementList(node* statementList);
@@ -55,6 +61,8 @@ LLVMReturnReff printOPLLVMCode(node* expr);
 LLVMType getLLVMTypeToUseInOP(char* op, LLVMType leftType, LLVMType rightType);
 char* getLLVMOperationForExpression(char* op, LLVMType resultType);
 
+table* lookupFuncSymbolInAllTables(char *key, int isMainFunc);
+
 /* 
  * Auxiliary printing functions
  */
@@ -64,12 +72,16 @@ char* getLLVMTypeStrFromNode(node* cur_node);
 LLVMType getLLVMTypeFromStr(char* type_str);
 LLVMType getLLVMTypeFromNode(node* cur_node);
 char* getLLVMTypeStr(LLVMType t);
+LLVMType getLLVMTypeFromPredefType(PredefType t);
 
 char* printCurLocalVar();
 char* printCurLabelCounter();
 
-int getAndIncrementLocalVarCounter();
-int getAndIncrementLabelCounter();
+COUNTER_TYPE getAndIncrementLocalVarCounter();
+COUNTER_TYPE getAndIncrementLabelCounter();
+void printTabCounter();
+void incrementTabCounter();
+void decrementTabCounter();
 
 #endif
 
