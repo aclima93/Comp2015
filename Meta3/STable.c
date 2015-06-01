@@ -830,7 +830,10 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0 || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
- 		if ( ( leftType == _integer_  || leftType == _real_  || leftType == _boolean_ ) && ( rightType == _integer_ || rightType == _real_ || rightType == _boolean_ ) ) {
+ 		if ( ( leftType == _integer_  || leftType == _real_ ) && ( rightType == _integer_ || rightType == _real_ ) ) {
+ 			return 1;
+ 		}
+ 		else if( leftType == _boolean_ && rightType == _boolean_ ){
  			return 1;
  		}
  	}
