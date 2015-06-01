@@ -15,7 +15,7 @@ define i32 @gcd(i32 %a.param, i32 %b.param){
 	store i32 %a.param, i32* %a
 	%b = alloca i32
 	store i32 %b.param, i32* %b
-			br i1 %-2040956809, label %if.then1, label %if.else1
+			br i1 %1, label %if.then1, label %if.else1
 
 		if.then1:
 			br label %if.end1
@@ -24,10 +24,10 @@ define i32 @gcd(i32 %a.param, i32 %b.param){
 					br label %while.start2
 
 				while.start2:
-					br i1 %0, label %while.do2, label %while.end2
+					br i1 %2, label %while.do2, label %while.end2
 
 				while.do2:
-						br i1 %-2098713132, label %if.then3, label %if.else3
+						br i1 %3, label %if.then3, label %if.else3
 
 					if.then3:
 						br label %if.end3
@@ -56,7 +56,7 @@ define void @main(){
 			br label %if.end4
 
 		if.else4:
-			call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %209001274)
+			call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.int_lit, i32 0, i32 0), i32 %2)
 
 			br label %if.end4
 

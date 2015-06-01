@@ -22,6 +22,7 @@
 COUNTER_TYPE localVarCounter;
 COUNTER_TYPE labelCounter;
 COUNTER_TYPE tabCounter;
+table* curFunctionScope;
 
 typedef enum {
 	llvm_i1, llvm_i32, llvm_double, llvm_null
@@ -40,9 +41,10 @@ typedef struct {
  * Main code generation printing functions
  */
 
-void printLLVM(node* ast_root);
+void printLLVM(table* st_root, node* ast_root);
 void printLLVMHeader();
-void printLLVMCode(node* cur_node);
+void printLLVMCodeChildren(table* cur_scope, node* cur_node);
+void printLLVMCode(table* cur_scope, node* cur_node);
 
 void generateLLVMFunction(node* funcNode, int isMainFunc);
 void generateLLVMFunctionParameters(node* formalParamList);

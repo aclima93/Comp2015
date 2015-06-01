@@ -2128,7 +2128,7 @@ int main(int argc, char** args){
 
 	if( !printTree && !printSymbolTable ){
 		// only generate IR LLVM if no errors were found (checked beforehand) AND no printing flags were activated
-		printLLVM( ASTroot );
+		printLLVM( STroot, ASTroot );
 	}
 
 	// free all nodes in AST

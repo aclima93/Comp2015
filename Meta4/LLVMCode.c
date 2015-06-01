@@ -4,7 +4,7 @@
 #include "LLVMCode.h"
 
 
-void printLLVM(node* ast_root){
+void printLLVM(table* st_root, node* ast_root){
 
 	localVarCounter = 1;
 	labelCounter = 1;
@@ -12,7 +12,7 @@ void printLLVM(node* ast_root){
 
 	printLLVMHeader();
 
-	printLLVMCode(ast_root);
+	printLLVMCode(st_root, ast_root);
 }
 
 void printLLVMHeader(){
@@ -33,14 +33,14 @@ void printLLVMHeader(){
     printf("\n\n");
 }
 
-void printLLVMCodeChildren(node* cur_node){
+void printLLVMCodeChildren(table* cur_scope, node* cur_node){
 
-	printLLVMCode(cur_node->field1);
-	printLLVMCode(cur_node->field2);
-	printLLVMCode(cur_node->field3);
+	printLLVMCode(cur_scope, cur_node->field1);
+	printLLVMCode(cur_scope, cur_node->field2);
+	printLLVMCode(cur_scope, cur_node->field3);
 }
 
-void printLLVMCode(node* cur_node){
+void printLLVMCode(table* cur_scope, node* cur_node){
 
 	if( cur_node == NULL || isLeaf(cur_node) ){
 		return;
@@ -57,7 +57,7 @@ void printLLVMCode(node* cur_node){
 			//
 			// print the functions in FuncPart first so we can refference them in main
 			node* progBlock = cur_node->field2;
-			printLLVMCode(progBlock->field2);
+			printLLVMCode(curFunctionScope, progBlock->field2);
 
 			//
 			// create a function stub for LLVM's main function from the program's VarPart and StatPart
@@ -70,19 +70,27 @@ void printLLVMCode(node* cur_node){
 
 			// print LLVM's main function and its body
 			node* mainFuncNode = makenode(FuncDefinitionType, progFuncHeading, progFuncBlock, NULL, -1, -1);
+			curFunctionScope = cur_scope;
 			generateLLVMFunction(mainFuncNode, 1);
 
 			break;
 
 		case FuncDeclarationListType:
 
-			generateLLVMFunction(cur_node->field1, 0);
-			printLLVMCode(cur_node->field2);
+			; // very importnt voodoo magic ;)
+
+			node* funcNode = cur_node->field1;
+			node* funcHeading = funcNode->field1;
+			node* funcID = funcHeading->field1;
+			char* funcIDStr = funcID->field1;
+			curFunctionScope = lookupFuncSymbolInAllTables(funcIDStr, cur_scope);
+			generateLLVMFunction(funcNode, 0);
+			printLLVMCode(curFunctionScope, cur_node->field2);
 
 			break;
 
 		default:
-			printLLVMCodeChildren(cur_node);
+			printLLVMCodeChildren(curFunctionScope, cur_node);
 			break;
 	}
 
@@ -319,7 +327,7 @@ void generateLLVMStatement(node* statement){
 	        if(ret.returnVarType == llvm_i32){
 
 	        	printTabCounter();
-	            printf("call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
+	            printf("call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.int_lit, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
 	        }
 	        else if(ret.returnVarType == llvm_i1){
 
@@ -333,11 +341,10 @@ void generateLLVMStatement(node* statement){
 	            printf("call i32 (i8*, ...)* @printf(i8* %%%d)\n\n", localVarCounter -1);
 	        }
 	        else if(ret.returnVarType == llvm_double){
-	        	/*
+
 	        	// TODO how do i print a double in LLVM ?
 	        	printTabCounter();
-	        	printf("call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
-	        	*/
+	        	printf("call double (i8*, ...)* @printf(i8* getelementptr inbounds ([8 x i8]* @str.real_lit, double 0, double 0), double %%%d)\n\n", ret.returnVarNum);
 	        }
 
 	        getAndIncrementLocalVarCounter();
@@ -376,6 +383,8 @@ LLVMReturnReff generateLLVMExpression(node* expr){
     LLVMReturnReff returnValue;
     LLVMReturnReff leftExprId, rightExprId;
 
+    returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+
     if(expr->type_of_node == OPType){
 
         returnValue = printOPLLVMCode(expr);
@@ -384,62 +393,30 @@ LLVMReturnReff generateLLVMExpression(node* expr){
 
         returnValue = printUnaryOPLLVMCode(expr);
     }
-    /*
     else if(expr->type_of_node == IDType){
 
-        char llvmType[MAX_LLVM_TYPE_SIZE];
-        Type idType = getSymbolFromLocal(expr->idOrLit);
-
+        returnValue.returnVarType = getLLVMTypeFromPredefType( searchForTypeOfSymbolInRelevantScopes(expr->field1, curFunctionScope)) ;
         returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 
-        if(idType != -1)
-        {
-            getLLVMTypeStr(leftExpr.idType);
-            printTabCounter();
-            printf("%%%d = load %s* %%%s\n\n", returnValue.returnVarNum, llvmType, expr->idOrLit);
-        }
-        else
-        {
-            idType = getSymbolFromGlobal(expr->idOrLit);
-            getLLVMTypeStr(leftExpr.idType);
-            printTabCounter();
-            printf("%%%d = load %s* @%s\n\n", returnValue.returnVarNum, llvmType, expr->idOrLit);
-        }
-
-        returnValue.returnVarType = idType;
+        char* llvmType = getLLVMTypeStr(leftExprId.returnVarType);
+        printTabCounter();
+        printf("%%%d = load %s* %%%s\n\n", returnValue.returnVarNum, llvmType, strlwr(expr->field1) );
+        
     }
-    */
     else if(expr->type_of_node == IntType){
 
-		returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 		printTabCounter();
         printf("%%%d = add i32 0, %d\n", returnValue.returnVarNum, atoi(expr->field1));
         returnValue.returnVarType = llvm_i32;
     }
     else if(expr->type_of_node == DoubleType){
 
-		returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 		double d;
 		sscanf(expr->field1, "%lf", &d);
 		printTabCounter();
         printf("%%%d = add double 0, %f.12E\n", returnValue.returnVarNum, d);
         returnValue.returnVarType = llvm_double;
     }
-    /*
-    else if(expr->type_of_node == BOOLLIT_T)
-    {
-        if(strcmp(expr->idOrLit, "true") == 0) {
-        	printTabCounter();
-            printf("%%%d = add i1 0, 1\n", localVarCounter);
-        }
-        else {
-        	printTabCounter();
-            printf("%%%d = add i1 0, 0\n", localVarCounter);
-        }        
-        returnValue.returnVarNum = getAndIncrementLocalVarCounter();
-        returnValue.returnVarType = llvm_i1;
-    }
-	*/
 	/*
     else if(expr->type_of_node == CallType){
 
