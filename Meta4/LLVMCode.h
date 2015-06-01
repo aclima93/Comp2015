@@ -46,10 +46,14 @@ void generateLLVMLocalVar(node* varDeclarationNode);
 void generateLLVMStatementList(node* statementList);
 void generateLLVMStatement(node* statement);
 
-LLVMReturnReff buildExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnReff rightExpr, char* operation);
-LLVMReturnReff genExpr(node* expr);
+LLVMReturnReff printLLVMExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnReff rightExpr, char* operation);
+LLVMReturnReff generateLLVMExpression(node* expr);
+
 LLVMReturnReff printUnaryOPLLVMCode(node* expr);
 LLVMReturnReff printOPLLVMCode(node* expr);
+
+LLVMType getLLVMTypeToUseInOP(char* op, LLVMType leftType, LLVMType rightType);
+char* getLLVMOperationForExpression(char* op, LLVMType resultType);
 
 /* 
  * Auxiliary printing functions
@@ -64,8 +68,8 @@ char* getLLVMTypeStr(LLVMType t);
 char* printCurLocalVar();
 char* printCurLabelCounter();
 
-int incrementAndGetLocalVarCounter();
-int incrementAndGetLabelCounter();
+int getAndIncrementLocalVarCounter();
+int getAndIncrementLabelCounter();
 
 #endif
 

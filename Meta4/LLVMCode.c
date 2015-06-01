@@ -96,52 +96,6 @@ void printLLVMCode(node* cur_node){
 
 			break;
 
-		case ExprType:
-
-			// SimpleExpr OP2 SimpleExpr
-			if(cur_node->field1 != NULL && cur_node->field1 != NULL){
-
-				/*
-				case DoubleType:
-				case IntType:
-				case IDType:
-				case StringType:
-
-					printf("%s(%s)\n", getLeafStr(t), cur_node->field1 );
-					break;
-
-				case CallType:
-
-					printf("Id(%s)\n", (char*) cur_node->field1);
-					break;
-
-				case UnaryOPType:
-
-					printUnaryOPLLVMCode(cur_node->field1);
-					break;
-
-				case OPType:
-				
-					printOP
-				LLVMCode(cur_node->field1);
-					break;
-				*/
-			}
-			// SimpleExpr
-			else{
-			}
-
-			printLLVMCodeChildren(cur_node);
-			break;
-
-		case SimpleExprType:
-		case FactorType:
-		case OPTermListType: 
-
-			printLLVMCodeChildren(cur_node);
-			break;
-
-
 		default:
 			printLLVMCodeChildren(cur_node);
 			break;
@@ -296,9 +250,9 @@ void generateLLVMStatement(node* statement){
     else if(statement->type_of_node == IfElseStatType){
 
     	// new label, increment counter
-        int labelNum = incrementAndGetLabelCounter();
+        int labelNum = getAndIncrementLabelCounter();
 
-        LLVMReturnReff returnReff = genExpr(statement->field1);
+        LLVMReturnReff returnReff = generateLLVMExpression(statement->field1);
 
         printf("\tbr i1 %%%d, label %%if.then%d, label %%if.else%d\n\n", returnReff.returnVarNum, labelNum, labelNum);
 
@@ -322,7 +276,7 @@ void generateLLVMStatement(node* statement){
 
         printf("while.start%d:\n", labelNum);
         
-		LLVMReturnReff returnReff = genExpr(statement->field1);
+		LLVMReturnReff returnReff = generateLLVMExpression(statement->field1);
         
         printf("\tbr i1 %%%d, label %%while.do%d, label %%while.end%d\n\n", returnReff.returnVarNum, labelNum, labelNum);
 
@@ -336,39 +290,44 @@ void generateLLVMStatement(node* statement){
     }
     else if(statement->type_of_node == WriteLnStatType){
 
-    	// TODO:
     	// percorrer a lista de argumentos da chamda ao writeln e imprimi-los
 
-    	/*
-        LLVMReturnReff ret = genExpr(statement->expr1);
+        LLVMReturnReff ret;
 
-        if(ret.returnVarType == llvm_i32){
+        while( statement != NULL ){
 
-            printf("\tcall i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
-        }
-        else if(ret.returnVarType == llvm_i1){
+	        ret = generateLLVMExpression(statement->field1);
 
-            printf("\t%%%d = zext i1 %%%d to i32\n", incrementAndGetLocalVarCounter(), ret.returnVarNum);
-            printf("\t%%%d = getelementptr inbounds [2 x i8*]* @str.bools, i32 0, i32 %%%d\n", incrementAndGetLocalVarCounter(), localVarCounter -1);
-            printf("\t%%%d = load i8** %%%d\n", incrementAndGetLocalVarCounter(), localVarCounter -1);
-            printf("\tcall i32 (i8*, ...)* @printf(i8* %%%d)\n\n", localVarCounter -1);
-        }
-        else if(ret.returnVarType == llvm_double){
+	        if(ret.returnVarType == llvm_i32){
 
-        	printf("\tcall i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
-        }
+	            printf("\tcall i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
+	        }
+	        else if(ret.returnVarType == llvm_i1){
 
-        incrementAndGetLocalVarCounter();
-        */
+	            printf("\t%%%d = zext i1 %%%d to i32\n", getAndIncrementLocalVarCounter(), ret.returnVarNum);
+	            printf("\t%%%d = getelementptr inbounds [2 x i8*]* @str.bools, i32 0, i32 %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
+	            printf("\t%%%d = load i8** %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
+	            printf("\tcall i32 (i8*, ...)* @printf(i8* %%%d)\n\n", localVarCounter -1);
+	        }
+	        else if(ret.returnVarType == llvm_double){
+	        	/*
+	        	// TODO how do i print a double in LLVM ?
+	        	printf("\tcall i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.d, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
+	        	*/
+	        }
+
+	        getAndIncrementLocalVarCounter();
+	        statement = statement->field2;
+	    }
     }
 }
 
-LLVMReturnReff buildExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnReff rightExpr, char* operation){
+LLVMReturnReff printLLVMExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnReff rightExpr, char* operation){
 
     LLVMReturnReff returnValue;
     char* llvmType = getLLVMTypeStr(leftExpr.returnVarType);
 
-    returnValue.returnVarNum = incrementAndGetLocalVarCounter();
+    returnValue.returnVarNum = getAndIncrementLocalVarCounter();
     returnValue.returnVarType = leftExpr.returnVarType;
 
     printf("\t%%%d = %s %s %%%d, %%%d\n\n", returnValue.returnVarNum, operation, llvmType, leftExpr.returnVarNum, rightExpr.returnVarNum);
@@ -376,7 +335,7 @@ LLVMReturnReff buildExpression(node* expr, LLVMReturnReff leftExpr, LLVMReturnRe
     return returnValue;
 }
 
-LLVMReturnReff genExpr(node* expr){
+LLVMReturnReff generateLLVMExpression(node* expr){
 
     LLVMReturnReff returnValue;
     LLVMReturnReff leftExprId, rightExprId;
@@ -395,7 +354,7 @@ LLVMReturnReff genExpr(node* expr){
         char llvmType[MAX_LLVM_TYPE_SIZE];
         Type idType = getSymbolFromLocal(expr->idOrLit);
 
-        returnValue.returnVarNum = incrementAndGetLocalVarCounter();
+        returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 
         if(idType != -1)
         {
@@ -412,14 +371,20 @@ LLVMReturnReff genExpr(node* expr){
         returnValue.returnVarType = idType;
     }
     */
-    /*
     else if(expr->type_of_node == IntType){
 
-        printf("\t%%%d = add i32 0, %d\n", incrementAndGetLocalVarCounter(), (int) strtol(expr->idOrLit, NULL, 0));
-        returnValue.returnVarNum = localVarCounter -1;
+		returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+        printf("\t%%%d = add i32 0, %d\n", returnValue.returnVarNum, atoi(expr->field1));
         returnValue.returnVarType = llvm_i32;
     }
-    */
+    else if(expr->type_of_node == DoubleType){
+
+		returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+		double d;
+		sscanf(expr->field1, "%lf", &d);
+        printf("\t%%%d = add double 0, %f.12E\n", returnValue.returnVarNum, d);
+        returnValue.returnVarType = llvm_double;
+    }
     /*
     else if(expr->type_of_node == BOOLLIT_T)
     {
@@ -429,7 +394,7 @@ LLVMReturnReff genExpr(node* expr){
         else {
             printf("\t%%%d = add i1 0, 0\n", localVarCounter);
         }        
-        returnValue.returnVarNum = incrementAndGetLocalVarCounter();
+        returnValue.returnVarNum = getAndIncrementLocalVarCounter();
         returnValue.returnVarType = llvm_i1;
     }
 	*/
@@ -450,9 +415,9 @@ LLVMReturnReff genExpr(node* expr){
 
         int i;
         for(i=0, aux = expr->argsList; aux != NULL; aux = aux->next, i++)
-            args[i] = genExpr(aux->expr);
+            args[i] = generateLLVMExpression(aux->expr);
 
-        printf("\t%%%d = call %s @%s(", incrementAndGetLocalVarCounter(), llvmType, expr->idOrLit);
+        printf("\t%%%d = call %s @%s(", getAndIncrementLocalVarCounter(), llvmType, expr->idOrLit);
         aux = expr->argsList;
         if(aux != NULL)
         {
@@ -486,27 +451,25 @@ LLVMReturnReff printUnaryOPLLVMCode(node* expr){
 	LLVMReturnReff returnValue;
     LLVMReturnReff exprId;
 
-    exprId = genExpr(expr->field3);
-    returnValue.returnVarNum = incrementAndGetLocalVarCounter();
+    exprId = generateLLVMExpression(expr->field3);
+    returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 
 	if( strcasecmp ( "+", op_str ) == 0){
 
-        printf("\t%%%d = add i32 0, %%%d\n\n", returnValue.returnVarNum, exprId.returnVarNum);
-        returnValue.returnVarType = llvm_i32;
+        printf("\t%%%d = add %s 0, %%%d\n\n", returnValue.returnVarNum, getLLVMTypeStr(exprId.returnVarType), exprId.returnVarNum);
     }
 	else if( strcasecmp ( "-", op_str ) == 0){
 
-        printf("\t%%%d = sub i32 0, %%%d\n\n", returnValue.returnVarNum, exprId.returnVarNum);
-        returnValue.returnVarType = llvm_i32;
+        printf("\t%%%d = sub %s 0, %%%d\n\n", returnValue.returnVarNum, getLLVMTypeStr(exprId.returnVarType), exprId.returnVarNum);
     }
 	else if( strcasecmp ( "not", op_str ) == 0){
 
-        int tempId;
         printf("\t%%%d = icmp ne i1 %%%d, 0\n", returnValue.returnVarNum, exprId.returnVarNum);
         printf("\t%%%d = xor i1 %%%d, true\n\n", localVarCounter, returnValue.returnVarNum);
-        returnValue.returnVarNum = incrementAndGetLocalVarCounter();
-        returnValue.returnVarType = llvm_i1;
+        returnValue.returnVarNum = getAndIncrementLocalVarCounter();
     }
+
+	returnValue.returnVarType = exprId.returnVarType;
 
     return returnValue;
 }
@@ -517,30 +480,32 @@ LLVMReturnReff printOPLLVMCode(node* expr){
 	char* op_str = op_expr->field1;
 
 	// new label, increment counter
-    int labelNum = incrementAndGetLabelCounter();
+    int labelNum = getAndIncrementLabelCounter();
 	LLVMReturnReff returnValue;
 
-	int resVarNumber = incrementAndGetLocalVarCounter();
-	int leftExprIdNum = genExpr(expr->field1).returnVarNum;
-	int rightExprIdNum = genExpr(expr->field3).returnVarNum;
+	int resVarNumber = getAndIncrementLocalVarCounter();
+	LLVMReturnReff leftExpr = generateLLVMExpression(expr->field1);
+	LLVMReturnReff rightExpr = generateLLVMExpression(expr->field3);
+
+	LLVMType exprType = getLLVMTypeToUseInOP(op_str, leftExpr.returnVarNum, rightExpr.returnVarNum);
 
 	if( strcasecmp ( "and", op_str ) == 0){
 
         //res = a
         printf("\t%%%d = alloca i1\n", resVarNumber);
-        printf("\tstore i1 %%%d, i1* %%%d\n", leftExprIdNum, resVarNumber);
+        printf("\tstore i1 %%%d, i1* %%%d\n", leftExpr.returnVarNum, resVarNumber);
 
         //if(a)
-        printf("\t%%%d = icmp eq i1 1, %%%d\n", incrementAndGetLocalVarCounter(), leftExprIdNum);
+        printf("\t%%%d = icmp eq i1 1, %%%d\n", getAndIncrementLocalVarCounter(), leftExpr.returnVarNum);
         printf("\tbr i1 %%%d, label %%and.do%d, label %%and.end%d\n\n", localVarCounter -1, labelNum, labelNum);
 
         //res = a
         printf("and.do%d:\n", labelNum);
-        printf("\tstore i1 %%%d, i1* %%%d\n", rightExprIdNum, resVarNumber);
+        printf("\tstore i1 %%%d, i1* %%%d\n", rightExpr.returnVarNum, resVarNumber);
         printf("\tbr label %%and.end%d\n\n", labelNum);
 
         printf("and.end%d:", labelNum);
-        printf("%%%d = load i1* %%%d\n", incrementAndGetLocalVarCounter(), resVarNumber);
+        printf("%%%d = load i1* %%%d\n", getAndIncrementLocalVarCounter(), resVarNumber);
 
         returnValue.returnVarNum = localVarCounter -1;
         returnValue.returnVarType = llvm_i1;
@@ -550,77 +515,172 @@ LLVMReturnReff printOPLLVMCode(node* expr){
 
 	    //res = a
 	    printf("\t%%%d = alloca i1\n", resVarNumber);
-	    printf("\tstore i1 %%%d, i1* %%%d\n", leftExprIdNum, resVarNumber);
+	    printf("\tstore i1 %%%d, i1* %%%d\n", leftExpr.returnVarNum, resVarNumber);
 
 	    //if(!a)
-	    printf("\t%%%d = icmp eq i1 0, %%%d\n", incrementAndGetLocalVarCounter(), leftExprIdNum);
+	    printf("\t%%%d = icmp eq i1 0, %%%d\n", getAndIncrementLocalVarCounter(), leftExpr.returnVarNum);
 	    printf("\tbr i1 %%%d, label %%or.do%d, label %%or.end%d\n\n", localVarCounter -1, labelNum, labelNum);
 
 	    //res = a
 	    printf("or.do%d:\n", labelNum);
-	    printf("\tstore i1 %%%d, i1* %%%d\n", rightExprIdNum, resVarNumber);
+	    printf("\tstore i1 %%%d, i1* %%%d\n", rightExpr.returnVarNum, resVarNumber);
 	    printf("\tbr label %%or.end%d\n\n", labelNum);
 
 	    printf("or.end%d:", labelNum);
-	    printf("%%%d = load i1* %%%d\n", incrementAndGetLocalVarCounter(), resVarNumber);
+	    printf("%%%d = load i1* %%%d\n", getAndIncrementLocalVarCounter(), resVarNumber);
 
 	    returnValue.returnVarNum = localVarCounter -1;
 	    returnValue.returnVarType = llvm_i1;
 
 	}
-	else if( strcasecmp ( "<>", op_str ) == 0){
+	else if( strcasecmp ( "<>", op_str ) == 0 || strcasecmp ( "<=", op_str ) == 0
+		  || strcasecmp ( ">=", op_str ) == 0 || strcasecmp ( "<", op_str ) == 0 
+		  || strcasecmp ( ">", op_str ) == 0 || strcasecmp ( "=", op_str ) == 0 ){
+
+		char* llvmOpStr = getLLVMOperationForExpression(op_str, exprType);
+        if( exprType == llvm_double ){
+	        printf("\t%%%d = fcmp %s %s %%%d, %%%d\n\n", resVarNumber, llvmOpStr, getLLVMTypeStr(exprType), leftExpr.returnVarNum, rightExpr.returnVarNum);
+        }
+        else{
+        	printf("\t%%%d = icmp %s %s %%%d, %%%d\n\n", resVarNumber, llvmOpStr, getLLVMTypeStr(exprType), leftExpr.returnVarNum, rightExpr.returnVarNum);
+        }
+		returnValue.returnVarNum = resVarNumber;
+        returnValue.returnVarType = exprType;
 
 	}
-	else if( strcasecmp ( "<=", op_str ) == 0){
+	else if( strcasecmp ( "+", op_str ) == 0 || strcasecmp ( "-", op_str ) == 0 
+		  || strcasecmp ( "*", op_str ) == 0 || strcasecmp ( "/", op_str ) == 0
+		  || strcasecmp ( "div", op_str ) == 0 ){
 
-	}
-	else if( strcasecmp ( ">=", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "<", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( ">", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "=", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "+", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "-", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "*", op_str ) == 0){
-
-	}
-	else if( strcasecmp ( "/", op_str ) == 0){
-
+		char* llvmOpStr = getLLVMOperationForExpression(op_str, exprType);
+        printf("\t%%%d = %s %s %%%d, %%%d\n\n", resVarNumber, llvmOpStr, getLLVMTypeStr(exprType), leftExpr.returnVarNum, rightExpr.returnVarNum);
+		returnValue.returnVarNum = resVarNumber;
+        returnValue.returnVarType = exprType;
 	}
 	else if( strcasecmp ( "mod", op_str ) == 0){
 
-	}
-	else if( strcasecmp ( "div", op_str ) == 0){
+        printf("\t%%%d = srem %s %%%d, %%%d\n\n", resVarNumber, getLLVMTypeStr(exprType), leftExpr.returnVarNum, rightExpr.returnVarNum);
 
+        // srem instruction returns a negative modulo if the left expressions returns a negative integer
+        // to make it positive we have to add the second integer to the result fo the modulous
+
+        int ifcond = getAndIncrementLocalVarCounter();
+        int ifcont = getAndIncrementLabelCounter();
+        int finalResVarNumber = getAndIncrementLocalVarCounter();
+
+		printf("%%%d = icmp slt i32 %%%d, 0", ifcond, leftExpr.returnVarNum);
+		printf("\tbr i1 %%%d, label %%if.then%d, label %%if.else%d", ifcond, ifcont, ifcont);
+		printf("then:");
+		printf("\t%%%d = add i32 %%%d, %%%d", finalResVarNumber, resVarNumber, rightExpr.returnVarNum);
+		printf("\tbr label %%%d", ifcont);
+		printf("else:");
+		printf("\tbr label %%%d", ifcont);
+		printf("%%%d:", ifcont);
+		
+		returnValue.returnVarNum = resVarNumber;
+        returnValue.returnVarType = exprType;
 	}
 	else{
 
-		/*
-        char llvmOp[MAX_LLVM_OP_STRING];
-        getOpLLVM(llvmOp, expr->op);
+		char* llvmOpStr = getLLVMOperationForExpression(op_str, exprType);
 
-        leftExprId = genExpr(expr->expr1);
-        rightExprId = genExpr(expr->expr2);
-        returnValue = buildExpression(expr, leftExprId, rightExprId, llvmOp);
-
-        if(expr->op != PLUS && expr->op != MINUS && expr->op != MUL && expr->op != DIV && expr->op != REM)
-            returnValue.returnVarType = llvm_i1;
-        */
+        returnValue = printLLVMExpression(expr, leftExpr, rightExpr, llvmOpStr);
     }
 
     return returnValue;
 }
+
+LLVMType getLLVMTypeToUseInOP(char* op, LLVMType leftType, LLVMType rightType){
+
+ 	if (strcasecmp(op, "+") == 0 || strcasecmp(op, "-") == 0 || strcasecmp(op, "*") == 0) {
+ 		
+ 		// integer/real with integer/real
+		if ( leftType == llvm_i32 && rightType == llvm_i32)
+			return llvm_i32;
+		else if ( (leftType == llvm_i32 || leftType == llvm_double) && (rightType == llvm_i32 || rightType == llvm_double) )
+			return llvm_double;
+ 	}
+ 	else if (strcasecmp(op, "/") == 0)
+ 		return llvm_double;
+
+ 	else if (strcasecmp(op, "div") == 0 || strcasecmp(op, "mod") == 0) {
+ 		return llvm_i32;
+ 	}
+ 	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 
+ 		  || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0  
+ 		  || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
+	
+		if ( leftType == llvm_i32 && rightType == llvm_i32)
+			return llvm_i32;
+		else if ( leftType == llvm_i1 && rightType == llvm_i1)
+			return llvm_i1;
+		else if ( (leftType == llvm_i32 || leftType == llvm_double) && (rightType == llvm_i32 || rightType == llvm_double) )
+			return llvm_double;
+ 	}
+ 	else if ((strcasecmp(op, "and") == 0 || strcasecmp(op, "or") == 0) ) {
+		return llvm_i1;
+ 	}
+
+ 	return llvm_null;
+}
+
+char* getLLVMOperationForExpression(char* op, LLVMType resultType){
+
+ 	if (strcasecmp(op, "+") == 0){
+ 		return "add";
+ 	}
+ 	else if(strcasecmp(op, "-") == 0){
+ 		return "sub";
+ 	}
+	else if(strcasecmp(op, "*") == 0){
+
+		if ( resultType == llvm_i32)
+			return "mul";
+		else if ( resultType == llvm_double )
+			return "fmul";
+ 	}
+ 	else if (strcasecmp(op, "/") == 0){
+
+		if ( resultType == llvm_i32)
+			return "sdiv";
+		else if ( resultType == llvm_double )
+			return "fdiv";
+ 	}
+ 	else if (strcasecmp(op, "div") == 0){
+ 		return "sdiv";
+ 	}
+	else if(strcasecmp(op, "<>") == 0){
+ 		return "ne";
+ 	}
+	else if( strcasecmp ( "<=", op ) == 0){
+		return "sle";
+	}
+	else if( strcasecmp ( ">=", op ) == 0){
+		return "sge";
+	}
+	else if( strcasecmp ( "<", op ) == 0){
+		return "slt";
+	}
+	else if( strcasecmp ( ">", op ) == 0){
+		return "sgt";
+	}
+	else if( strcasecmp ( "=", op ) == 0){
+		return "eq";
+	}
+	// unused because of special cases
+ 	//else if( strcasecmp(op, "and" == 0 )
+ 	//else if( strcasecmp(op, "or") == 0 )
+ 	//else if( strcasecmp(op, "mod") == 0 )
+ 
+
+ 	return "llvm_null";
+}
+
+
+
+
+/* Aux functions */
+
 
 char* getLLVMTypeStrFromNodeStr(char* str){
 	return getLLVMTypeStr(getLLVMTypeFromStr(str));
@@ -685,14 +745,16 @@ char* printCurLabelCounter() {
     return str;
 }
 
-int incrementAndGetLocalVarCounter(){
+int getAndIncrementLocalVarCounter(){
+	int temp = localVarCounter;
 	localVarCounter += 1;
-	return localVarCounter;
+	return temp;
 }
 
-int incrementAndGetLabelCounter(){
+int getAndIncrementLabelCounter(){
+	int temp = labelCounter;
 	labelCounter += 1;
-	return labelCounter;
+	return temp;
 }
 
 
