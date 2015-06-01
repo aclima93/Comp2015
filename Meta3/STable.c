@@ -425,8 +425,17 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				printErrorLineCol(IDNode->line, IDNode->col, printVariableIdentifierExpectedError() );
 			}
 
+			// if we get _function_ instead of another type it means that it got fucked up
+			if( type1 == _function_ ){
+				// imprimir erro
+				printErrorLineCol(IDNode->line, IDNode->col, printVariableIdentifierExpectedError() );
+			}
+			if( type2 == _function_ ){
+				// imprimir erro
+				printErrorLineCol(temp->line, temp->col, printVariableIdentifierExpectedError() );
+			}
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
-			if( !isValidAssignment(type1, type2) ){
+			else if( !isValidAssignment(type1, type2) ){
 				// imprimir erro
 				printErrorLineCol(temp->line, temp->col, printIncompatibleTypeAssignmentError(IDNode->field1, getPredefTypeStr(type2), getPredefTypeStr(type1)) );
 			}
