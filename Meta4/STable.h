@@ -116,6 +116,7 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* s
 
 void insertSymbol(symbol* s, table* t);
 
+symbol* lookupProgramSymbol(char* key, table* t);
 symbol* lookupFuncSymbol(char* key, table* t);
 
 symbol* lookupSymbol(char* key, table* t);

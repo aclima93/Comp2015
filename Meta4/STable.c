@@ -646,13 +646,38 @@ table* getFuncScope(char *key, table* cur_scope) {
 	}
 }
 
+symbol* lookupProgramSymbol(char* key, table* t){
+
+	symbol* cur_symbol = t->symbol_variables;
+
+	while( cur_symbol != NULL ){
+
+		if( strcasecmp(cur_symbol->name, key) == 0 && cur_symbol->type == _program_ ){
+			break;
+		}
+
+		cur_symbol = cur_symbol->nextSymbol;
+	}
+
+	if(LOOKUP_DEBUG){
+		printf("\n--------\n");
+		printTable(t);
+		printf("Searching\n");
+		printf("%s\n", key);
+		printf("Got\n");
+		printSymbolDebug( cur_symbol );
+	}
+
+	return cur_symbol;
+}
+
 symbol* lookupFuncSymbol(char* key, table* t){
 
 	symbol* cur_symbol = t->symbol_variables;
 
 	while( cur_symbol != NULL ){
 
-		if( strcasecmp(cur_symbol->name, key) == 0 && cur_symbol->type == _function_ ){
+		if( strcasecmp(cur_symbol->name, key) == 0 && (cur_symbol->type == _function_ || cur_symbol->type == _program_) ){
 			break;
 		}
 
@@ -830,7 +855,10 @@ int isValidOperation(char* op, PredefType leftType, PredefType rightType){
  		}
  	}
  	else if (strcasecmp(op, ">") == 0 || strcasecmp(op, "<=") == 0 || strcasecmp(op, ">=") == 0 || strcasecmp(op, "<") == 0 || strcasecmp(op, "<>") == 0 || strcasecmp(op, "=") == 0 ) {
- 		if ( ( leftType == _integer_  || leftType == _real_  || leftType == _boolean_ ) && ( rightType == _integer_ || rightType == _real_ || rightType == _boolean_ ) ) {
+ 		if ( ( leftType == _integer_  || leftType == _real_ ) && ( rightType == _integer_ || rightType == _real_ ) ) {
+ 			return 1;
+ 		}
+ 		else if( leftType == _boolean_ && rightType == _boolean_ ){
  			return 1;
  		}
  	}
