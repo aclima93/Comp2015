@@ -434,7 +434,6 @@ void walkASTNode(table* cur_scope, node* cur_node, node* cur_declaration_type, P
 				// imprimir erro
 				printErrorLineCol(temp->line, temp->col, printVariableIdentifierExpectedError() );
 			}
-
 			// tem de verificar se o tipo da direita é o mesmo do tipo da esquerda
 			if( !isValidAssignment(type1, type2) ){
 				// imprimir erro
@@ -1031,17 +1030,24 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		ExprPredefTypeList* gotExprTypes = NULL; // gotten type list
 		ExprPredefTypeList* temp_exprType;
 		node* temp_node = cur_node->field3;
-		PredefType tempType; 
+		PredefType temp; 
 		
 		while( temp_node != NULL ){
 
 			//TODO
 			// find a way to get rid of this quadratic complexity
 
-			tempType = getPredefTypeOfNode(temp_node->field1, cur_scope);
+
+
+			temp = getPredefTypeOfNode(temp_node->field1, cur_scope);
+
+			PredefFlag flag = NULLFlag;
+			if( temp_node->type_of_node == IDType ){
+				flag = varparamFlag;
+			}
 
 			if(gotExprTypes == NULL){
-				gotExprTypes = makeTypeListElement( tempType);
+				gotExprTypes = makeTypeListElement(temp, flag);
 			}
 			else{
 
@@ -1052,7 +1058,7 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 					temp_exprType = temp_exprType->next;
 				}
 
-				temp_exprType->next = makeTypeListElement(tempType);
+				temp_exprType->next = makeTypeListElement(temp, flag);
 			}
 			temp_node = temp_node->field2;
 		}
@@ -1062,10 +1068,11 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 		if(PARAMLIST_DEBUG){
 			printf("\n\n------------------\nGotten Argument Symbols\n");
 
-			ExprPredefTypeList* temp = gotExprTypes;
-			while(temp != NULL){
-				printf("%s\n", getPredefTypeStr(temp->type));
-				temp = temp->next;
+			ExprPredefTypeList* temp2 = gotExprTypes;
+			while(temp2 != NULL){
+				printf("type: %s\n", getPredefTypeStr(temp2->type));
+				printf("flag: %s\n", getPredefFlagStr(temp2->flag));
+				temp2 = temp2->next;
 			}
 		}
 
@@ -1086,6 +1093,12 @@ PredefType getPredefTypeOfFactor(node* cur_node, table* cur_scope){
 				// imprimir erro
 				printErrorLineCol(op->line, op->col, printIncompatibleTypeCallFunctionError(num, op->field1, getPredefTypeStr(cur_gotExpr->type), getPredefTypeStr(cur_expectedExpr->type) ) );
 				return _NULL_;
+			}
+			// parâmetros de funções que sejam do tipo Var só podem receber variáveis (IDs), não o resultado de expressões (por exemplo)
+			else if( cur_gotExpr->flag != paramFlag && cur_expectedExpr->flag == paramFlag ){
+				// imprimir erro
+				printErrorLineCol(op->line, op->col, printVariableIdentifierExpectedError() );
+				return _NULL_;	
 			}
 
 			num++;
@@ -1128,7 +1141,7 @@ int countNumElements(ExprPredefTypeList* exprTypes){
 	return numElements;
 }
 
-ExprPredefTypeList* makeTypeListElement(PredefType t){
+ExprPredefTypeList* makeTypeListElement(PredefType t, PredefFlag f){
 
 	if( EXPR_TYPES_DEBUG ){
 		printf("Type: %s\n", getPredefTypeStr(t));
@@ -1137,6 +1150,7 @@ ExprPredefTypeList* makeTypeListElement(PredefType t){
 	// create new element and add to end of list
 	ExprPredefTypeList* new_element = malloc( sizeof(ExprPredefTypeList) );
 	new_element->type = t;
+	new_element->flag = f;
 	new_element->next = NULL;
 
 	return new_element;
@@ -1156,7 +1170,7 @@ ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
 
 			if( paramSymbolList == NULL ){
 
-				paramSymbolList = makeTypeListElement(cur_symbol->type);
+				paramSymbolList = makeTypeListElement(cur_symbol->type, cur_symbol->flag);
 			}
 			else{
 
@@ -1168,7 +1182,7 @@ ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope){
 					temp = temp->next;
 				}
 
-				temp->next = makeTypeListElement(cur_symbol->type);
+				temp->next = makeTypeListElement(cur_symbol->type, cur_symbol->flag);
 			}
 
 			if(PARAMLIST_DEBUG){

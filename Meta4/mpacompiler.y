@@ -150,7 +150,12 @@ Stat: CompStat 																		{$$ = $1;}
 	| REPEAT StatList UNTIL Expr 													{$$ = makenode(RepeatStatType, $2, $4, NULL, line, col);} 
 	| VAL '(' PARAMSTR '(' Expr ')' ',' ID ')' 										{$$ = makenode(ValParamStatType, $5, makeleaf(IDType, ($8)->string, ($8)->line, ($8)->col), NULL, line, col);} 
 	| IDAssignExpr_Optional 														{$$ = $1;} 
-	| WRITELN WritelnPList_Optional 												{$$ = $2;} 
+	| WRITELN WritelnPList_Optional 												{
+																						if( $2 == NULL )
+																							$$ = makenode(WriteLnStatType, NULL, NULL, NULL, line, col);
+																						else
+																							$$ = $2;
+																					} 
 	;
 
 IDAssignExpr_Optional: ID ASSIGN Expr 												{$$ = makenode(AssignStatType, makeleaf(IDType, ($1)->string, ($1)->line, ($1)->col), $3, NULL, ($1)->line, ($1)->col);} 

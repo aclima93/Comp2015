@@ -509,9 +509,9 @@ static const yytype_uint8 yyrline[] =
       91,    93,    94,    97,    99,   100,   103,   104,   105,   108,
      109,   112,   114,   116,   117,   120,   121,   124,   126,   128,
      130,   132,   138,   141,   142,   143,   144,   150,   151,   152,
-     153,   156,   157,   160,   161,   164,   165,   168,   169,   170,
-     173,   174,   177,   178,   179,   180,   183,   184,   185,   188,
-     189,   190,   191,   192,   193,   196,   198,   199
+     153,   161,   162,   165,   166,   169,   170,   173,   174,   175,
+     178,   179,   182,   183,   184,   185,   188,   189,   190,   193,
+     194,   195,   196,   197,   198,   201,   203,   204
 };
 #endif
 
@@ -1711,147 +1711,152 @@ yyreduce:
 
   case 40:
 #line 153 "mpacompiler.y"
-    {(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);}
+    {
+																						if( (yyvsp[(2) - (2)].node_pointer) == NULL )
+																							(yyval.node_pointer) = makenode(WriteLnStatType, NULL, NULL, NULL, line, col);
+																						else
+																							(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);
+																					}
     break;
 
   case 41:
-#line 156 "mpacompiler.y"
+#line 161 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(AssignStatType, makeleaf(IDType, ((yyvsp[(1) - (3)].info))->string, ((yyvsp[(1) - (3)].info))->line, ((yyvsp[(1) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(1) - (3)].info))->line, ((yyvsp[(1) - (3)].info))->col);}
     break;
 
   case 42:
-#line 157 "mpacompiler.y"
+#line 162 "mpacompiler.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 43:
-#line 160 "mpacompiler.y"
+#line 165 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(WriteLnStatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL, ((yyvsp[(1) - (1)].node_pointer))->line, ((yyvsp[(1) - (1)].node_pointer))->col);}
     break;
 
   case 44:
-#line 161 "mpacompiler.y"
+#line 166 "mpacompiler.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 45:
-#line 164 "mpacompiler.y"
+#line 169 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, ((yyvsp[(2) - (4)].node_pointer))->line, ((yyvsp[(2) - (4)].node_pointer))->col);}
     break;
 
   case 46:
-#line 165 "mpacompiler.y"
+#line 170 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (4)].info))->string, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col), (yyvsp[(3) - (4)].node_pointer), NULL, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col);}
     break;
 
   case 47:
-#line 168 "mpacompiler.y"
+#line 173 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(2) - (3)].node_pointer))->line, ((yyvsp[(2) - (3)].node_pointer))->col);}
     break;
 
   case 48:
-#line 169 "mpacompiler.y"
+#line 174 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 49:
-#line 170 "mpacompiler.y"
+#line 175 "mpacompiler.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 50:
-#line 173 "mpacompiler.y"
+#line 178 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(ExprType, NULL, (yyvsp[(1) - (1)].node_pointer), NULL, ((yyvsp[(1) - (1)].node_pointer))->line, ((yyvsp[(1) - (1)].node_pointer))->col);}
     break;
 
   case 51:
-#line 174 "mpacompiler.y"
+#line 179 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 52:
-#line 177 "mpacompiler.y"
+#line 182 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 53:
-#line 178 "mpacompiler.y"
+#line 183 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 54:
-#line 179 "mpacompiler.y"
+#line 184 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 55:
-#line 180 "mpacompiler.y"
-    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
-    break;
-
-  case 56:
-#line 183 "mpacompiler.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
-    break;
-
-  case 57:
-#line 184 "mpacompiler.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
-    break;
-
-  case 58:
 #line 185 "mpacompiler.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
-  case 59:
+  case 56:
 #line 188 "mpacompiler.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
+    break;
+
+  case 57:
+#line 189 "mpacompiler.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
+    break;
+
+  case 58:
+#line 190 "mpacompiler.y"
+    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
+    break;
+
+  case 59:
+#line 193 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 60:
-#line 189 "mpacompiler.y"
+#line 194 "mpacompiler.y"
     {(yyval.node_pointer) = (yyvsp[(2) - (3)].node_pointer);}
     break;
 
   case 61:
-#line 190 "mpacompiler.y"
+#line 195 "mpacompiler.y"
     {(yyval.node_pointer) = makeleaf(IntType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 62:
-#line 191 "mpacompiler.y"
+#line 196 "mpacompiler.y"
     {(yyval.node_pointer) = makeleaf(DoubleType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 63:
-#line 192 "mpacompiler.y"
+#line 197 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(CallType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 64:
-#line 193 "mpacompiler.y"
+#line 198 "mpacompiler.y"
     {(yyval.node_pointer) = makeleaf(IDType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 65:
-#line 196 "mpacompiler.y"
+#line 201 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(ParamListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 66:
-#line 198 "mpacompiler.y"
+#line 203 "mpacompiler.y"
     {(yyval.node_pointer) = makenode(ExprListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 67:
-#line 199 "mpacompiler.y"
+#line 204 "mpacompiler.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1855 "y.tab.c"
+#line 1860 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2065,7 +2070,7 @@ yyreturn:
 }
 
 
-#line 202 "mpacompiler.y"
+#line 207 "mpacompiler.y"
 
 
 int main(int argc, char** args){

@@ -6,7 +6,6 @@
 
 void printLLVM(table* st_root, node* ast_root){
 
-	localVarCounter = 1;
 	labelCounter = 1;
 	tabCounter = 1;
 
@@ -18,6 +17,7 @@ void printLLVM(table* st_root, node* ast_root){
 void printLLVMHeader(){
 
 	// helper functions
+	printf("\n\n");
     printf("declare i32 @printf(i8*, ...)\n");
     printf("declare i32 @atoi(i8*) nounwind readonly\n");
     printf("\n\n");
@@ -29,8 +29,14 @@ void printLLVMHeader(){
 	printf("@str.real_lit = private unnamed_addr constant [8 x i8] c\"%%f.12E\\0A\\00\"\n");
     printf("@str.false = private unnamed_addr constant [7 x i8] c\"FALSE\\0A\\00\"\n");
     printf("@str.true = private unnamed_addr constant [6 x i8] c\"TRUE\\0A\\00\"\n");
+    printf("@str.blank_line = private unnamed_addr constant [2 x i8] c\"\\0A\\00\", align 1\n");
     printf("@str.bools = global [2 x i8*] [i8* getelementptr inbounds ([7 x i8]* @str.false, i32 0, i32 0), i8* getelementptr inbounds ([6 x i8]* @str.true, i32 0, i32 0)]\n");
     printf("\n\n");
+
+    // definição da função paramcount
+    printf("define i32 @paramcount(){\n\n");
+    printf("\tret i32 0\n");
+	printf("}\n\n");
 }
 
 void printLLVMCodeChildren(table* cur_scope, node* cur_node){
@@ -83,7 +89,7 @@ void printLLVMCode(table* cur_scope, node* cur_node){
 			node* funcHeading = funcNode->field1;
 			node* funcID = funcHeading->field1;
 			char* funcIDStr = funcID->field1;
-			curFunctionScope = lookupFuncSymbolInAllTables(funcIDStr, cur_scope);
+			curFunctionScope = lookupFuncSymbolInAllTables(funcIDStr, 0);
 			generateLLVMFunction(funcNode, 0);
 			printLLVMCode(curFunctionScope, cur_node->field2);
 
@@ -102,8 +108,6 @@ void generateLLVMFunction(node* funcNode, int isMainFunc){
 	if( funcNode->field2 == NULL )
 		return;
 
-    localVarCounter = 1;
-
     // "regular" function declaration and definition
     if( funcNode->type_of_node == FuncDefinitionType){
 
@@ -116,18 +120,27 @@ void generateLLVMFunction(node* funcNode, int isMainFunc){
 
 	    // function header
 	    if( isMainFunc ){
-		    printf("define void @main(");
+
+			localVarCounter = LOCAL_VAR_COUNTER_START;
+
+		    printf("define void @main(i32 %%argc, i8** %%argv) #0 {\n\n");
+	    	printf("\t%%1 = alloca i32, align 4\n");
+			printf("\t%%2 = alloca i32, align 4\n");
+			printf("\t%%3 = alloca i8**, align 8\n");
+			printf("\tstore i32 0, i32* %%1\n");
+			printf("\tstore i32 %%argc, i32* %%2, align 4\n");
+			printf("\tstore i8** %%argv, i8*** %%3, align 8\n\n");
 		}
 		else{
+
+			localVarCounter = 1;
+
 		    printf("define %s @%s(", getLLVMTypeStrFromNodeStr(funcReturnType->field1), funcIDStr);
+
+	    	// function parameters (quadratic complexity!)
+		    generateLLVMFunctionParameters(funcHeading->field2);
+		    printf("){\n\n");
 		}
-
-	    // function parameters (quadratic complexity!)
-	    generateLLVMFunctionParameters(funcHeading->field2);
-
-	    // begin function definition
-	    printf("){\n\n");
-
 
 	    //Save arguments to stack
 	    if( isMainFunc ){
@@ -255,6 +268,9 @@ void generateLLVMStatement(node* statement){
 	if(statement == NULL)
 		return ;
 
+	
+	LLVMReturnReff returnReff;
+	
 	incrementTabCounter();
 
     if(statement->type_of_node == CompStatType){
@@ -266,10 +282,10 @@ void generateLLVMStatement(node* statement){
     	// new label, increment counter
         COUNTER_TYPE labelNum = getAndIncrementLabelCounter();
 
-        LLVMReturnReff returnReff = generateLLVMExpression(statement->field1);
+        returnReff = generateLLVMExpression(statement->field1);
 
         printTabCounter();
-        printf("\tbr i1 %%%d, label %%if.then%d, label %%if.else%d\n\n", returnReff.returnVarNum, labelNum, labelNum);
+        printf("br i1 %%%d, label %%if.then%d, label %%if.else%d\n\n", returnReff.returnVarNum, labelNum, labelNum);
 
 		printTabCounter();
         printf("if.then%d:\n", labelNum);
@@ -298,7 +314,7 @@ void generateLLVMStatement(node* statement){
         printTabCounter();
         printf("while.start%d:\n", labelNum);
         
-		LLVMReturnReff returnReff = generateLLVMExpression(statement->field1);
+		returnReff = generateLLVMExpression(statement->field1);
         
         printTabCounter();
         printf("\tbr i1 %%%d, label %%while.do%d, label %%while.end%d\n\n", returnReff.returnVarNum, labelNum, labelNum);
@@ -318,38 +334,46 @@ void generateLLVMStatement(node* statement){
 
     	// percorrer a lista de argumentos da chamda ao writeln e imprimi-los
 
-        LLVMReturnReff ret;
+    	if( statement == NULL){
+			printf("%%%d = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([2 x i8]* @str.blank_line, i32 0, i32 0))", getAndIncrementLocalVarCounter());
+    	}
+    	else{
 
-        while( statement != NULL ){
+	        while( statement != NULL ){
 
-	        ret = generateLLVMExpression(statement->field1);
+		        returnReff = generateLLVMExpression(statement->field1);
 
-	        if(ret.returnVarType == llvm_i32){
+		        if(returnReff.returnVarType == llvm_i32){
 
-	        	printTabCounter();
-	            printf("call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.int_lit, i32 0, i32 0), i32 %%%d)\n\n", ret.returnVarNum);
-	        }
-	        else if(ret.returnVarType == llvm_i1){
+		        	printTabCounter();
+		            printf("call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([4 x i8]* @str.int_lit, i32 0, i32 0), i32 %%%d)\n\n", returnReff.returnVarNum);
+		        }
+		        else if(returnReff.returnVarType == llvm_i1){
 
-	        	printTabCounter();
-	            printf("%%%d = zext i1 %%%d to i32\n", getAndIncrementLocalVarCounter(), ret.returnVarNum);
-	            printTabCounter();
-	            printf("%%%d = getelementptr inbounds [2 x i8*]* @str.bools, i32 0, i32 %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
-	            printTabCounter();
-	            printf("%%%d = load i8** %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
-	            printTabCounter();
-	            printf("call i32 (i8*, ...)* @printf(i8* %%%d)\n\n", localVarCounter -1);
-	        }
-	        else if(ret.returnVarType == llvm_double){
+		        	printTabCounter();
+		            printf("%%%d = zext i1 %%%d to i32\n", getAndIncrementLocalVarCounter(), returnReff.returnVarNum);
+		            printTabCounter();
+		            printf("%%%d = getelementptr inbounds [2 x i8*]* @str.bools, i32 0, i32 %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
+		            printTabCounter();
+		            printf("%%%d = load i8** %%%d\n", getAndIncrementLocalVarCounter(), localVarCounter -1);
+		            printTabCounter();
+		            printf("call i32 (i8*, ...)* @printf(i8* %%%d)\n\n", localVarCounter -1);
+		        }
+		        else if(returnReff.returnVarType == llvm_double){
 
-	        	// TODO how do i print a double in LLVM ?
-	        	printTabCounter();
-	        	printf("call double (i8*, ...)* @printf(i8* getelementptr inbounds ([8 x i8]* @str.real_lit, double 0, double 0), double %%%d)\n\n", ret.returnVarNum);
-	        }
+		        	printTabCounter();
+		        	printf("call double (i8*, ...)* @printf(i8* getelementptr inbounds ([8 x i8]* @str.real_lit, double 0, double 0), double %%%d)\n\n", returnReff.returnVarNum);
+		        }
+		        else if( returnReff.returnVarType == llvm_i8 ){
+		        	// TODO
+		        	// imprimir string
+		        }
 
-	        getAndIncrementLocalVarCounter();
-	        statement = statement->field2;
-	    }
+		        getAndIncrementLocalVarCounter();
+		        statement = statement->field2;
+		    }
+		}
+
     }
     else if(statement->type_of_node == RepeatStatType){
 
@@ -359,6 +383,14 @@ void generateLLVMStatement(node* statement){
     }
     else if(statement->type_of_node == AssignStatType){
 
+    	node* IDNode = statement->field1;
+		returnReff = generateLLVMExpression(statement->field2);
+
+		symbol* aux = searchForSymbolInRelevantScopes(IDNode->field1, curFunctionScope);
+		char* symTypeStr = getLLVMTypeStr( getLLVMTypeFromPredefType(aux->type) );
+
+    	printTabCounter();
+		printf("store %s* %%%s, %s* %%%d\n", symTypeStr, strlwr(IDNode->field1) , getLLVMTypeStr(returnReff.returnVarType), returnReff.returnVarNum );
     }
 
     decrementTabCounter();
@@ -381,9 +413,12 @@ LLVMReturnReff printLLVMExpression(node* expr, LLVMReturnReff leftExpr, LLVMRetu
 LLVMReturnReff generateLLVMExpression(node* expr){
 
     LLVMReturnReff returnValue;
-    LLVMReturnReff leftExprId, rightExprId;
 
-    returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+    if( expr == NULL ){
+    	returnValue.returnVarType = llvm_null;
+    	returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+    	return returnValue;
+    }
 
     if(expr->type_of_node == OPType){
 
@@ -398,9 +433,8 @@ LLVMReturnReff generateLLVMExpression(node* expr){
         returnValue.returnVarType = getLLVMTypeFromPredefType( searchForTypeOfSymbolInRelevantScopes(expr->field1, curFunctionScope)) ;
         returnValue.returnVarNum = getAndIncrementLocalVarCounter();
 
-        char* llvmType = getLLVMTypeStr(leftExprId.returnVarType);
         printTabCounter();
-        printf("%%%d = load %s* %%%s\n\n", returnValue.returnVarNum, llvmType, strlwr(expr->field1) );
+        printf("%%%d = load %s* %%%s\n", returnValue.returnVarNum, getLLVMTypeStr(returnValue.returnVarType), strlwr(expr->field1) );
         
     }
     else if(expr->type_of_node == IntType){
@@ -418,7 +452,7 @@ LLVMReturnReff generateLLVMExpression(node* expr){
         returnValue.returnVarType = llvm_double;
     }
 	/*
-    else if(expr->type_of_node == CallType){
+    else if(opNode->type_of_node == CallType){
 
         char llvmType[MAX_LLVM_TYPE_SIZE];
         Type methodType = getMethodFromGlobal(expr->idOrLit);
@@ -459,6 +493,10 @@ LLVMReturnReff generateLLVMExpression(node* expr){
         returnValue.returnVarType = methodType;
     }
     */
+    else{
+    	returnValue.returnVarType = llvm_null;
+    	returnValue.returnVarNum = getAndIncrementLocalVarCounter();
+    }
 
     return returnValue;
 }
@@ -805,7 +843,7 @@ LLVMType getLLVMTypeFromNode(node* cur_node){
 		return getLLVMTypeFromStr(cur_node->field1);
 	}
 	else if( t ==  StringType){
-		return llvm_null;
+		return llvm_i8;
 	}
 
 	return llvm_null;
@@ -813,7 +851,7 @@ LLVMType getLLVMTypeFromNode(node* cur_node){
 
 char* getLLVMTypeStr(LLVMType t){
 
-	char* str[] = { "i1", "i32", "double", "This cannot show!"};
+	char* str[] = { "i1", "i8", "i32", "double", "i32"/*"This cannot show!"*/};
 	return str[t];
 }
 
@@ -827,6 +865,9 @@ LLVMType getLLVMTypeFromPredefType(PredefType t){
 	}
 	else if( t == _boolean_){
 		return llvm_i1;
+	}
+	else if( t == _string_ ){
+		return llvm_i8;
 	}
 
 	return llvm_null;

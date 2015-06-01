@@ -80,6 +80,7 @@ char* errorStr;
 
 typedef struct {
     PredefType type;
+    PredefFlag flag;
     void* next;
 } ExprPredefTypeList;
 
@@ -116,6 +117,7 @@ symbol* makeSymbol(char* n, PredefType t, PredefFlag f, char* v, int d, table* s
 
 void insertSymbol(symbol* s, table* t);
 
+symbol* lookupProgramSymbol(char* key, table* t);
 symbol* lookupFuncSymbol(char* key, table* t);
 
 symbol* lookupSymbol(char* key, table* t);
@@ -158,7 +160,7 @@ void addSymbolToParamList(ExprPredefTypeList* paramSymbolList, symbol* s);
 
 int countNumElements(ExprPredefTypeList* exprTypes);
 
-ExprPredefTypeList* makeTypeListElement(PredefType t);
+ExprPredefTypeList* makeTypeListElement(PredefType t, PredefFlag f);
 
 ExprPredefTypeList* getPredefTypesOfParamList(table* func_scope);
 

@@ -16,6 +16,9 @@ function gcd(A, B: integer): integer;
             end
     end;
 begin
+
+    writeln;
+
     if paramcount >= 2 then
         begin
             val(paramstr(1), x);

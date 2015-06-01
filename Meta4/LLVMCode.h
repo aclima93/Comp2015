@@ -19,13 +19,15 @@
 
 // greater range with unsigned variables
 #define COUNTER_TYPE unsigned int
+#define LOCAL_VAR_COUNTER_START 4
+
 COUNTER_TYPE localVarCounter;
 COUNTER_TYPE labelCounter;
 COUNTER_TYPE tabCounter;
 table* curFunctionScope;
 
 typedef enum {
-	llvm_i1, llvm_i32, llvm_double, llvm_null
+	llvm_i1, llvm_i8, llvm_i32, llvm_double, llvm_null
 } LLVMType;
 
 /* 

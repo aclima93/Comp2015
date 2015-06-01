@@ -508,9 +508,9 @@ static const yytype_uint8 yyrline[] =
       90,    92,    93,    96,    98,    99,   102,   103,   104,   107,
      108,   111,   113,   115,   116,   119,   120,   123,   125,   127,
      129,   131,   137,   140,   141,   142,   143,   149,   150,   151,
-     152,   155,   156,   159,   160,   163,   164,   167,   168,   169,
-     172,   173,   176,   177,   178,   179,   182,   183,   184,   187,
-     188,   189,   190,   191,   192,   195,   197,   198
+     152,   160,   161,   164,   165,   168,   169,   172,   173,   174,
+     177,   178,   181,   182,   183,   184,   187,   188,   189,   192,
+     193,   194,   195,   196,   197,   200,   202,   203
 };
 #endif
 
@@ -1710,147 +1710,152 @@ yyreduce:
 
   case 40:
 #line 152 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);}
+    {
+																						if( (yyvsp[(2) - (2)].node_pointer) == NULL )
+																							(yyval.node_pointer) = makenode(WriteLnStatType, NULL, NULL, NULL, line, col);
+																						else
+																							(yyval.node_pointer) = (yyvsp[(2) - (2)].node_pointer);
+																					}
     break;
 
   case 41:
-#line 155 "mpasemantic.y"
+#line 160 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(AssignStatType, makeleaf(IDType, ((yyvsp[(1) - (3)].info))->string, ((yyvsp[(1) - (3)].info))->line, ((yyvsp[(1) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(1) - (3)].info))->line, ((yyvsp[(1) - (3)].info))->col);}
     break;
 
   case 42:
-#line 156 "mpasemantic.y"
+#line 161 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 43:
-#line 159 "mpasemantic.y"
+#line 164 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WriteLnStatType, (yyvsp[(1) - (1)].node_pointer), NULL, NULL, ((yyvsp[(1) - (1)].node_pointer))->line, ((yyvsp[(1) - (1)].node_pointer))->col);}
     break;
 
   case 44:
-#line 160 "mpasemantic.y"
+#line 165 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 45:
-#line 163 "mpasemantic.y"
+#line 168 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, ((yyvsp[(2) - (4)].node_pointer))->line, ((yyvsp[(2) - (4)].node_pointer))->col);}
     break;
 
   case 46:
-#line 164 "mpasemantic.y"
+#line 169 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (4)].info))->string, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col), (yyvsp[(3) - (4)].node_pointer), NULL, ((yyvsp[(2) - (4)].info))->line, ((yyvsp[(2) - (4)].info))->col);}
     break;
 
   case 47:
-#line 167 "mpasemantic.y"
+#line 172 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(2) - (3)].node_pointer))->line, ((yyvsp[(2) - (3)].node_pointer))->col);}
     break;
 
   case 48:
-#line 168 "mpasemantic.y"
+#line 173 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(WritelnPListType, makeleaf(StringType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), NULL, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 49:
-#line 169 "mpasemantic.y"
+#line 174 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
   case 50:
-#line 172 "mpasemantic.y"
+#line 177 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ExprType, NULL, (yyvsp[(1) - (1)].node_pointer), NULL, ((yyvsp[(1) - (1)].node_pointer))->line, ((yyvsp[(1) - (1)].node_pointer))->col);}
     break;
 
   case 51:
-#line 173 "mpasemantic.y"
+#line 178 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 52:
-#line 176 "mpasemantic.y"
+#line 181 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 53:
-#line 177 "mpasemantic.y"
+#line 182 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
     break;
 
   case 54:
-#line 178 "mpasemantic.y"
+#line 183 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(SimpleExprType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 55:
-#line 179 "mpasemantic.y"
-    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
-    break;
-
-  case 56:
-#line 182 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
-    break;
-
-  case 57:
-#line 183 "mpasemantic.y"
-    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
-    break;
-
-  case 58:
 #line 184 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
     break;
 
-  case 59:
+  case 56:
 #line 187 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
+    break;
+
+  case 57:
+#line 188 "mpasemantic.y"
+    {(yyval.node_pointer) = makenode(OPTermListType, (yyvsp[(1) - (3)].node_pointer), makeleaf(OPType, ((yyvsp[(2) - (3)].info))->string, ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col), (yyvsp[(3) - (3)].node_pointer), ((yyvsp[(2) - (3)].info))->line, ((yyvsp[(2) - (3)].info))->col);}
+    break;
+
+  case 58:
+#line 189 "mpasemantic.y"
+    {(yyval.node_pointer) = (yyvsp[(1) - (1)].node_pointer);}
+    break;
+
+  case 59:
+#line 192 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(UnaryOPType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 60:
-#line 188 "mpasemantic.y"
+#line 193 "mpasemantic.y"
     {(yyval.node_pointer) = (yyvsp[(2) - (3)].node_pointer);}
     break;
 
   case 61:
-#line 189 "mpasemantic.y"
+#line 194 "mpasemantic.y"
     {(yyval.node_pointer) = makeleaf(IntType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 62:
-#line 190 "mpasemantic.y"
+#line 195 "mpasemantic.y"
     {(yyval.node_pointer) = makeleaf(DoubleType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 63:
-#line 191 "mpasemantic.y"
+#line 196 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(FactorType, NULL, makeleaf(CallType, ((yyvsp[(1) - (2)].info))->string, ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col), (yyvsp[(2) - (2)].node_pointer), ((yyvsp[(1) - (2)].info))->line, ((yyvsp[(1) - (2)].info))->col);}
     break;
 
   case 64:
-#line 192 "mpasemantic.y"
+#line 197 "mpasemantic.y"
     {(yyval.node_pointer) = makeleaf(IDType, ((yyvsp[(1) - (1)].info))->string, ((yyvsp[(1) - (1)].info))->line, ((yyvsp[(1) - (1)].info))->col);}
     break;
 
   case 65:
-#line 195 "mpasemantic.y"
+#line 200 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ParamListType, (yyvsp[(2) - (4)].node_pointer), (yyvsp[(3) - (4)].node_pointer), NULL, line, col);}
     break;
 
   case 66:
-#line 197 "mpasemantic.y"
+#line 202 "mpasemantic.y"
     {(yyval.node_pointer) = makenode(ExprListType, (yyvsp[(2) - (3)].node_pointer), (yyvsp[(3) - (3)].node_pointer), NULL, line, col);}
     break;
 
   case 67:
-#line 198 "mpasemantic.y"
+#line 203 "mpasemantic.y"
     {(yyval.node_pointer) = NULL;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1854 "y.tab.c"
+#line 1859 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2064,7 +2069,7 @@ yyreturn:
 }
 
 
-#line 201 "mpasemantic.y"
+#line 206 "mpasemantic.y"
 
 
 int main(int argc, char** args){

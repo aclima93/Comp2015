@@ -1,1 +1,1 @@
-Line 15, col 11: Incompatible type for argument 2 in call to function max (got _boolean_, expected _integer_)
+Line 15, col 11: Variable identifier expected
