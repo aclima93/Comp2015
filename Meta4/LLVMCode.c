@@ -309,7 +309,7 @@ void generateLLVMStatement(node* statement){
         COUNTER_TYPE labelNum = getAndIncrementLabelCounter();
 
         printTabCounter();
-        printf("\tbr label %%while.start%d\n\n", labelNum);
+        printf("br label %%while.start%d\n\n", labelNum);
 
         printTabCounter();
         printf("while.start%d:\n", labelNum);
@@ -657,19 +657,21 @@ LLVMReturnReff printOPLLVMCode(node* expr){
 		printTabCounter();
 		printf("br i1 %%%d, label %%if.then%d, label %%if.else%d", ifcond, ifcont, ifcont);
 		printTabCounter();
-		printf("then:");
+		printf("if.then%d:", ifcont);
 		printTabCounter();
 		printf("\t%%%d = add i32 %%%d, %%%d", finalResVarNumber, resVarNumber, rightExpr.returnVarNum);
 		printTabCounter();
-		printf("\tbr label %%%d", ifcont);
+		printf("\tbr label %%if.cont%d", ifcont);
 		printTabCounter();
-		printf("else:");
+		printf("if.else%d:", ifcont);
 		printTabCounter();
-		printf("\tbr label %%%d", ifcont);
+		printf("\t%%%d = add i32 %%%d, 0", finalResVarNumber, resVarNumber);
 		printTabCounter();
-		printf("%%%d:", ifcont);
+		printf("\tbr label %%if.cont%d", ifcont);
+		printTabCounter();
+		printf("if.cont%d:", ifcont);
 		
-		returnValue.returnVarNum = resVarNumber;
+		returnValue.returnVarNum = finalResVarNumber;
         returnValue.returnVarType = exprType;
 	}
 	else{

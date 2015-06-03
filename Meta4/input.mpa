@@ -23,7 +23,6 @@ begin
         begin
             val(paramstr(1), x);
             val(paramstr(2), y);
-            writeln(gcd(x,y))
         end
     else
         writeln('Error: two parameters required.')

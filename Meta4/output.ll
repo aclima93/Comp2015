@@ -30,7 +30,7 @@ define i32 @gcd(i32 %a.param, i32 %b.param){
 			br label %if.end1
 
 		if.else1:
-					br label %while.start2
+				br label %while.start2
 
 				while.start2:
 					br i1 %3, label %while.do2, label %while.end2
